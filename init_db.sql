@@ -1,26 +1,28 @@
 -- this is turned off for some stupid reason???
 PRAGMA foreign_keys = TRUE;
 
-DROP TABLE IF EXISTS Employee;
-DROP TABLE IF EXISTS WorkTask;
-DROP TABLE IF EXISTS Project;
-DROP TABLE IF EXISTS Comment;
-DROP TABLE IF EXISTS TaskComment;
-DROP TABLE IF EXISTS ProjectComment;
-DROP TABLE IF EXISTS Assignment;
+DROP TABLE IF EXISTS employee;
+DROP TABLE IF EXISTS workTask;
+DROP TABLE IF EXISTS project;
+DROP TABLE IF EXISTS comment;
+DROP TABLE IF EXISTS taskComment;
+DROP TABLE IF EXISTS projectComment;
+DROP TABLE IF EXISTS assignment;
 
-CREATE TABLE Employee 
+CREATE TABLE employee 
 (
  idEmployee INTEGER PRIMARY KEY AUTOINCREMENT,
  favoriteTeam VARCHAR NOT NULL,
  age INTEGER NOT NULL,
  name VARCHAR NOT NULL,
+ information VARCHAR,
  joinedOn INTEGER,
+ password BLOB,
  idManager INTEGER,
- FOREIGN KEY(idManager) REFERENCES Employee (idEmployee)
+ FOREIGN KEY(idManager) REFERENCES employee (idEmployee)
 );
 
-CREATE TABLE WorkTask 
+CREATE TABLE workTask 
 ( 
  idWorkTask INTEGER PRIMARY KEY AUTOINCREMENT,
  name VARCHAR NOT NULL,
@@ -30,49 +32,49 @@ CREATE TABLE WorkTask
  createdAt DATETIME NOT NULL,
  idProject INTEGER,
  CHECK (done IN (TRUE, FALSE)),
- FOREIGN KEY(idProject) REFERENCES Project (idProject)
+ FOREIGN KEY(idProject) REFERENCES project (idProject)
 ); 
 
-CREATE TABLE Project 
+CREATE TABLE project 
 ( 
  idProject INTEGER PRIMARY KEY AUTOINCREMENT,
  name VARCHAR NOT NULL,
  idManager INTEGER NOT NULL,
  UNIQUE (name),
- FOREIGN KEY(idManager) REFERENCES Employee (idEmployee)
+ FOREIGN KEY(idManager) REFERENCES employee (idEmployee)
 ); 
 
-CREATE TABLE Comment 
+CREATE TABLE comment 
 ( 
  idComment INTEGER PRIMARY KEY AUTOINCREMENT,
  idEmployee INTEGER NOT NULL,
  content VARCHAR NOT NULL,
- FOREIGN KEY(idEmployee) REFERENCES Employee (idEmployee)
+ FOREIGN KEY(idEmployee) REFERENCES employee (idEmployee)
 ); 
 
-CREATE TABLE TaskComment 
+CREATE TABLE taskComment 
 ( 
  idComment INTEGER NOT NULL,
  idWorkTask INTEGER NOT NULL,
  UNIQUE (idComment),
- FOREIGN KEY(idComment) REFERENCES Comment (idComment),
- FOREIGN KEY(idWorkTask) REFERENCES WorkTask (idWorkTask)
+ FOREIGN KEY(idComment) REFERENCES comment (idComment),
+ FOREIGN KEY(idWorkTask) REFERENCES workTask (idWorkTask)
 ); 
 
-CREATE TABLE ProjectComment 
+CREATE TABLE projectComment 
 ( 
  idComment INTEGER NOT NULL,
  idProject INTEGER NOT NULL,
  UNIQUE (idComment),
- FOREIGN KEY(idComment) REFERENCES Comment (idComment),
- FOREIGN KEY(idProject) REFERENCES Project (idProject)
+ FOREIGN KEY(idComment) REFERENCES comment (idComment),
+ FOREIGN KEY(idProject) REFERENCES project (idProject)
 ); 
 
-CREATE TABLE Assignment 
+CREATE TABLE assignment 
 ( 
  idEmployee INTEGER NOT NULL,
  idWorkTask INTEGER NOT NULL,
  idAssigned INTEGER PRIMARY KEY AUTOINCREMENT,
- FOREIGN KEY(idEmployee) REFERENCES Employee (idEmployee),
- FOREIGN KEY(idWorkTask) REFERENCES WorkTask (idWorkTask)
+ FOREIGN KEY(idEmployee) REFERENCES employee (idEmployee),
+ FOREIGN KEY(idWorkTask) REFERENCES workTask (idWorkTask)
 ); 

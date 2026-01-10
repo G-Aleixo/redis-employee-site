@@ -1,0 +1,230 @@
+from flask import Flask, request, make_response, jsonify, g, session, redirect, url_for
+from markupsafe import escape
+from functools import wraps
+
+import sqlite3 as sql
+import database
+import hashlib
+
+DATABASE = "worker_database.db"
+
+app = Flask(__name__)
+
+app.secret_key = "Charley Harvard Alpha Donald"
+
+def stable_hash(data: any):
+    return hashlib.sha256(data.encode()).hexdigest()
+
+def get_db() -> database.DatabaseConnection:
+    if "db" not in g:
+        g.db = database.DatabaseConnection(DATABASE)
+        g.db.row_factory = sql.Row
+    return g.db
+
+@app.teardown_appcontext
+def close_db(exception):
+    db = g.pop("db", None)
+    if db is not None:
+        db.close()
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if "user_id" not in session:
+            return jsonify({"error": "Authentication required"}), 401
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+@app.route("/")
+def hello_world():
+    name = request.args.get("name", "Flask")
+    return f"<p>Hello {escape(name)}!</p>"
+
+@app.get("/api/tasks/<int:task_id>")
+def get_task(task_id: int):
+    if task_id == None:
+        return {}, 501
+
+    db = get_db()
+
+    task = db.get_task(task_id)
+
+    if task:
+        task = dict(task)
+        return jsonify(dict(db.get_task(task_id))), 200
+    else:
+        return {}, 404
+
+@app.post("/api/tasks")
+def add_task():
+    data = request.get_json()
+    
+    # Validate correct JSON format
+    if not data or "name" not in data:
+        return jsonify({"error": "Missing required field: name"}), 400
+    if not data or "content" not in data:
+        return jsonify({"error": "Missing required field: content"}), 400
+    # if not data or "project_id" not in data:
+    #     return jsonify({"error": "Missing required field: project_id"}), 400
+
+    name = data.get("name")
+    content = data.get("content")
+    project_id = data.get("project_id")
+
+    db = get_db()
+
+    # Call your DB method
+    db.add_task(name, content, project_id=project_id)
+
+    return {}, 201
+
+@app.put("/api/tasks/<int:task_id>/done")
+def mark_task_completed(task_id):
+    db = get_db()
+
+    if mark_task_completed():
+        return {}, 201
+    return {}, 400
+
+
+@app.get("/api/tasks/<int:task_id>/assigned")
+def get_task_assignees(task_id: int):
+    if task_id == None:
+        return {}, 501
+
+    db = get_db()
+
+    task = db.get_task(task_id)
+
+    if task:
+        task = dict(task)
+        return jsonify([dict(row) for row in db.get_assigned(task_id)]), 200
+    else:
+        return {}, 404
+
+@app.get("/api/tasks/<int:task_id>/comments")
+def get_task_comments(task_id: int):
+    if task_id == None:
+        return {}, 501
+
+    db = get_db()
+
+    task = db.get_task(task_id)
+
+    if task:
+        task = dict(task)
+        return jsonify([dict(row) for row in db.get_task_comments(task_id)]), 200
+    else:
+        return {}, 404
+
+@app.get("/api/employees/<int:employee_id>")
+def get_employee_api(employee_id: int | None = None):
+    if employee_id == None:
+        return {}, 501
+
+    db = get_db()
+
+    employee = dict(db.get_employee(employee_id))
+
+    if employee:
+        employee.pop("password")
+        return jsonify(dict(db.get_employee(employee_id))), 200
+
+@app.get("/employees/<int:employee_id>")
+def get_employee_page(employee_id: int | None = None):
+    if employee_id == None:
+        return "<p>NOT IMPLEMENTED</p>", 501
+
+    db = get_db()
+    
+    employee = db.get_employee(employee_id)
+    if employee:
+        response = f"""\
+<p>ID: {escape(employee["idEmployee"])}</p>
+<p>Favorite soccer team: {escape(employee["favoriteTeam"])}</p>
+<p>Age: {escape(employee["age"])}</p>
+<p>Name: {escape(employee["name"])}</p>
+<p>Info: {escape(employee["information"])}</p>
+<p>Joined on: {escape(employee["joinedOn"])}</p>"""
+
+        if employee["idManager"] != None:
+            manager_name = db.get_employee(employee["idManager"])["name"]
+            response += f"\n<p>Manager: <a href=\"/employees/{escape(employee[6])}\">{escape(manager_name)}</a></p>"
+        
+        return make_response(response)
+    
+    return "<p>ERROR 404, employee not found!</p>", 404
+
+@app.route("/signup", methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        username = request.form['username']
+        age = request.form['age']
+        info = request.form['information']
+        password = request.form['password']
+
+        db = get_db()
+        db.add_employee(username, age, info, password, 1)
+
+        return "<p>Signup successful!</p>"
+
+    # GET request → show signup form
+    return r"""<!DOCTYPE html>
+<html>
+<head>
+    <title>Signup</title>
+</head>
+<body>
+    <h2>Create an Account</h2>
+    <form method="POST" action="/signup">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="age">Age:</label><br>
+        <input type="number" id="age" name="age" required><br><br>
+
+        <label for="information">About yourself:</label><br>
+        <textarea id="information" name="information"></textarea><br><br>
+
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <button type="submit">Sign Up</button>
+    </form>
+</body>
+</html>
+"""
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        # Handle form submission
+        username = request.form['username']
+        password = request.form['password']
+
+        db = get_db()
+        user = db.cursor.execute("SELECT * FROM employee WHERE name = ?", (username,)).fetchone()
+        db.close()
+
+        if user and (user["password"] == stable_hash(password + (user["name"] + user["joinedOn"]))):
+            session["user_id"] = user["idemployee"]
+            session["username"] = user["name"]
+            return redirect(url_for('profile'))  # go to profile page
+        else:
+            return "Invalid credentials", 401
+
+    # If GET request → show login page
+    return r"""<!DOCTYPE html> <html> <head> <title>Login</title> </head> <body> <h2>Login</h2> <form method="POST" action="/login"> <label>Username:</label> <input type="text" name="username" required><br><br> <label>Password:</label> <input type="password" name="password" required><br><br> <button type="submit">Login</button> </form> </body> </html>"""
+
+@app.route('/profile')
+def profile():
+    if "user_id" not in session:
+        return redirect(url_for('login'))
+    return f"Welcome {session['username']}!"
+
+@app.post("/logout")
+def logout():
+    session.clear()
+    return jsonify({"message": "Logged out"}), 200
