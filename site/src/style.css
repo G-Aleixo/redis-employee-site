@@ -1,0 +1,43 @@
+#header-area{
+    background-color: rgb(190, 190, 190);
+    text-align: center;
+    margin-top: 2%;
+}
+#link-text{
+    color: rgb(0, 0, 0);
+    background-color: rgb(219, 219, 219);
+    border-style: double;
+    font-size: 1.5ex;
+    text-align: center;
+    vertical-align: middle;
+    padding-top: 1%;
+}
+.custom-header{
+    background-color: rgb(197, 197, 197);
+    position: relative;
+}
+
+
+#title-text{
+    padding-top: 2%;
+    padding-bottom: 2%;
+}
+
+#nav-bar{
+    background-color: rgb(255, 255, 255);
+}
+
+.nav-link{
+    color: black;
+    background-color: rgb(224, 224, 224);
+}
+
+#bd-logo{
+    width: 256px;
+    height: 128px;
+}
+
+#login-area{
+    background-color:  rgb(224, 224, 224);
+}
+
