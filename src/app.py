@@ -2,7 +2,7 @@ from flask import Flask, request, make_response, jsonify, g, session, redirect, 
 from markupsafe import escape
 from functools import wraps
 
-import sqlite3 as sql
+from sqlite3 import Row
 import database
 import hashlib
 
@@ -18,7 +18,7 @@ def stable_hash(data: any):
 def get_db() -> database.DatabaseConnection:
     if "db" not in g:
         g.db = database.DatabaseConnection(DATABASE)
-        g.db.row_factory = sql.Row
+        g.db.row_factory = Row
     return g.db
 
 @app.teardown_appcontext
@@ -75,7 +75,6 @@ def add_task():
 
     db = get_db()
 
-    # Call your DB method
     db.add_task(name, content, project_id=project_id)
 
     return {}, 201
@@ -116,6 +115,70 @@ def get_task_comments(task_id: int):
     if task:
         task = dict(task)
         return jsonify([dict(row) for row in db.get_task_comments(task_id)]), 200
+    else:
+        return {}, 404
+
+@app.get("/api/projects/<int:project_id>")
+def get_project(project_id: int):
+    if project_id == None:
+        return {}, 501
+
+    db = get_db()
+
+    project = db.get_project(project_id)
+
+    if project:
+        project = dict(project)
+        return jsonify(dict(db.get_project(project_id))), 200
+    else:
+        return {}, 404
+
+@app.post("/api/projects")
+def add_project():
+    data = request.get_json()
+    
+    # Validate correct JSON format
+    if not data or "name" not in data:
+        return jsonify({"error": "Missing required field: name"}), 400
+    if not data or "manager_id" not in data:
+        return jsonify({"error": "Missing required field: manager_id"}), 400
+
+    name = data.get("name")
+    manager_id = data.get("manager_id", None)
+
+    db = get_db()
+
+    db.add_project(name, manager_id=manager_id)
+
+    return {}, 201
+
+@app.get("/api/project/<int:project_id>/comments")
+def get_project_comments(project_id: int):
+    if project_id == None:
+        return {}, 501
+
+    db = get_db()
+
+    project = db.get_project(project_id)
+
+    if project:
+        project = dict(project)
+        return jsonify([dict(row) for row in db.get_project_comments(project_id)]), 200
+    else:
+        return {}, 404
+
+@app.get("/api/project/<int:project_id>/tasks")
+def get_project_tasks(project_id: int):
+    if project_id == None:
+        return {}, 501
+
+    db = get_db()
+
+    project = db.get_project(project_id)
+
+    if project:
+        row = db.get_project_tasks()
+        return jsonify([dict(row) for row in db.get_project_comments(project_id)]), 200
     else:
         return {}, 404
 

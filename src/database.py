@@ -114,6 +114,11 @@ class DatabaseConnection:
 
         return self.cursor.execute(query, (project_id, )).fetchone()
 
+    def get_project_tasks(self, project_id: int):
+        query = "SELECT * FROM workTask WHERE idProject = ?;"
+
+        return self.cursor.execute(query, (project_id, )).fetchall()
+
     def add_project(self, name, manager_id):
         if self.employee_exists(manager_id):
             query = "INSERT INTO project (name, idManager) VALUES (?, ?);"
