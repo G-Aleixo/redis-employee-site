@@ -12,4 +12,9 @@ O site é servido usando flask
 Exemplificar de modo exagerado um caso de uso em que o redis pode servir como um cache, acelerando drasticamente pesquisas feitas frequentemente em um banco de dados.
 
 ## Créditos
-@G-Aleixo Backend
+- @G-Aleixo Backend
+- @brasilicioh Fullstack
+- @pc123456789n Frontend
+
+## Link do site
+Acesse o site [aqui](https://g-aleixo.github.io/redis-employee-site/).
