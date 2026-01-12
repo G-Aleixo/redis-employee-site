@@ -23,8 +23,15 @@ class DatabaseConnection:
     def get_employees(self):
         return self.cursor.execute("SELECT * FROM employee").fetchall()
 
+    def employee_exists(self, employee_id) -> bool:
+        query = "SELECT 1 FROM employee WHERE idEmployee = ?;"
+        row = self.cursor.execute(query, employee_id).fetchone()
+        if row:
+            return True
+        return False
+
     def add_employee(self, name, age: int, information, password: str, id_manager: int = None, favorite_team = "America"):
-        query = "INSERT INTO employee (name, age, information, password, idManager, favoriteTeam, joinedOn) VALUES (?, ?, ?, ?, ?, ?, ?)"
+        query = "INSERT INTO employee (name, age, information, password, idManager, favoriteTeam, joinedOn) VALUES (?, ?, ?, ?, ?, ?, ?);"
 
         # we know better
         favorite_team = "America"
@@ -40,25 +47,32 @@ class DatabaseConnection:
         self.db.commit()
     
     def verify_password(self, employee_id, password):
-        employee = self.cursor.execute("SELECT * FROM employee WHERE idEmployee = ?", employee_id).fetchone()
+        employee = self.cursor.execute("SELECT * FROM employee WHERE idEmployee = \?;", employee_id).fetchone()
 
         if employee:
             return employee["password"] == stable_hash(password + employee["name"] + employee["joinedOn"])
 
     def get_task(self, task_id: int):
-        query = "SELECT * FROM workTask WHERE idWorkTask = (?) LIMIT 1"
+        query = "SELECT * FROM workTask WHERE idWorkTask = ?;"
 
         return self.cursor.execute(query, (task_id, )).fetchone()
+    
+    def task_exists(self, task_id) -> bool:
+        query = "SELECT 1 FROM workTask WHERE idWorkTask = ?;"
+        row = self.cursor.execute(query, task_id).fetchone()
+        if row:
+            return True
+        return False
 
     def add_task(self, name, content, done = False, done_time = None, project_id = None):
-        query = "INSERT INTO workTask (name, content, done, doneTimeDate, createdAt, idProject) VALUES (?, ?, ?, ?, ?, ?)"
+        query = "INSERT INTO workTask (name, content, done, doneTimeDate, createdAt, idProject) VALUES (?, ?, ?, ?, ?, ?);"
         self.cursor.execute(query, (name, content, done, done_time, str(datetime.now()), project_id))
 
     def get_tasks(self):
         return self.cursor.execute("SELECT * FROM workTask").fetchall()
 
     def mark_task_completed(self, task_id):
-        query = "UPDATE workTask SET done = TRUE WHERE idWorkTask = ?"
+        query = "UPDATE workTask SET done = TRUE WHERE idWorkTask = \?;"
 
         self.cursor.execute(query, (task_id, ))
 
@@ -67,15 +81,69 @@ class DatabaseConnection:
             return True
         return False
 
+    def assign_employee(self, task_id: int, employee_id: int):
+        if self.task_exists(task_id) and self.employee_exists(employee_id):
+            query = "INSERT INTO assignment (idWorkTask, idEmployee) VALUES (?, ?);"
+
+            self.cursor.execute(query, (task_id, employee_id))
+
     def get_assigned(self, task_id: int):
-        query = "SELECT e.* FROM employee e INNER JOIN assignment a ON e.idEmployee = a.idEmployee WHERE a.idWorkTask = ?"
+        query = "SELECT e.* FROM employee e INNER JOIN assignment a ON e.idEmployee = a.idEmployee WHERE a.idWorkTask = ?;"
 
         return self.cursor.execute(query, (task_id, )).fetchall()
 
     def get_task_comments(self, task_id: int):
-        query = "SELECT c.* FROM comment c INNER JOIN taskComment tc ON c.idComment = tc.idComment WHERE tc.idWorkTask = ?"
+        query = "SELECT c.* FROM comment c INNER JOIN taskComment tc ON c.idComment = tc.idComment WHERE tc.idWorkTask = ?;"
 
         return self.cursor.execute(query, (task_id, )).fetchall()
+
+    def post_task_comment(self, task_id: int, employee_id: int, comment: str):
+        if self.task_exists(task_id) and self.employee_exists(employee_id):
+            add_comment = "INSERT INTO comment (idEmployee, content) VALUES (?, ?);"
+
+            self.cursor.execute(add_comment, (employee_id, comment))
+
+            comment_id = self.cursor.lastrowid
+
+            assign_comment = "INSERT INTO taskComment (idComment, idWorkTask) VALUES (?, ?);"
+
+            self.cursor.execute(assign_comment, (comment_id, task_id))
+    
+    def get_project(self, project_id: int):
+        query = "SELECT * FROM project WHERE idProject = ?;"
+
+        return self.cursor.execute(query, (project_id, )).fetchone()
+
+    def add_project(self, name, manager_id):
+        if self.employee_exists(manager_id):
+            query = "INSERT INTO project (name, idManager) VALUES (?, ?);"
+
+            self.cursor.execute(query, name, manager_id)
+
+    def project_exists(self, project_id) -> bool:
+        query = "SELECT 1 FROM project WHERE idProject = ?;"
+        row = self.cursor.execute(query, project_id).fetchone()
+        if row:
+            return True
+        return False
+
+    def get_project_comments(self, project_id: int):
+        query = "SELECT c.* FROM comment c INNER JOIN taskComment tc ON c.idComment = tc.idComment WHERE tc.idWorkTask = \?;"
+
+        return self.cursor.execute(query, (project_id, )).fetchall()
+
+    def post_project_comment(self, project_id: int, employee_id: int, comment: str):
+        if self.project_exists(project_id) and self.employee_exists(employee_id):
+            add_comment = "INSERT INTO comment (idEmployee, content) VALUES (?, ?);"
+
+            self.cursor.execute(add_comment, (employee_id, comment))
+
+            comment_id = self.cursor.lastrowid
+
+            assign_comment = "INSERT INTO projectComment (idComment, idProject) VALUES (?, ?);"
+
+            self.cursor.execute(assign_comment, (comment_id, project_id))
+
 
     def close(self):
         if self.db is not None:
