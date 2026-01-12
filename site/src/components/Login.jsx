@@ -1,87 +1,62 @@
 import sqliteImg from '../assets/sqlite_logo.png'
 import redisImg from '../assets/Logo-redis.svg.png'
-export function Login( {usedDB, goCreateAcc} ){
-    
-    const imageScr =
-        usedDB === 'sqlite'
-        ? sqliteImg
-        : redisImg
 
-    const borderClass =
-        usedDB === 'sqlite'
-        ? 'border-primary'
-        : 'border-danger'
+export default function Login({ usedDB, goCreateAcc }) {
+  const imageScr =
+    usedDB === 'sqlite'
+      ? sqliteImg
+      : redisImg
 
-    const btnClass =
-        usedDB === 'sqlite'
-        ? 'btn-primary'
-        : 'btn-danger'
-    console.log('DB atual:', usedDB)    
-    
-    return(
-        <div className={`container p-0 border border-top-0 ${borderClass}`} id="login-area">
-            <form action="http://127.0.0.1:5000/login" method="POST">
-                <div className="row justify-content-center">
-                    <div className="col-12 text-center">
-                        <img id="bd-logo" className="img-thumbnail my-3 border-3 shadow p-3 mb-5 bg-body-tertiary rounded" src={imageScr} alt=""/>
-                    </div>
-                </div>
-                
-                {/* TODO: 
-                    TIRAR INPUTS; COLOCAR TEXTIN "se tiver conta, login; se não, criar conta"
-                    BOTÃO LOGIN CHAMA FUNÇÃO DE LOGIN
-                    BOTÃO CRIAR CONTA CHAMA FUNÇÃO DE CRIAR CONTA
+  const borderClass =
+    usedDB === 'sqlite'
+      ? 'border-primary'
+      : 'border-danger'
 
-                    CRIAR CONTA:
-                        NOME
-                        IDADE
-                        INFO
-                        TIMEFAV (SEMPRE AMERICA RN)
-                        SENHA 
+  const btnClass =
+    usedDB === 'sqlite'
+      ? 'btn-primary'
+      : 'btn-danger'
 
-                    SE NOME JÁ EXISTIR NO BANCO DE DADOS: NÃO PERMITIR
-
-                    AO CLICAR CRIAR CONTA: 
-                        INSERIR NO BD COM POST DO FORMS
-
-                    LOGIN:
-                        NOME
-                        SENHA */}
-                <div className="row justify-content-center">
-                    <div className="col-md-6 py-3">
-                        <div className="input-group">
-                            <span className="input-group-text" id="basic-addon1">Usuario:</span>
-                            <input type="text" className="form-control" name="username" placeholder="Nome" required></input>
-                            <div className="invalid-feedback">
-                                Insira um Nome Valido.
-                            </div> 
-                        </div>
-                    </div>
-                </div>
-
-                <div className="row justify-content-center">
-                    <div className="col-md-6 py-3">
-                        <div className="input-group">
-                            <span className="input-group-text" id="basic-addon2">Senha:</span>
-                            <input type="password" className="form-control" name="password" placeholder="Senha" required></input>
-                            <div className="invalid-feedback">
-                                Insira uma Senha Valida.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="row justify-content-center">
-                    <div className="col-12 d-flex justify-content-center gap-3 p-4">
-                        <button className={`btn ${btnClass}`} type='submit'>Fazer Login</button>
-                        <button className="btn btn-secondary" type='button' onClick={goCreateAcc}>Criar Conta</button>
-                    </div>
-                </div>
-
-            </form>
-
+  return (
+    <div className={`container p-0 border border-top-0 ${borderClass}`} id="login-area">
+      <form action="http://127.0.0.1:5000/login" method="POST">
+        <div className="row justify-content-center">
+          <div className="col-12 text-center">
+            <img id="bd-logo" className="img-thumbnail my-3 border-3 shadow p-3 mb-5 bg-body-tertiary rounded" src={imageScr} alt="" />
+          </div>
         </div>
-    )
-}
 
-export default Login
+        <div className="row justify-content-center">
+          <div className="col-md-6 py-3">
+            <div className="input-group">
+              <span className="input-group-text" id="basic-addon1">Usuario:</span>
+              <input type="text" className="form-control" name="username" placeholder="Nome" required></input>
+              <div className="invalid-feedback">
+                Insira um Nome Valido.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="row justify-content-center">
+          <div className="col-md-6 py-3">
+            <div className="input-group">
+              <span className="input-group-text" id="basic-addon2">Senha:</span>
+              <input type="password" className="form-control" name="password" placeholder="Senha" required></input>
+              <div className="invalid-feedback">
+                Insira uma Senha Valida.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="row justify-content-center">
+          <div className="col-12 d-flex justify-content-center gap-3 p-4">
+            <button className={`btn ${btnClass}`} type='submit'>Fazer Login</button>
+            <button className="btn btn-secondary" type='button' onClick={goCreateAcc}>Criar Conta</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  )
+}
