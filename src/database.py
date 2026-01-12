@@ -30,11 +30,11 @@ class DatabaseConnection:
             return True
         return False
 
-    def add_employee(self, name, age: int, information, password: str, id_manager: int = None, favorite_team = "America"):
+    def add_employee(self, name, age: int, information, password: str, id_manager: int = None, favorite_team = "América Natal - RN"):
         query = "INSERT INTO employee (name, age, information, password, idManager, favoriteTeam, joinedOn) VALUES (?, ?, ?, ?, ?, ?, ?);"
 
         # we know better
-        favorite_team = "America"
+        favorite_team = "América Natal - RN"
 
         joined_on = str(datetime.now())
 

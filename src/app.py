@@ -227,9 +227,10 @@ def signup():
         age = request.form['age']
         info = request.form['information']
         password = request.form['password']
+        favorite_team = request.form['favorite_team']
 
         db = get_db()
-        db.add_employee(username, age, info, password, 1)
+        db.add_employee(username, age, info, password, 1, favorite_team)
 
         return "<p>Signup successful!</p>"
 
