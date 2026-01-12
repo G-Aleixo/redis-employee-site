@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Header from './components/Header';
 import Landing from './components/Landing';
 import Login from './components/Login';
+import GoCreateAcc from './components/CreateAccount';
 
 
 
@@ -9,12 +10,17 @@ import Login from './components/Login';
 function App() {
 
   const [usedDB, setDB] = useState('sqlite');
+  const [page, setPage] = useState("login");
 
   return (
     <>
       <Header />
-      <Landing usedDB={usedDB} setDB={setDB} />
-      <Login usedDB={usedDB} />
+
+      {page === 'login' && (<Landing usedDB={usedDB} setDB={setDB} />)}
+      {page === 'login' && (<Login usedDB={usedDB} setDB={setDB} goCreateAcc={() => setPage('goCreateAcc')} />)}
+      {page === 'goCreateAcc' && <GoCreateAcc usedDB={usedDB} setPage={() => setPage('login')} />}
+
+
     </>
   )
 }

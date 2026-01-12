@@ -1,6 +1,6 @@
 import sqliteImg from '../assets/sqlite_logo.png'
 import redisImg from '../assets/Logo-redis.svg.png'
-export function Login( {usedDB} ){
+export function Login( {usedDB, goCreateAcc} ){
     
     const imageScr =
         usedDB === 'sqlite'
@@ -27,7 +27,7 @@ export function Login( {usedDB} ){
                     </div>
                 </div>
                 
-                TODO: 
+                {/* TODO: 
                     TIRAR INPUTS; COLOCAR TEXTIN "se tiver conta, login; se não, criar conta"
                     BOTÃO LOGIN CHAMA FUNÇÃO DE LOGIN
                     BOTÃO CRIAR CONTA CHAMA FUNÇÃO DE CRIAR CONTA
@@ -46,7 +46,7 @@ export function Login( {usedDB} ){
 
                     LOGIN:
                         NOME
-                        SENHA
+                        SENHA */}
                 <div className="row justify-content-center">
                     <div className="col-md-6 py-3">
                         <div className="input-group">
@@ -74,7 +74,7 @@ export function Login( {usedDB} ){
                 <div className="row justify-content-center">
                     <div className="col-12 d-flex justify-content-center gap-3 p-4">
                         <button className={`btn ${btnClass}`} type='submit'>Fazer Login</button>
-                        <button className="btn btn-secondary" type=''>Criar Conta</button>
+                        <button className="btn btn-secondary" type='button' onClick={goCreateAcc}>Criar Conta</button>
                     </div>
                 </div>
 
