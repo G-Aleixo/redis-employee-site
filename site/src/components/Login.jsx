@@ -20,19 +20,38 @@ export function Login( {usedDB} ){
     
     return(
         <div className={`container p-0 border border-top-0 ${borderClass}`} id="login-area">
-            <form action="">
+            <form action="http://127.0.0.1:5000/login" method="POST">
                 <div className="row justify-content-center">
                     <div className="col-12 text-center">
                         <img id="bd-logo" className="img-thumbnail my-3 border-3 shadow p-3 mb-5 bg-body-tertiary rounded" src={imageScr} alt=""/>
                     </div>
                 </div>
                 
-                
+                TODO: 
+                    TIRAR INPUTS; COLOCAR TEXTIN "se tiver conta, login; se não, criar conta"
+                    BOTÃO LOGIN CHAMA FUNÇÃO DE LOGIN
+                    BOTÃO CRIAR CONTA CHAMA FUNÇÃO DE CRIAR CONTA
+
+                    CRIAR CONTA:
+                        NOME
+                        IDADE
+                        INFO
+                        TIMEFAV (SEMPRE AMERICA RN)
+                        SENHA 
+
+                    SE NOME JÁ EXISTIR NO BANCO DE DADOS: NÃO PERMITIR
+
+                    AO CLICAR CRIAR CONTA: 
+                        INSERIR NO BD COM POST DO FORMS
+
+                    LOGIN:
+                        NOME
+                        SENHA
                 <div className="row justify-content-center">
                     <div className="col-md-6 py-3">
                         <div className="input-group">
                             <span className="input-group-text" id="basic-addon1">Usuario:</span>
-                            <input type="text" className="form-control" placeholder="Nome" required></input>
+                            <input type="text" className="form-control" name="username" placeholder="Nome" required></input>
                             <div className="invalid-feedback">
                                 Insira um Nome Valido.
                             </div> 
@@ -44,7 +63,7 @@ export function Login( {usedDB} ){
                     <div className="col-md-6 py-3">
                         <div className="input-group">
                             <span className="input-group-text" id="basic-addon2">Senha:</span>
-                            <input type="password" className="form-control" placeholder="Senha" required></input>
+                            <input type="password" className="form-control" name="password" placeholder="Senha" required></input>
                             <div className="invalid-feedback">
                                 Insira uma Senha Valida.
                             </div>
