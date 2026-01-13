@@ -1,4 +1,5 @@
 from flask import Flask, request, make_response, jsonify, g, session, redirect, url_for
+from flask_cors import CORS
 from markupsafe import escape
 from functools import wraps
 
@@ -9,6 +10,7 @@ import hashlib
 DATABASE = "worker_database.db"
 
 app = Flask(__name__)
+CORS(app, origins=["http://localhost:5173"])
 
 app.secret_key = "Charley Harvard Alpha Donald"
 
@@ -264,9 +266,9 @@ def signup():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        # Handle form submission
-        username = request.form['username']
-        password = request.form['password']
+        data = request.get_json()
+        username = data["name"]
+        password = data["password"]
 
         db = get_db()
         user = db.cursor.execute("SELECT * FROM employee WHERE name = ?", (username,)).fetchone()
@@ -275,9 +277,13 @@ def login():
         if user and (user["password"] == stable_hash(password + (user["name"] + user["joinedOn"]))):
             session["user_id"] = user["idemployee"]
             session["username"] = user["name"]
-            return redirect(url_for('profile'))  # go to profile page
+            return {
+                "id": user["idemployee"],
+                "name": user["name"],
+                "joinedOn": user["joinedOn"]
+            }, 200
         else:
-            return "Invalid credentials", 401
+            return {"error": "Invalid credentials"}, 401
 
     # If GET request → show login page
     return r"""<!DOCTYPE html> <html> <head> <title>Login</title> </head> <body> <h2>Login</h2> <form method="POST" action="/login"> <label>Username:</label> <input type="text" name="username" required><br><br> <label>Password:</label> <input type="password" name="password" required><br><br> <button type="submit">Login</button> </form> </body> </html>"""

@@ -31,6 +31,11 @@ class DatabaseConnection:
         return False
 
     def add_employee(self, name, age: int, information, password: str, id_manager: int = None, favorite_team = "América Natal - RN"):
+        exists = "SELECT 1 FROM employee WHERE name = ?;"
+        row = self.cursor.execute(exists, (name)).fetchone()
+        if row:
+            return 501 # Employee with this name already exists
+
         query = "INSERT INTO employee (name, age, information, password, idManager, favoriteTeam, joinedOn) VALUES (?, ?, ?, ?, ?, ?, ?);"
 
         # we know better
@@ -45,6 +50,8 @@ class DatabaseConnection:
         self.cursor.execute(query, (name, age, information, hashed_password, id_manager, favorite_team, joined_on))
 
         self.db.commit()
+
+        return 200
     
     def verify_password(self, employee_id, password):
         employee = self.cursor.execute("SELECT * FROM employee WHERE idEmployee = \?;", employee_id).fetchone()
