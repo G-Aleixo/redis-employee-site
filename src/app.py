@@ -225,16 +225,19 @@ def get_employee_page(employee_id: int | None = None):
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        username = request.form['username']
-        age = request.form['age']
-        info = request.form['information']
-        password = request.form['password']
-        favorite_team = request.form['favorite_team']
+        data = request.get_json()
+        username = data["name"]
+        age = data["age"]
+        info = data["information"]
+        password = data["password"]
+        favorite_team = data["favorite_team"]
 
         db = get_db()
-        db.add_employee(username, age, info, password, 1, favorite_team)
-
-        return "<p>Signup successful!</p>"
+        sucess = db.add_employee(username, age, info, password, 1, favorite_team)
+        db.close()
+        if sucess == 501:
+            return {"error": "User with this name already exists"}, 501
+        return {"message": "User created successfully"}, 200
 
     # GET request → show signup form
     return r"""<!DOCTYPE html>
