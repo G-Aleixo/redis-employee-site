@@ -32,7 +32,7 @@ class DatabaseConnection:
 
     def add_employee(self, name, age: int, information, password: str, id_manager: int = None, favorite_team = "América Natal - RN"):
         exists = "SELECT 1 FROM employee WHERE name = ?;"
-        row = self.cursor.execute(exists, (name)).fetchone()
+        row = self.cursor.execute(exists, (name,)).fetchone()
         if row:
             return 501 # Employee with this name already exists
 
