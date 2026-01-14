@@ -86,13 +86,16 @@ export default function Login({ usedDB, goCreateAcc }) {
       </form>
       {response && !response.error && (
         <div className="mt-4 p-3 border rounded bg-light">
-          <p>ID: {response.id}</p>
-          <p>Nome: {response.name}</p>
-          <p>Data de entrada: {response.joinedOn}</p>
+          <p>ID no sistema: {response.id}</p>
+          <p>Seu nome de usuário: {response.name}</p>
+          <p>Sua idade: {response.age}</p>
+          <p>Seu time favorito: {response.favTeam}</p>
+          {response.information && <p>Sobre você: {response.information}</p>}
+          <p>Você entrou em: {" " + new Date(response.joinedOn).toLocaleString('pt-BR')}</p>
         </div>
       )} {response && response.error && (
         <div className="mt-4 p-3 border rounded bg-light text-danger">
-          <p>{response.error}</p>
+          <p>Esse usuário não foi cadastrado</p>
         </div>
       )}
     </div>

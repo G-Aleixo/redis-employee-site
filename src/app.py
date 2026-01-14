@@ -280,6 +280,9 @@ def login():
             return {
                 "id": user["idemployee"],
                 "name": user["name"],
+                "age": user["age"],
+                "favTeam": user["favoriteTeam"],
+                "information": user["information"],
                 "joinedOn": user["joinedOn"]
             }, 200
         else:
