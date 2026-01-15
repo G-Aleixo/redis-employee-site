@@ -1,6 +1,7 @@
 export default function LoginPage({ response, setPage }) {
   return (
     <>
+      {/* EDITAR PARA FICAR BONITO E ADEQUADO A SITE */}
       <div className="mt-4 p-3 border rounded bg-light">
         <p>ID no sistema: {response.id}</p>
         <p>Seu nome de usuário: {response.name}</p>

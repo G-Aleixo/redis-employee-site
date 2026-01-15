@@ -38,6 +38,16 @@ export default function CreateAccount({ setPage }) {
 
   return (
     <div className="container p-0 border border-top-0 border-dark-subtle">
+      {/* // AQUI VAI OS ALERTS DE SUCESSO E ERRO */}
+      {response && !response.error && ( // sucesso
+        <div className="mt-4 p-3 border rounded bg-light">
+          <p>Conta criada com sucesso! Você já pode fazer login.</p>
+        </div>
+      )} {response && response.error && ( // erro
+        <div className="mt-4 p-3 border rounded bg-light text-danger">
+          <p>{response.error}</p>
+        </div>
+      )}
       <form onSubmit={createAcc}>
         <div className="row justify-content-center">
           <div className="col-12 text-center">
@@ -122,15 +132,6 @@ export default function CreateAccount({ setPage }) {
           </div>
         </div>
       </form>
-      {response && !response.error && (
-        <div className="mt-4 p-3 border rounded bg-light">
-          <p>Conta criada com sucesso! Você já pode fazer login.</p>
-        </div>
-      )} {response && response.error && (
-        <div className="mt-4 p-3 border rounded bg-light text-danger">
-          <p>{response.error}</p>
-        </div>
-      )}
     </div>
   );
 }

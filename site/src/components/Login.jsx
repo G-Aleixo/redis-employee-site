@@ -46,6 +46,12 @@ export default function Login({ response, setResponse, usedDB, setPage }) {
 
   return (
     <div className={`container p-0 border border-top-0 ${borderClass}`} id="login-area">
+      {/* AQUI VAI ALERTS DE ERRO */}
+      {response && response.error && ( // erro
+        <div className="mt-4 p-3 border rounded bg-light text-danger">
+          <p>Esse usuário não foi cadastrado</p>
+        </div>
+      )}
       <form onSubmit={login}>
         <div className="row justify-content-center">
           <div className="col-12 text-center">
@@ -84,11 +90,6 @@ export default function Login({ response, setResponse, usedDB, setPage }) {
           </div>
         </div>
       </form>
-      {response && response.error && (
-        <div className="mt-4 p-3 border rounded bg-light text-danger">
-          <p>Esse usuário não foi cadastrado</p>
-        </div>
-      )}
     </div>
   );
 }
