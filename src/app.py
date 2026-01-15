@@ -10,7 +10,7 @@ import hashlib
 DATABASE = "worker_database.db"
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:5173", "https://g-aleixo.github.io"], supports_credentials=True)
+CORS(app, origins=["http://localhost:5173", "https://g-aleixo.github.io", "https://redis-employee-site.onrender.com"], supports_credentials=True)
 
 app.secret_key = "Charley Harvard Alpha Donald"
 
