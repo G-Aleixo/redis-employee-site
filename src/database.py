@@ -54,7 +54,7 @@ class DatabaseConnection:
         return 200
     
     def verify_password(self, employee_id, password):
-        employee = self.cursor.execute("SELECT * FROM employee WHERE idEmployee = \?;", employee_id).fetchone()
+        employee = self.cursor.execute("SELECT * FROM employee WHERE idEmployee = ?;", employee_id).fetchone()
 
         if employee:
             return employee["password"] == stable_hash(password + employee["name"] + employee["joinedOn"])
@@ -79,7 +79,7 @@ class DatabaseConnection:
         return self.cursor.execute("SELECT * FROM workTask").fetchall()
 
     def mark_task_completed(self, task_id):
-        query = "UPDATE workTask SET done = TRUE WHERE idWorkTask = \?;"
+        query = "UPDATE workTask SET done = TRUE WHERE idWorkTask = ?;"
 
         self.cursor.execute(query, (task_id, ))
 
@@ -140,7 +140,7 @@ class DatabaseConnection:
         return False
 
     def get_project_comments(self, project_id: int):
-        query = "SELECT c.* FROM comment c INNER JOIN taskComment tc ON c.idComment = tc.idComment WHERE tc.idWorkTask = \?;"
+        query = "SELECT c.* FROM comment c INNER JOIN taskComment tc ON c.idComment = tc.idComment WHERE tc.idWorkTask = ?;"
 
         return self.cursor.execute(query, (project_id, )).fetchall()
 

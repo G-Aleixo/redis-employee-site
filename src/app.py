@@ -4,7 +4,7 @@ from markupsafe import escape
 from functools import wraps
 
 from sqlite3 import Row
-import database
+import src.database as database
 import hashlib
 
 DATABASE = "worker_database.db"
