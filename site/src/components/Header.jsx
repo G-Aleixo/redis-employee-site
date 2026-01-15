@@ -1,5 +1,4 @@
 export default function Header() {
-
   return (
     <div className="container" id="header-area">
       <div className="row justify-content-center align-items-center">
@@ -18,12 +17,12 @@ export default function Header() {
               alt="Logo"
               className="d-none d-md-block"
               style={{
-                position: 'absolute',
-                right: '0px',
-                top: '0%',
-                height: '100%',
-                width: 'auto',
-                objectFit: 'cover'
+                position: "absolute",
+                right: "0px",
+                top: "0%",
+                height: "100%",
+                width: "auto",
+                objectFit: "cover"
               }}
             />
           </div>
@@ -33,12 +32,12 @@ export default function Header() {
             alt="LogoBD"
             className="img-fluid d-none d-md-block"
             style={{
-              position: 'absolute',
-              left: '0px',
-              top: '0%',
-              height: '100%',
-              width: 'auto',
-              objectFit: 'cover'
+              position: "absolute",
+              left: "0px",
+              top: "0%",
+              height: "100%",
+              width: "auto",
+              objectFit: "cover"
             }}
           />
         </div>
@@ -63,5 +62,5 @@ export default function Header() {
         </div>
       </div>
     </div>
-  )
+  );
 }

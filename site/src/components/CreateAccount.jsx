@@ -1,18 +1,18 @@
-import { useState } from "react"
+import { useState } from "react";
 
 export default function CreateAccount({ setPage }) {
-  const [name, setName] = useState("")
-  const [age, setAge] = useState(0)
-  const [information, setInformation] = useState("")
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const [information, setInformation] = useState("");
   const [favTeam, setFavTeam] = useState({
     first: "",
     second: ""
-  })
-  const [pwd, setPwd] = useState("")
-  const [response, setResponse] = useState(null)
+  });
+  const [pwd, setPwd] = useState("");
+  const [response, setResponse] = useState(null);
 
   async function createAcc(e) {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
       const res = await fetch("http://127.0.0.1:5000/signup", {
@@ -27,12 +27,12 @@ export default function CreateAccount({ setPage }) {
           favorite_team: favTeam.first,
           password: pwd
         })
-      })
+      });
 
-      const data = await res.json()
-      setResponse(data)
+      const data = await res.json();
+      setResponse(data);
     } catch (error) {
-      console.log("Erro:", error)
+      console.log("Erro:", error);
     }
   }
 
@@ -41,7 +41,7 @@ export default function CreateAccount({ setPage }) {
       <form onSubmit={createAcc}>
         <div className="row justify-content-center">
           <div className="col-12 text-center">
-            <h3 className="py-3 border-bottom">Criando sua conta na Renan's Software</h3>
+            <h3 className="py-3 border-bottom">Criando sua conta na Renan"s Software</h3>
           </div>
         </div>
 
@@ -117,8 +117,8 @@ export default function CreateAccount({ setPage }) {
 
         <div className="row pb-5">
           <div className="col-12 d-flex justify-content-center gap-2">
-            <button className="btn btn-success  px-4" type="submit" style={{ width: '160px' }}>Criar Conta</button>
-            <button className="btn btn-dark  px-4" type="button" style={{ width: '160px' }} onClick={setPage}>Voltar a Home</button>
+            <button className="btn btn-success  px-4" type="submit" style={{ width: "160px" }}>Criar Conta</button>
+            <button className="btn btn-dark  px-4" type="button" style={{ width: "160px" }} onClick={() => setPage("Login")}>Voltar a Home</button>
           </div>
         </div>
       </form>
@@ -132,5 +132,5 @@ export default function CreateAccount({ setPage }) {
         </div>
       )}
     </div>
-  )
+  );
 }
