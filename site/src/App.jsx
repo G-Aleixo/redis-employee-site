@@ -1,23 +1,26 @@
-import { useState } from 'react';
-import Header from './components/Header';
-import Landing from './components/Landing';
-import Login from './components/Login';
-import GoCreateAcc from './components/CreateAccount';
+import { useState } from "react";
+import Header from "./components/Header";
+import Landing from "./components/Landing";
+import Login from "./components/Login";
+import CreateAccount from "./components/CreateAccount";
+import LoginPage from "./components/LoginPage";
 
 export default function App() {
-  const [usedDB, setDB] = useState('sqlite');
-  const [page, setPage] = useState("login");
+  const [usedDB, setDB] = useState("sqlite");
+  const [page, setPage] = useState("Login");
+  const [response, setResponse] = useState(null);
 
   return (
     <>
       <Header />
-      {page === 'login' && 
+      {page === "Login" && 
         <>
           <Landing usedDB={usedDB} setDB={setDB} />
-          <Login usedDB={usedDB} setDB={setDB} goCreateAcc={() => setPage('goCreateAcc')} />
+          <Login response={response} setResponse={setResponse} usedDB={usedDB} setDB={setDB} setPage={setPage} />
         </>
       }
-      {page === 'goCreateAcc' && <GoCreateAcc usedDB={usedDB} setPage={() => setPage('login')} />}
+      {page === "CreateAccount" && <CreateAccount usedDB={usedDB} setPage={setPage} />}
+      {page === "LoginPage" && <LoginPage response={response} setPage={setPage} />}
     </>
-  )
+  );
 }

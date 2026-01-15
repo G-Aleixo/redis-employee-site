@@ -1,29 +1,28 @@
-import { useState } from 'react'
-import sqliteImg from '../assets/sqlite_logo.png'
-import redisImg from '../assets/Logo-redis.svg.png'
+import { useState } from "react";
+import sqliteImg from "../assets/sqlite_logo.png";
+import redisImg from "../assets/Logo-redis.svg.png";
 
-export default function Login({ usedDB, goCreateAcc }) {
+export default function Login({ response, setResponse, usedDB, setPage }) {
   const imageScr =
-    usedDB === 'sqlite'
+    usedDB === "sqlite"
       ? sqliteImg
-      : redisImg
+      : redisImg;
 
   const borderClass =
-    usedDB === 'sqlite'
-      ? 'border-primary'
-      : 'border-danger'
+    usedDB === "sqlite"
+      ? "border-primary"
+      : "border-danger";
 
   const btnClass =
-    usedDB === 'sqlite'
-      ? 'btn-primary'
-      : 'btn-danger'
+    usedDB === "sqlite"
+      ? "btn-primary"
+      : "btn-danger";
 
-  const [name, setName] = useState("")
-  const [pwd, setPwd] = useState("")
-  const [response, setResponse] = useState(null)
+  const [name, setName] = useState("");
+  const [pwd, setPwd] = useState("");
 
   async function login(e) {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
       const res = await fetch("http://127.0.0.1:5000/login", {
@@ -35,12 +34,13 @@ export default function Login({ usedDB, goCreateAcc }) {
           name: name,
           password: pwd
         })
-      })
+      });
 
-      const data = await res.json()
-      setResponse(data)
+      const data = await res.json();
+      setResponse(data);
+      setPage("LoginPage");
     } catch (error) {
-      console.log("Erro:", error)
+      console.log("Erro:", error);
     }
   }
 
@@ -79,25 +79,16 @@ export default function Login({ usedDB, goCreateAcc }) {
 
         <div className="row justify-content-center">
           <div className="col-12 d-flex justify-content-center gap-3 p-4">
-            <button className={`btn ${btnClass}`} type='submit'>Fazer Login</button>
-            <button className="btn btn-secondary" type='button' onClick={goCreateAcc}>Criar Conta</button>
+            <button className={`btn ${btnClass}`} type="submit">Fazer Login</button>
+            <button className="btn btn-secondary" type="button" onClick={() => setPage("CreateAccount")}>Criar Conta</button>
           </div>
         </div>
       </form>
-      {response && !response.error && (
-        <div className="mt-4 p-3 border rounded bg-light">
-          <p>ID no sistema: {response.id}</p>
-          <p>Seu nome de usuário: {response.name}</p>
-          <p>Sua idade: {response.age}</p>
-          <p>Seu time favorito: {response.favTeam}</p>
-          {response.information && <p>Sobre você: {response.information}</p>}
-          <p>Você entrou em: {" " + new Date(response.joinedOn).toLocaleString('pt-BR')}</p>
-        </div>
-      )} {response && response.error && (
+      {response && response.error && (
         <div className="mt-4 p-3 border rounded bg-light text-danger">
           <p>Esse usuário não foi cadastrado</p>
         </div>
       )}
     </div>
-  )
+  );
 }
