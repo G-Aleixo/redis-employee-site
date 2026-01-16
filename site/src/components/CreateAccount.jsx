@@ -10,6 +10,7 @@ export default function CreateAccount({ setPage }) {
   });
   const [pwd, setPwd] = useState("");
   const [response, setResponse] = useState(null);
+  const [showedAlert, setShowedAlert] = useState(false);
 
   async function createAcc(e) {
     e.preventDefault();
@@ -37,27 +38,31 @@ export default function CreateAccount({ setPage }) {
   }
 
   return (
-    <div className="container p-0 border border-top-0 border-dark-subtle">
+    <div className="container p-0 border border-2 border-success" id="login-area">
       {/* // AQUI VAI OS ALERTS DE SUCESSO E ERRO */}
-      {response && !response.error && ( // sucesso
-        <div className="mt-4 p-3 border rounded bg-light">
-          <p>Conta criada com sucesso! Você já pode fazer login.</p>
+      {response && !response.error && showedAlert && ( // sucesso
+        <div className="alert alert-success alert-dismissible w-50 mx-auto" role="alert">
+          <h4>Conta Criada</h4>
+          <p>Sua conta foi criada! tente fazer login agora.</p>
+          <button type="button" className="btn-close" onClick={()=>setShowedAlert(false)} aria-label="Close"></button>
         </div>
-      )} {response && response.error && ( // erro
-        <div className="mt-4 p-3 border rounded bg-light text-danger">
-          <p>{response.error}</p>
+      )} {response && response.error && showedAlert && ( // erro
+        <div className="alert alert-danger alert-dismissible w-50 mx-auto" role="alert">
+          <h4>Um Erro ocorreu!</h4>
+          <p>A conta que você tentou criar já existe, tente novamente.</p>
+          <button type="button" className="btn-close" onClick={()=>setShowedAlert(false)} aria-label="Close"></button>
         </div>
       )}
-      <form onSubmit={createAcc}>
+      <form onSubmit={createAcc} onClick={()=>setShowedAlert(true)}>
         <div className="row justify-content-center">
           <div className="col-12 text-center">
-            <h3 className="py-3 border-bottom">Criando sua conta na Renan"s Software</h3>
+            <h3 className="py-3 border-bottom border-black w-75 mx-auto">Criando sua conta na Renan's Software</h3>
           </div>
         </div>
 
         <div className="row justify-content-center">
           <div className="col-md-5 py-3">
-            <div className="input-group">
+            <div className="input-group shadow">
               <span className="input-group-text" id="basic-addon1">Nome de Usuário</span>
               <input type="text" className="form-control" name="username" placeholder="Digite seu nome" 
                 onChange={e => setName(e.target.value)} 
@@ -70,7 +75,7 @@ export default function CreateAccount({ setPage }) {
           </div>
 
           <div className="col-md-2 py-3">
-            <div className="input-group">
+            <div className="input-group shadow">
               <span className="input-group-text" id="basic-addon2">Idade</span>
               <input type="number" className="form-control" name="age" placeholder={0} min={0} max={100} 
                 onChange={e => setAge(Number(e.target.value))} 
@@ -85,7 +90,7 @@ export default function CreateAccount({ setPage }) {
 
         <div className="row justify-content-center">
           <div className="col-md-3 py-3">
-            <div className="input-group">
+            <div className="input-group shadow">
               <span className="input-group-text" id="basic-addon2">Senha</span>
               <input type="password" className="form-control" name="password" placeholder="Digite sua senha" 
                 onChange={e => setPwd(e.target.value)} 
@@ -98,7 +103,7 @@ export default function CreateAccount({ setPage }) {
           </div>
 
           <div className="col-md-4 py-3">
-            <div className="input-group">
+            <div className="input-group shadow">
               <span className="input-group-text" id="basic-addon2">Time Favorito</span>
               <input className="form-control" name="favorite_team" list="datalistOptions" placeholder="Nome do seu time favorito" 
                 value={favTeam.first} 
@@ -115,7 +120,7 @@ export default function CreateAccount({ setPage }) {
 
         <div className="row justify-content-center pb-5 pt-3">
           <div className="col-md-7">
-            <div className="input-group display-flex">
+            <div className="input-group display-flex shadow">
               <span className="input-group-text">Informações sobre você</span>
               <textarea className="form-control" name="information" aria-label="Withtextarea" placeholder="Fale sobre você... opcional" 
                 onChange={(e) => setInformation(e.target.value)}
