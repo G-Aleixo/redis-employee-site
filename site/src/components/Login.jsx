@@ -20,7 +20,7 @@ export default function Login({ response, setResponse, usedDB, setPage }) {
 
   const [name, setName] = useState("");
   const [pwd, setPwd] = useState("");
-  const [showedAlert, setShowedAlert] = useState(false)
+  const [alert, setAlert] = useState({pwdWrong: false, notExists: false});
 
   async function login(e) {
     e.preventDefault();
@@ -39,28 +39,36 @@ export default function Login({ response, setResponse, usedDB, setPage }) {
 
       const data = await res.json();
       setResponse(data);
-      setPage("LoginPage");
+      
+      if (res.ok) {
+        setPage("LoginPage");
+      } else {
+        if (res.status === 404) {
+          setAlert({ pwdWrong: false, notExists: true });
+        } else if (res.status === 401) {
+          setAlert({ pwdWrong: true, notExists: false });
+        }
+      }
     } catch (error) {
-      console.log("Erro:", error);
+      console.warn("Erro de rede ou CORS:", error);
     }
   }
 
   return (
     <div className={`container p-0 border border-2 ${borderClass}`} id="login-area">
-      {/* AQUI VAI ALERTS DE ERRO */}
-      {response && response.error && showedAlert && ( // erro
+      {response && response.error && alert.notExists && (
         <div className="alert alert-danger alert-dismissible w-50 mx-auto" role="alert">
           <h4>Conta Não Encontrada!</h4>
           <p>Sua conta não foi encontrada, tente criar uma conta no botão "Criar Conta"</p>
-          <button type="button" className="btn-close" onClick={() => setShowedAlert(false)} aria-label="Close"></button>
+          <button type="button" className="btn-close" onClick={() => setAlert({...alert, notExists: false})} aria-label="Close"></button>
         </div>
       )}
 
-      {response && response.error && showedAlert && ( // erro
+      {response && response.error && alert.pwdWrong && (
         <div className="alert alert-warning alert-dismissible w-50 mx-auto" role="alert">
           <h4>Senha Incorreta!</h4>
           <p>A senha inserida não pertence a essa conta ou não existe, tente novamente.</p>
-          <button type="button" className="btn-close" onClick={() => setShowedAlert(false)} aria-label="Close"></button>
+          <button type="button" className="btn-close" onClick={() => setAlert({...alert, pwdWrong: false})} aria-label="Close"></button>
         </div>
       )}
       <form onSubmit={login}>
@@ -96,7 +104,7 @@ export default function Login({ response, setResponse, usedDB, setPage }) {
 
         <div className="row justify-content-center">
           <div className="col-12 d-flex justify-content-center gap-3 p-4">
-            <button className={`btn ${btnClass}`} type="submit" onClick={()=> setShowedAlert(true)}>Fazer Login</button>
+            <button className={`btn ${btnClass}`} type="submit">Fazer Login</button>
             <button className="btn btn-secondary" type="button" onClick={() => setPage("CreateAccount")}>Criar Conta</button>
           </div>
         </div>
