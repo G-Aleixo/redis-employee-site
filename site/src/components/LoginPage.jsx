@@ -44,9 +44,9 @@ export default function LoginPage({ response, setPage }) {
         {response.information &&
           <div className="row justify-content-center pt-3 g-0">
             <div className="col-sm-10 px-3">
-              <div className="form-floating shadow rounded">
+              <div className="mb-3 shadow rounded">
+                <label htmlFor="floatingTextarea" className="form-label">Sobre você:</label>
                 <textarea className="form-control" placeholder="Leave a comment here" id="floatingTextarea" readOnly value={response.information}></textarea>
-                <label htmlFor="floatingTextarea">Sobre você:</label>
               </div>
             </div>
           </div>
@@ -63,7 +63,7 @@ export default function LoginPage({ response, setPage }) {
 
         
 
-        <div className="row justify-content-center py-3">
+        <div className="row justify-content-center py-3 g-0">
           <div className="col-sm-10 d-flex justify-content-center">
             <button className="btn btn-success w-50" onClick={() => setPage("Login")}>Voltar Home</button>
           </div>
