@@ -79,9 +79,9 @@ export default function Login({ response, setResponse, usedDB, setPage }) {
         </div>
 
         <div className="row justify-content-center g-0">
-          <div className="col-md-6 py-3">
+          <div className="col-md-6 p-3">
             <div className="input-group shadow">
-              <span className="input-group-text" id="basic-addon1">Nome de Usuário</span>
+              <span className="input-group-text" id="basic-addon1" style={{width : '10ex'}}>Usuário</span>
               <input type="text" className="form-control" name="username" placeholder="Digite seu nome" onChange={e => setName(e.target.value)} required></input>
               <div className="invalid-feedback">
                 Insira um Nome Válido
@@ -91,9 +91,9 @@ export default function Login({ response, setResponse, usedDB, setPage }) {
         </div>
 
         <div className="row justify-content-center g-0">
-          <div className="col-md-6 py-3">
+          <div className="col-md-6 p-3">
             <div className="input-group shadow">
-              <span className="input-group-text" id="basic-addon2">Senha</span>
+              <span className="input-group-text" id="basic-addon2" style={{width : '10ex'}}>Senha</span>
               <input type="password" className="form-control" name="password" placeholder="Digite sua senha" onChange={e => setPwd(e.target.value)} required></input>
               <div className="invalid-feedback">
                 Insira uma Senha Válida

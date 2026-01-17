@@ -61,7 +61,7 @@ export default function CreateAccount({ setPage }) {
         </div>
 
         <div className="row justify-content-center g-1">
-          <div className="col-md-5 py-3">
+          <div className="col-md-5 p-3">
             <div className="input-group shadow">
               <span className="input-group-text" id="basic-addon1">Nome de Usuário</span>
               <input type="text" className="form-control" name="username" placeholder="Digite seu nome" 
@@ -74,7 +74,7 @@ export default function CreateAccount({ setPage }) {
             </div>
           </div>
 
-          <div className="col-md-2 py-3">
+          <div className="col-md-2 p-3">
             <div className="input-group shadow">
               <span className="input-group-text" id="basic-addon2">Idade</span>
               <input type="number" className="form-control" name="age" placeholder={0} min={0} max={100} 
@@ -89,7 +89,7 @@ export default function CreateAccount({ setPage }) {
         </div>
 
         <div className="row justify-content-center g-1">
-          <div className="col-md-3 py-3">
+          <div className="col-md-3 p-3">
             <div className="input-group shadow">
               <span className="input-group-text" id="basic-addon2">Senha</span>
               <input type="password" className="form-control" name="password" placeholder="Digite sua senha" 
@@ -102,7 +102,7 @@ export default function CreateAccount({ setPage }) {
             </div>
           </div>
 
-          <div className="col-md-4 py-3">
+          <div className="col-md-4 p-3">
             <div className="input-group shadow">
               <span className="input-group-text" id="basic-addon2">Time Favorito</span>
               <input className="form-control" name="favorite_team" list="datalistOptions" placeholder="Nome do seu time favorito" 
@@ -119,7 +119,7 @@ export default function CreateAccount({ setPage }) {
         </div>
 
         <div className="row justify-content-center pb-5 pt-3 g-0">
-          <div className="col-md-7">
+          <div className="col-md-7 p-3">
             <div className="mb-3">
               <label htmlFor="floatingTextarea" className="form-label">Informações Extras</label>
               <textarea className="form-control" name="information" id="floatingTextarea" aria-label="Withtextarea" placeholder="Fale sobre você... opcional" 
