@@ -1,7 +1,9 @@
+html{
+    width: 100%;
+}
 #header-area{
     background-color: rgb(190, 190, 190);
     text-align: center;
-    margin-top: 2%;
 }
 #link-text{
     color: rgb(0, 0, 0);

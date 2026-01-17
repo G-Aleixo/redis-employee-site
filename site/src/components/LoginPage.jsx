@@ -1,7 +1,7 @@
 import renanImg from "../assets/renan.png";
 export default function LoginPage({ response, setPage }) {
   return (
-      <div className="container p-0 border border-success border-2" id="login-area">
+      <div className="container-fluid p-0 border border-success border-2" id="login-area">
         <div className="row justify-content-center g-0">
           <div className="col-sm-8">
             <div className="row justify-content-center pt-3">
@@ -11,14 +11,14 @@ export default function LoginPage({ response, setPage }) {
               </div>
             </div>
 
-            <div className="row justify-content-center">
+            <div className="row justify-content-center g-0">
               <div className="input-group mb-3 px-0 shadow w-75 rounded">
                 <span className="input-group-text" id="basic-addon2" style={{width: '17ex'}}>Nome:</span>
                 <input type="text" className="form-control" value={response.name} aria-label="Username" aria-describedby="basic-addon2" readOnly/>
               </div>
             </div>
 
-            <div className="row justify-content-center">
+            <div className="row justify-content-center g-0">
               <div className="input-group mb-3 px-0 shadow w-75 rounded">
                 <span className="input-group-text" id="basic-addon3" style={{width: '17ex'}}>Idade:</span>
                 <input type="number" className="form-control" value={response.age} aria-label="userAge" aria-describedby="basic-addon3" readOnly/>
@@ -31,7 +31,7 @@ export default function LoginPage({ response, setPage }) {
           </div>
         </div>
 
-        <div className="row justify-content-center pt-3">
+        <div className="row justify-content-center pt-3 g-0">
           <div className="col-sm-10 px-0 rounded">
             <div className="input-group mb-3 shadow rounded">
               <span className="input-group-text" id="basic-addon4" style={{width: '17ex'}}>Time Favorito:</span>

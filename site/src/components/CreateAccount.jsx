@@ -38,7 +38,7 @@ export default function CreateAccount({ setPage }) {
   }
 
   return (
-    <div className="container p-0 border border-2 border-success" id="login-area">
+    <div className="container-fluid p-0 border border-2 border-success" id="login-area">
       {/* // AQUI VAI OS ALERTS DE SUCESSO E ERRO */}
       {response && !response.error && showedAlert && ( // sucesso
         <div className="alert alert-success alert-dismissible w-50 mx-auto" role="alert">
@@ -54,13 +54,13 @@ export default function CreateAccount({ setPage }) {
         </div>
       )}
       <form onSubmit={createAcc} onClick={()=>setShowedAlert(true)}>
-        <div className="row justify-content-center">
+        <div className="row justify-content-center g-0">
           <div className="col-12 text-center">
             <h3 className="py-3 border-bottom border-black w-75 mx-auto">Criando sua conta na Renan's Software</h3>
           </div>
         </div>
 
-        <div className="row justify-content-center">
+        <div className="row justify-content-center g-1">
           <div className="col-md-5 py-3">
             <div className="input-group shadow">
               <span className="input-group-text" id="basic-addon1">Nome de Usuário</span>
@@ -88,7 +88,7 @@ export default function CreateAccount({ setPage }) {
           </div>
         </div>
 
-        <div className="row justify-content-center">
+        <div className="row justify-content-center g-1">
           <div className="col-md-3 py-3">
             <div className="input-group shadow">
               <span className="input-group-text" id="basic-addon2">Senha</span>
@@ -118,11 +118,11 @@ export default function CreateAccount({ setPage }) {
           </div>
         </div>
 
-        <div className="row justify-content-center pb-5 pt-3">
+        <div className="row justify-content-center pb-5 pt-3 g-0">
           <div className="col-md-7">
-            <div className="input-group display-flex shadow">
-              <span className="input-group-text">Informações sobre você</span>
-              <textarea className="form-control" name="information" aria-label="Withtextarea" placeholder="Fale sobre você... opcional" 
+            <div className="mb-3">
+              <label htmlFor="floatingTextarea" className="form-label">Informações Extras</label>
+              <textarea className="form-control" name="information" id="floatingTextarea" aria-label="Withtextarea" placeholder="Fale sobre você... opcional" 
                 onChange={(e) => setInformation(e.target.value)}
                 value={information}
               />
@@ -130,7 +130,7 @@ export default function CreateAccount({ setPage }) {
           </div>
         </div>
 
-        <div className="row pb-5">
+        <div className="row pb-5 g-0">
           <div className="col-12 d-flex justify-content-center gap-2">
             <button className="btn btn-success  px-4" type="submit" style={{ width: "160px" }}>Criar Conta</button>
             <button className="btn btn-dark  px-4" type="button" style={{ width: "160px" }} onClick={() => setPage("Login")}>Voltar a Home</button>

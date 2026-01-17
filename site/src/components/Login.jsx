@@ -55,7 +55,7 @@ export default function Login({ response, setResponse, usedDB, setPage }) {
   }
 
   return (
-    <div className={`container p-0 border border-2 ${borderClass}`} id="login-area">
+    <div className={`container-fluid p-0 border border-2 ${borderClass}`} id="login-area">
       {response && response.error && alert.notExists && (
         <div className="alert alert-danger alert-dismissible w-50 mx-auto" role="alert">
           <h4>Conta Não Encontrada!</h4>
@@ -72,13 +72,13 @@ export default function Login({ response, setResponse, usedDB, setPage }) {
         </div>
       )}
       <form onSubmit={login}>
-        <div className="row justify-content-center">
+        <div className="row justify-content-center g-0">
           <div className="col-12 text-center">
             <img id="bd-logo" className="img-thumbnail my-3 border-3 shadow p-3 mb-5 bg-body-tertiary rounded" src={imageScr} alt="" />
           </div>
         </div>
 
-        <div className="row justify-content-center">
+        <div className="row justify-content-center g-0">
           <div className="col-md-6 py-3">
             <div className="input-group shadow">
               <span className="input-group-text" id="basic-addon1">Nome de Usuário</span>
@@ -90,7 +90,7 @@ export default function Login({ response, setResponse, usedDB, setPage }) {
           </div>
         </div>
 
-        <div className="row justify-content-center">
+        <div className="row justify-content-center g-0">
           <div className="col-md-6 py-3">
             <div className="input-group shadow">
               <span className="input-group-text" id="basic-addon2">Senha</span>
@@ -102,7 +102,7 @@ export default function Login({ response, setResponse, usedDB, setPage }) {
           </div>
         </div>
 
-        <div className="row justify-content-center">
+        <div className="row justify-content-center g-0">
           <div className="col-12 d-flex justify-content-center gap-3 p-4">
             <button className={`btn ${btnClass}`} type="submit">Fazer Login</button>
             <button className="btn btn-secondary" type="button" onClick={() => setPage("CreateAccount")}>Criar Conta</button>
