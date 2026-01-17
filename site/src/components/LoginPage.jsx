@@ -42,7 +42,7 @@ export default function LoginPage({ response, setPage }) {
         </div>
 
         {response.information &&
-          <div className="row justify-content-center pt-3">
+          <div className="row justify-content-center pt-3 g-0">
             <div className="col-sm-10 px-3">
               <div className="form-floating shadow rounded">
                 <textarea className="form-control" placeholder="Leave a comment here" id="floatingTextarea" readOnly value={response.information}></textarea>
@@ -52,7 +52,7 @@ export default function LoginPage({ response, setPage }) {
           </div>
         }
 
-        <div className="row justify-content-center pt-3">
+        <div className="row justify-content-center p-3 g-0">
           <div className="col-sm-10 px-0">
             <div className="input-group mb-3 shadow rounded">
               <span className="input-group-text" id="basic-addon5" style={{width: '17ex'}}>Cadastro em:</span>
