@@ -44,9 +44,9 @@ export default function LoginPage({ response, setPage }) {
         {response.information &&
           <div className="row justify-content-center pt-3 g-0">
             <div className="col-sm-10 px-3">
-              <div className="mb-3 shadow rounded">
+              <div className="mb-3">
                 <label htmlFor="floatingTextarea" className="form-label">Sobre você:</label>
-                <textarea className="form-control" placeholder="Leave a comment here" id="floatingTextarea" readOnly value={response.information}></textarea>
+                <textarea className="form-control shadow rounded" placeholder="Leave a comment here" id="floatingTextarea" readOnly value={response.information}></textarea>
               </div>
             </div>
           </div>
