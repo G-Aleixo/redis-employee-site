@@ -32,15 +32,6 @@ export default function LoginPage({ response, setPage }) {
           </div>
         </div>
 
-        <div className="row justify-content-center pt-3 g-0">
-          <div className="col-sm-10 px-3 rounded">
-            <div className="input-group mb-3 shadow rounded">
-              <span className="input-group-text" id="basic-addon4" style={{width: '17ex'}}>Time Favorito:</span>
-              <input type="text" className="form-control" value={response.favTeam} aria-label="userTeam" aria-describedby="basic-addon4" readOnly/>
-            </div>
-          </div>
-        </div>
-
         {response.information &&
           <div className="row justify-content-center pt-3 g-0">
             <div className="col-sm-10 px-3">
@@ -52,6 +43,15 @@ export default function LoginPage({ response, setPage }) {
           </div>
         }
 
+        <div className="row justify-content-center pt-3 g-0">
+          <div className="col-sm-10 px-3 rounded">
+            <div className="input-group mb-3 shadow rounded">
+              <span className="input-group-text" id="basic-addon4" style={{width: '17ex'}}>Time Favorito:</span>
+              <input type="text" className="form-control" value={response.favTeam} aria-label="userTeam" aria-describedby="basic-addon4" readOnly/>
+            </div>
+          </div>
+        </div>
+
         <div className="row justify-content-center p-3 g-0">
           <div className="col-sm-10 px-0">
             <div className="input-group mb-3 shadow rounded">
@@ -60,8 +60,6 @@ export default function LoginPage({ response, setPage }) {
             </div>
           </div>
         </div>
-
-        
 
         <div className="row justify-content-center py-3 g-0">
           <div className="col-sm-10 d-flex justify-content-center">
