@@ -22,10 +22,18 @@ export default function Login({ setResponse, usedDB, setPage }) {
   const [name, setName] = useState("");
   const [pwd, setPwd] = useState("");
   const [alert, setAlert] = useState({ pwdWrong: false, notExists: false });
+  const [loading, setLoading] = useState(false);
+
+  const sleep = (ms) => new Promise(res => setTimeout(res, ms));
 
   async function login(e) {
     e.preventDefault();
     setAlert({ pwdWrong: false, notExists: false });
+
+    setLoading(true);
+    if (usedDB == "sqlite") {
+      await sleep(4000);
+    }
 
     try {
       const res = await fetch("https://redis-employee-site.onrender.com/login", {
@@ -41,7 +49,7 @@ export default function Login({ setResponse, usedDB, setPage }) {
 
       const data = await res.json();
       setResponse(data);
-      
+
       if (res.ok) {
         setPage("LoginPage");
       } else {
@@ -51,6 +59,7 @@ export default function Login({ setResponse, usedDB, setPage }) {
           setAlert({ pwdWrong: true, notExists: false });
         }
       }
+      setLoading(false);
     } catch (error) {
       console.warn("Erro de rede ou CORS:", error);
     }
@@ -59,17 +68,17 @@ export default function Login({ setResponse, usedDB, setPage }) {
   return (
     <div className={`container-fluid p-0 border border-2 ${borderClass}`} id="login-area">
       {alert.notExists && (
-        <Alert setFunction={() => setAlert({...alert, notExists: false})} 
-        title="Conta Não Encontrada!" text='Sua conta não foi encontrada, tente criar uma conta no botão "Criar Conta".'
-        className="alert-danger" />
+        <Alert setFunction={() => setAlert({ ...alert, notExists: false })}
+          title="Conta Não Encontrada!" text='Sua conta não foi encontrada, tente criar uma conta no botão "Criar Conta".'
+          className="alert-danger" />
       )}
 
       {alert.pwdWrong && (
-        <Alert setFunction={() => setAlert({...alert, pwdWrong: false})} 
-        title="Senha incorreta!" text="A senha inserida não pertence a essa conta ou não existe, tente novamente." 
-        className="alert-warning" />
+        <Alert setFunction={() => setAlert({ ...alert, pwdWrong: false })}
+          title="Senha incorreta!" text="A senha inserida não pertence a essa conta ou não existe, tente novamente."
+          className="alert-warning" />
       )}
-      
+
       <form onSubmit={login}>
         <div className="row justify-content-center g-0">
           <div className="col-12 text-center">
@@ -80,7 +89,7 @@ export default function Login({ setResponse, usedDB, setPage }) {
         <div className="row justify-content-center g-0">
           <div className="col-md-6 p-3">
             <div className="input-group shadow">
-              <span className="input-group-text" id="basic-addon1" style={{width : '10ex'}}>Usuário</span>
+              <span className="input-group-text" id="basic-addon1" style={{ width: '10ex' }}>Usuário</span>
               <input type="text" className="form-control" name="username" placeholder="Digite seu nome" onChange={e => setName(e.target.value)} required></input>
               <div className="invalid-feedback">
                 Insira um Nome Válido
@@ -92,7 +101,7 @@ export default function Login({ setResponse, usedDB, setPage }) {
         <div className="row justify-content-center g-0">
           <div className="col-md-6 p-3">
             <div className="input-group shadow">
-              <span className="input-group-text" id="basic-addon2" style={{width : '10ex'}}>Senha</span>
+              <span className="input-group-text" id="basic-addon2" style={{ width: '10ex' }}>Senha</span>
               <input type="password" className="form-control" name="password" placeholder="Digite sua senha" onChange={e => setPwd(e.target.value)} required></input>
               <div className="invalid-feedback">
                 Insira uma Senha Válida
@@ -103,7 +112,16 @@ export default function Login({ setResponse, usedDB, setPage }) {
 
         <div className="row justify-content-center g-0">
           <div className="col-12 d-flex justify-content-center gap-3 p-4">
-            <button className={`btn ${btnClass}`} type="submit">Fazer Login</button>
+            <button className={`btn ${btnClass} d-flex align-items-center justify-content-center`}
+              type="submit" disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
+                  Carregando...
+                </>
+              ) : ("Fazer Login")}
+            </button>
             <button className="btn btn-secondary" type="button" onClick={() => setPage("CreateAccount")}>Criar Conta</button>
           </div>
         </div>
