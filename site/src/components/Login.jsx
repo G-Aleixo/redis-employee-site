@@ -2,6 +2,26 @@ import { useState } from "react";
 import sqliteImg from "../assets/sqlite_logo.png";
 import redisImg from "../assets/Logo-redis.svg.png";
 
+function Alert({ alert, setFunction }) {
+  let title, text, className;
+  if (alert.pwdWrong) {
+    title = "Senha Incorreta!";
+    text = "A senha inserida não pertence a essa conta ou não existe, tente novamente.";
+    className = "alert-warning";
+  } else if (alert.notExists) {
+    title = "Conta Não Encontrada!";
+    text = "Sua conta não foi encontrada, tente criar uma conta no botão \"Criar Conta\"";
+    className = "alert-danger";
+  }
+  return (
+    <div className={`alert ${className} alert-dismissible w-50 mx-auto`} role="alert">
+      <h4>{title}</h4>
+      <p>{text}</p>
+      <button type="button" className="btn-close" onClick={setFunction} aria-label="Close"></button>
+    </div>
+  );
+}
+
 export default function Login({ response, setResponse, usedDB, setPage }) {
   const imageScr =
     usedDB === "sqlite"
@@ -57,20 +77,13 @@ export default function Login({ response, setResponse, usedDB, setPage }) {
   return (
     <div className={`container-fluid p-0 border border-2 ${borderClass}`} id="login-area">
       {response && response.error && alert.notExists && (
-        <div className="alert alert-danger alert-dismissible w-50 mx-auto" role="alert">
-          <h4>Conta Não Encontrada!</h4>
-          <p>Sua conta não foi encontrada, tente criar uma conta no botão "Criar Conta"</p>
-          <button type="button" className="btn-close" onClick={() => setAlert({...alert, notExists: false})} aria-label="Close"></button>
-        </div>
+        <Alert alert={alert} setFunction={() => setAlert({...alert, notExists: false})} />
       )}
 
       {response && response.error && alert.pwdWrong && (
-        <div className="alert alert-warning alert-dismissible w-50 mx-auto" role="alert">
-          <h4>Senha Incorreta!</h4>
-          <p>A senha inserida não pertence a essa conta ou não existe, tente novamente.</p>
-          <button type="button" className="btn-close" onClick={() => setAlert({...alert, pwdWrong: false})} aria-label="Close"></button>
-        </div>
+        <Alert alert={alert} setFunction={() => setAlert({...alert, pwdWrong: false})} />
       )}
+      
       <form onSubmit={login}>
         <div className="row justify-content-center g-0">
           <div className="col-12 text-center">

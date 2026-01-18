@@ -277,21 +277,22 @@ def login():
         user = db.cursor.execute("SELECT * FROM employee WHERE name = ?", (username,)).fetchone()
         db.close()
 
-        if user and (user["password"] == stable_hash(password + (user["name"] + user["joinedOn"]))):
-            session["user_id"] = user["idemployee"]
-            session["username"] = user["name"]
-            return {
-                "id": user["idemployee"],
-                "name": user["name"],
-                "age": user["age"],
-                "favTeam": user["favoriteTeam"],
-                "information": user["information"],
-                "joinedOn": user["joinedOn"]
-            }, 200
-        elif user and (user["password"] != stable_hash(password + (user["name"] + user["joinedOn"]))):
-            return {"error": "Invalid credentials"}, 401
-        else:
-            return {"error": "User not found"}, 404
+        if user is None:
+            return {"error": "User not found", "status": 404}, 404
+
+        if user["password"] != stable_hash(password + (user["name"] + user["joinedOn"])):
+            return {"error": "Invalid credentials", "status": 401}, 401
+
+        session["user_id"] = user["idemployee"]
+        session["username"] = user["name"]
+        return {
+            "id": user["idemployee"],
+            "name": user["name"],
+            "age": user["age"],
+            "favTeam": user["favoriteTeam"],
+            "information": user["information"],
+            "joinedOn": user["joinedOn"]
+        }, 200
 
     # If GET request → show login page
     return r"""<!DOCTYPE html> <html> <head> <title>Login</title> </head> <body> <h2>Login</h2> <form method="POST" action="/login"> <label>Username:</label> <input type="text" name="username" required><br><br> <label>Password:</label> <input type="password" name="password" required><br><br> <button type="submit">Login</button> </form> </body> </html>"""
