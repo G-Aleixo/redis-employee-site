@@ -1,28 +1,9 @@
 import { useState } from "react";
+import Alert from "./Alert";
 import sqliteImg from "../assets/sqlite_logo.png";
 import redisImg from "../assets/Logo-redis.svg.png";
 
-function Alert({ alert, setFunction }) {
-  let title, text, className;
-  if (alert.pwdWrong) {
-    title = "Senha Incorreta!";
-    text = "A senha inserida não pertence a essa conta ou não existe, tente novamente.";
-    className = "alert-warning";
-  } else if (alert.notExists) {
-    title = "Conta Não Encontrada!";
-    text = "Sua conta não foi encontrada, tente criar uma conta no botão \"Criar Conta\"";
-    className = "alert-danger";
-  }
-  return (
-    <div className={`alert ${className} alert-dismissible w-50 mx-auto`} role="alert">
-      <h4>{title}</h4>
-      <p>{text}</p>
-      <button type="button" className="btn-close" onClick={setFunction} aria-label="Close"></button>
-    </div>
-  );
-}
-
-export default function Login({ response, setResponse, usedDB, setPage }) {
+export default function Login({ setResponse, usedDB, setPage }) {
   const imageScr =
     usedDB === "sqlite"
       ? sqliteImg
@@ -40,10 +21,11 @@ export default function Login({ response, setResponse, usedDB, setPage }) {
 
   const [name, setName] = useState("");
   const [pwd, setPwd] = useState("");
-  const [alert, setAlert] = useState({pwdWrong: false, notExists: false});
+  const [alert, setAlert] = useState({ pwdWrong: false, notExists: false });
 
   async function login(e) {
     e.preventDefault();
+    setAlert({ pwdWrong: false, notExists: false });
 
     try {
       const res = await fetch("https://redis-employee-site.onrender.com/login", {
@@ -76,12 +58,16 @@ export default function Login({ response, setResponse, usedDB, setPage }) {
 
   return (
     <div className={`container-fluid p-0 border border-2 ${borderClass}`} id="login-area">
-      {response && response.error && alert.notExists && (
-        <Alert alert={alert} setFunction={() => setAlert({...alert, notExists: false})} />
+      {alert.notExists && (
+        <Alert setFunction={() => setAlert({...alert, notExists: false})} 
+        title="Conta Não Encontrada!" text='Sua conta não foi encontrada, tente criar uma conta no botão "Criar Conta".'
+        className="alert-danger" />
       )}
 
-      {response && response.error && alert.pwdWrong && (
-        <Alert alert={alert} setFunction={() => setAlert({...alert, pwdWrong: false})} />
+      {alert.pwdWrong && (
+        <Alert setFunction={() => setAlert({...alert, pwdWrong: false})} 
+        title="Senha incorreta!" text="A senha inserida não pertence a essa conta ou não existe, tente novamente." 
+        className="alert-warning" />
       )}
       
       <form onSubmit={login}>

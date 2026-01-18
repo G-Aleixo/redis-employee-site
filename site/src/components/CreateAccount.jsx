@@ -1,16 +1,14 @@
 import { useState } from "react";
+import Alert from "./Alert";
 
-export default function CreateAccount({ setPage }) {
+export default function CreateAccount({ setResponse, setPage }) {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [information, setInformation] = useState("");
-  const [favTeam, setFavTeam] = useState({
-    first: "",
-    second: ""
-  });
+  const [favTeam, setFavTeam] = useState({ first: "", second: "" });
   const [pwd, setPwd] = useState("");
-  const [response, setResponse] = useState(null);
-  const [showedAlert, setShowedAlert] = useState(false);
+
+  const [alert, setAlert] = useState({ sucess: false, error: false });
 
   async function createAcc(e) {
     e.preventDefault();
@@ -32,28 +30,33 @@ export default function CreateAccount({ setPage }) {
 
       const data = await res.json();
       setResponse(data);
+
+      if (res.ok) {
+        setAlert({ ...alert, sucess: true });
+      } else {
+        setAlert({ ...alert, error: true });
+      }
+
     } catch (error) {
-      console.log("Erro:", error);
+      console.warn("Erro de rede ou CORS:", error);
     }
   }
 
   return (
     <div className="container-fluid p-0 border border-2 border-success" id="login-area">
-      {/* // AQUI VAI OS ALERTS DE SUCESSO E ERRO */}
-      {response && !response.error && showedAlert && ( // sucesso
-        <div className="alert alert-success alert-dismissible w-50 mx-auto" role="alert">
-          <h4>Conta Criada</h4>
-          <p>Sua conta foi criada! tente fazer login agora.</p>
-          <button type="button" className="btn-close" onClick={()=>setShowedAlert(false)} aria-label="Close"></button>
-        </div>
-      )} {response && response.error && showedAlert && ( // erro
-        <div className="alert alert-danger alert-dismissible w-50 mx-auto" role="alert">
-          <h4>Um Erro ocorreu!</h4>
-          <p>A conta que você tentou criar já existe, tente novamente.</p>
-          <button type="button" className="btn-close" onClick={()=>setShowedAlert(false)} aria-label="Close"></button>
-        </div>
+      {alert.sucess && (
+        <Alert setFunction={() => setAlert({...alert, sucess: false})} 
+        title="Conta Criada!" text="Sua conta foi criada! Volte para home e faça login." 
+        className="alert-success" />
+      )} 
+      
+      {alert.error && (
+        <Alert setFunction={() => setAlert({...alert, error: false})} 
+          title="Um Erro Ocorreu!" text="O nome que você escolheu já está em uso, tente outro nome." 
+          className="alert-danger" />
       )}
-      <form onSubmit={createAcc} onClick={()=>setShowedAlert(true)}>
+
+      <form onSubmit={createAcc}>
         <div className="row justify-content-center g-0">
           <div className="col-12 text-center">
             <h3 className="py-3 border-bottom border-black w-75 mx-auto">Criando sua conta na Renan's Software</h3>

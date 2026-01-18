@@ -19,7 +19,7 @@ export default function App() {
           <Login response={response} setResponse={setResponse} usedDB={usedDB} setDB={setDB} setPage={setPage} />
         </>
       }
-      {page === "CreateAccount" && <CreateAccount usedDB={usedDB} setPage={setPage} />}
+      {page === "CreateAccount" && <CreateAccount setResponse={setResponse} setPage={setPage} />}
       {page === "LoginPage" && <LoginPage response={response} setPage={setPage} />}
     </>
   );
