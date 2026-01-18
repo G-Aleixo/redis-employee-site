@@ -31,6 +31,7 @@ export default function Login({ setResponse, usedDB, setPage }) {
     setAlert({ pwdWrong: false, notExists: false });
 
     setLoading(true);
+    const start = performance.now();
     if (usedDB == "sqlite") {
       await sleep(4000);
     }
@@ -46,6 +47,9 @@ export default function Login({ setResponse, usedDB, setPage }) {
           password: pwd
         })
       });
+
+      const end = performance.now();
+      console.log(`tempo: ${end - start}ms`);
 
       const data = await res.json();
       setResponse(data);
