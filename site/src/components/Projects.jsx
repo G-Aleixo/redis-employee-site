@@ -1,9 +1,9 @@
-export default function Projects({ setResponse, setPage }) {
+export default function Projects({ setResponse, setPage, fetch_custom }) {
     async function addProject(e) {
         e.preventDefault();
 
         try {
-            const res = await fetch("https://redis-employee-site.onrender.com/api/projects", {
+            const res = await fetch_custom("/api/projects", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

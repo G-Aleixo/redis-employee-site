@@ -3,7 +3,7 @@ import Alert from "./Alert";
 import sqliteImg from "../assets/sqlite_logo.png";
 import redisImg from "../assets/Logo-redis.svg.png";
 
-export default function Login({ setResponse, usedDB, setPage }) {
+export default function Login({ setResponse, usedDB, setPage, fetch_custom }) {
   const imageScr =
     usedDB === "sqlite"
       ? sqliteImg
@@ -37,7 +37,7 @@ export default function Login({ setResponse, usedDB, setPage }) {
     }
 
     try {
-      const res = await fetch("https://redis-employee-site.onrender.com/login", {
+      const res = await fetch_custom("/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

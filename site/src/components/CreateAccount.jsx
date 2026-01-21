@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Alert from "./Alert";
 
-export default function CreateAccount({ setResponse, setPage }) {
+export default function CreateAccount({ setResponse, setPage, fetch_custom }) {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [information, setInformation] = useState("");
@@ -14,7 +14,7 @@ export default function CreateAccount({ setResponse, setPage }) {
     e.preventDefault();
 
     try {
-      const res = await fetch("https://redis-employee-site.onrender.com/signup", {
+      const res = await fetch_custom("/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

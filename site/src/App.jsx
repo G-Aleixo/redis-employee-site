@@ -6,6 +6,14 @@ import CreateAccount from "./components/CreateAccount";
 import LoginPage from "./components/LoginPage";
 import Projects from "./components/Projects";
 
+function fetch_custom(url, data) {
+  if (process.env.NODE_ENV === 'development') {
+    return fetch("http://127.0.0.1:8000" + url, data);
+  } else {
+    return fetch("https://redis-employee-site.onrender.com" + url, data)
+  }
+}
+
 export default function App() {
   const [usedDB, setDB] = useState("sqlite");
   const [page, setPage] = useState("Login");
@@ -17,12 +25,12 @@ export default function App() {
       {page === "Login" && 
         <>
           <Landing usedDB={usedDB} setDB={setDB} />
-          <Login response={response} setResponse={setResponse} usedDB={usedDB} setDB={setDB} setPage={setPage} />
+          <Login response={response} setResponse={setResponse} usedDB={usedDB} setDB={setDB} setPage={setPage} fetch_custom={fetch_custom} />
         </>
       }
-      {page === "CreateAccount" && <CreateAccount setResponse={setResponse} setPage={setPage} />}
+      {page === "CreateAccount" && <CreateAccount setResponse={setResponse} setPage={setPage} fetch_custom={fetch_custom} />}
       {page === "LoginPage" && <LoginPage response={response} setPage={setPage} />}
-      {page === "Projects" && <Projects setResponse={setResponse} setPage={setPage} />}
+      {page === "Projects" && <Projects setResponse={setResponse} setPage={setPage} fetch_custom={fetch_custom} />}
     </>
   );
 }
