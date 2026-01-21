@@ -64,6 +64,7 @@ export default function LoginPage({ response, setPage }) {
         <div className="row justify-content-center py-3 g-0">
           <div className="col-sm-10 d-flex justify-content-center">
             <button className="btn btn-success w-50" onClick={() => setPage("Login")}>Voltar Home</button>
+            <button className="btn btn-success w-50" onClick={() => setPage("Projects")}>Ver Projetos</button>
           </div>
         </div>
       

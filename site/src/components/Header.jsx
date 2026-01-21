@@ -1,4 +1,5 @@
-export default function Header() {
+export default function Header({ setPage }) {
+  
   return (
     <div className="container-fluid" id="header-area">
       <div className="row justify-content-center align-items-center">
@@ -43,7 +44,7 @@ export default function Header() {
                 <a className="nav-link active" aria-disabled="true" href="https://pt.wikipedia.org/wiki/Extra%C3%A7%C3%A3o_de_petr%C3%B3leo">Empresas Renan</a>
               </li>
               <li className="nav-item h-100 flex-fill">
-                <a className="nav-link active" aria-current="page" href="#">Home</a>
+                <a className="nav-link active" aria-disabled="true" aria-current="page" onClick={() => setPage("Login")} href="">Home</a>
               </li>
               <li className="nav-item h-100 flex-fill">
                 <a className="nav-link" href="#">Créditos</a>

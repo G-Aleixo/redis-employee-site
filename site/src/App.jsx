@@ -4,6 +4,7 @@ import Landing from "./components/Landing";
 import Login from "./components/Login";
 import CreateAccount from "./components/CreateAccount";
 import LoginPage from "./components/LoginPage";
+import Projects from "./components/Projects";
 
 export default function App() {
   const [usedDB, setDB] = useState("sqlite");
@@ -12,7 +13,7 @@ export default function App() {
 
   return (
     <>
-      <Header />
+      <Header setPage={setPage} />
       {page === "Login" && 
         <>
           <Landing usedDB={usedDB} setDB={setDB} />
@@ -21,6 +22,7 @@ export default function App() {
       }
       {page === "CreateAccount" && <CreateAccount setResponse={setResponse} setPage={setPage} />}
       {page === "LoginPage" && <LoginPage response={response} setPage={setPage} />}
+      {page === "Projects" && <Projects setResponse={setResponse} setPage={setPage} />}
     </>
   );
 }
