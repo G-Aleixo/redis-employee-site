@@ -131,7 +131,7 @@ def get_project(project_id: int):
 
     if project:
         project = dict(project)
-        return jsonify(dict(db.get_project(project_id))), 200
+        return jsonify(project), 200
     else:
         return {}, 404
 
@@ -146,7 +146,7 @@ def add_project():
         return jsonify({"error": "Missing required field: manager_id"}), 400
 
     name = data.get("name")
-    manager_id = data.get("manager_id", None)
+    manager_id = data.get("manager_id")
 
     db = get_db()
 
@@ -164,7 +164,6 @@ def get_project_comments(project_id: int):
     project = db.get_project(project_id)
 
     if project:
-        project = dict(project)
         return jsonify([dict(row) for row in db.get_project_comments(project_id)]), 200
     else:
         return {}, 404
@@ -179,8 +178,7 @@ def get_project_tasks(project_id: int):
     project = db.get_project(project_id)
 
     if project:
-        row = db.get_project_tasks()
-        return jsonify([dict(row) for row in db.get_project_comments(project_id)]), 200
+        return jsonify([dict(row) for row in db.get_project_tasks(project_id)]), 200
     else:
         return {}, 404
 

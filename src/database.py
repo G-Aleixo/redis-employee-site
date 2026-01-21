@@ -132,6 +132,8 @@ class DatabaseConnection:
 
             self.cursor.execute(query, (name, manager_id))
 
+            self.db.commit()
+            
     def project_exists(self, project_id) -> bool:
         query = "SELECT 1 FROM project WHERE idProject = ?;"
         row = self.cursor.execute(query, (project_id, )).fetchone()
