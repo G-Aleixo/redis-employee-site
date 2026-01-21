@@ -1,5 +1,8 @@
 import renanImg from "../assets/renan.png";
-export default function LoginPage({ response, setPage }) {
+export default function LoginPage({ response, setPage, setId }) {
+
+  setId(response.id);
+
   return (
       <div className="container-fluid p-0 border border-success border-2" id="login-area">
         <div className="row justify-content-center g-0">

@@ -7,7 +7,7 @@ import LoginPage from "./components/LoginPage";
 import Projects from "./components/Projects";
 
 function fetch_custom(url, data) {
-  if (process.env.NODE_ENV === 'development') {
+  if (false) {
     return fetch("http://127.0.0.1:8000" + url, data);
   } else {
     return fetch("https://redis-employee-site.onrender.com" + url, data)
@@ -19,6 +19,10 @@ export default function App() {
   const [page, setPage] = useState("Login");
   const [response, setResponse] = useState(null);
 
+  const setId = (idNum) => {
+    localStorage["id"] = idNum
+  }
+
   return (
     <>
       <Header setPage={setPage} />
@@ -29,7 +33,7 @@ export default function App() {
         </>
       }
       {page === "CreateAccount" && <CreateAccount setResponse={setResponse} setPage={setPage} fetch_custom={fetch_custom} />}
-      {page === "LoginPage" && <LoginPage response={response} setPage={setPage} />}
+      {page === "LoginPage" && <LoginPage response={response} setPage={setPage} setId={setId} />}
       {page === "Projects" && <Projects setResponse={setResponse} setPage={setPage} fetch_custom={fetch_custom} />}
     </>
   );
