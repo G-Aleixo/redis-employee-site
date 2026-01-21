@@ -120,6 +120,11 @@ class DatabaseConnection:
         query = "SELECT * FROM project WHERE idProject = ?;"
 
         return self.cursor.execute(query, (project_id, )).fetchone()
+    
+    def get_projects(self):
+        query = "SELECT * FROM project;"
+
+        return self.cursor.execute(query).fetchall()
 
     def get_project_tasks(self, project_id: int):
         query = "SELECT * FROM workTask WHERE idProject = ?;"
@@ -133,7 +138,7 @@ class DatabaseConnection:
             self.cursor.execute(query, (name, manager_id))
 
             self.db.commit()
-            
+
     def project_exists(self, project_id) -> bool:
         query = "SELECT 1 FROM project WHERE idProject = ?;"
         row = self.cursor.execute(query, (project_id, )).fetchone()

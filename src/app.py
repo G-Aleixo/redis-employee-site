@@ -135,6 +135,15 @@ def get_project(project_id: int):
     else:
         return {}, 404
 
+@app.get("/api/projects/")
+def get_projects():
+    db = get_db()
+
+    projects = db.get_projects()
+
+    projects = [dict(project) for project in projects]
+    return jsonify(projects), 200
+
 @app.post("/api/projects")
 def add_project():
     data = request.get_json()
@@ -144,6 +153,8 @@ def add_project():
         return jsonify({"error": "Missing required field: name"}), 400
     if not data or "manager_id" not in data:
         return jsonify({"error": "Missing required field: manager_id"}), 400
+    if not data or "text" not in data:
+        return jsonify({"error": "Missing required field: text"}), 400
 
     name = data.get("name")
     manager_id = data.get("manager_id")
