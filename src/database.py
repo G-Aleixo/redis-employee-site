@@ -25,14 +25,14 @@ class DatabaseConnection:
 
     def employee_exists(self, employee_id) -> bool:
         query = "SELECT 1 FROM employee WHERE idEmployee = ?;"
-        row = self.cursor.execute(query, employee_id).fetchone()
+        row = self.cursor.execute(query, (employee_id, )).fetchone()
         if row:
             return True
         return False
 
     def add_employee(self, name, age: int, information, password: str, id_manager: int = None, favorite_team = "América Natal - RN"):
         exists = "SELECT 1 FROM employee WHERE name = ?;"
-        row = self.cursor.execute(exists, (name,)).fetchone()
+        row = self.cursor.execute(exists, (name, )).fetchone()
         if row:
             return 501 # Employee with this name already exists
 
@@ -54,7 +54,7 @@ class DatabaseConnection:
         return 200
     
     def verify_password(self, employee_id, password):
-        employee = self.cursor.execute("SELECT * FROM employee WHERE idEmployee = ?;", employee_id).fetchone()
+        employee = self.cursor.execute("SELECT * FROM employee WHERE idEmployee = ?;", (employee_id, )).fetchone()
 
         if employee:
             return employee["password"] == stable_hash(password + employee["name"] + employee["joinedOn"])
@@ -66,7 +66,7 @@ class DatabaseConnection:
     
     def task_exists(self, task_id) -> bool:
         query = "SELECT 1 FROM workTask WHERE idWorkTask = ?;"
-        row = self.cursor.execute(query, task_id).fetchone()
+        row = self.cursor.execute(query, (task_id, )).fetchone()
         if row:
             return True
         return False
@@ -130,11 +130,11 @@ class DatabaseConnection:
         if self.employee_exists(manager_id):
             query = "INSERT INTO project (name, idManager) VALUES (?, ?);"
 
-            self.cursor.execute(query, name, manager_id)
+            self.cursor.execute(query, (name, manager_id))
 
     def project_exists(self, project_id) -> bool:
         query = "SELECT 1 FROM project WHERE idProject = ?;"
-        row = self.cursor.execute(query, project_id).fetchone()
+        row = self.cursor.execute(query, (project_id, )).fetchone()
         if row:
             return True
         return False
