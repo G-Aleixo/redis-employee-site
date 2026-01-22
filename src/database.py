@@ -37,10 +37,6 @@ class SlowDatabase(sql.Connection):
 class DatabaseConnection:
     #TODO: use redis as a cache and introduce some delay
     def __init__(self, database_path: str, redis_url: str):
-        self.db: sql.Connection = sql.connect(database_path, factory=SlowDatabase)
-        self.db.row_factory = sql.Row
-        self.cursor: SlowCursor = self.db.cursor()
-
         if redis_url:
             try:
                 self.redis_db = redis.Redis(host=redis_url, db=0, decode_responses=True)
@@ -53,6 +49,18 @@ class DatabaseConnection:
                 self.cache_enabled = False
         else:
             self.cache_enabled = False
+
+        # Toggle database delay when cache is enabled
+        # Used to prevent unnecessary delay when developing
+        if self.cache_enabled:
+            db_factory = SlowDatabase
+        else:
+            db_factory = None
+
+        self.db: sql.Connection = sql.connect(database_path, factory=db_factory)
+        self.db.row_factory = sql.Row
+        self.cursor: sql.Cursor = self.db.cursor()
+
 
     def _setup_redis(self):
         ...
