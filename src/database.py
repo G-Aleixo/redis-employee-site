@@ -134,10 +134,15 @@ class DatabaseConnection:
     def add_project(self, name, text, manager_id):
         if self.employee_exists(manager_id):
             query = "INSERT INTO project (name, text, idManager) VALUES (?, ?, ?);"
+            
+            try:
+                self.cursor.execute(query, (name, text, manager_id))
+                
+                self.db.commit()
 
-            self.cursor.execute(query, (name, text, manager_id))
-
-            self.db.commit()
+                return 201
+            except sql.IntegrityError:
+                return 501
 
     def project_exists(self, project_id) -> bool:
         query = "SELECT 1 FROM project WHERE idProject = ?;"

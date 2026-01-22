@@ -162,9 +162,9 @@ def add_project():
 
     db = get_db()
 
-    db.add_project(name, text, manager_id=manager_id)
+    code = db.add_project(name, text, manager_id=manager_id)
 
-    return {}, 201
+    return {}, code
 
 @app.get("/api/project/<int:project_id>/comments")
 def get_project_comments(project_id: int):
