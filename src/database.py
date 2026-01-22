@@ -2,28 +2,60 @@ import sqlite3 as sql
 import hashlib
 import redis
 from datetime import datetime
-
+from time import sleep
 
 def stable_hash(data: any):
     return hashlib.sha256(data.encode()).hexdigest()
 
+CURSOR_DELAY = 0.25
+
+class SlowCursor(sql.Cursor):
+    def _delay(self):
+        sleep(CURSOR_DELAY)
+
+    def execute(self, *args, **kwargs):
+        self._delay()
+        return super().execute(*args, **kwargs)
+    
+    def executemany(self, *args, **kwargs):
+        self._delay()
+        return super().executemany(*args, **kwargs)
+    
+    def fetchone(self, *args, **kwargs):
+        self._delay()
+        return super().fetchone(*args, **kwargs)
+    
+    def fetchall(self, *args, **kwargs):
+        self._delay()
+        return super().fetchall(*args, **kwargs)
+
+class SlowDatabase(sql.Connection):
+    def cursor(self, factory: None = None):
+        return super().cursor(factory=SlowCursor)
 
 # Wrapper class for a db connection that implements a bunch of helper methods
 class DatabaseConnection:
     #TODO: use redis as a cache and introduce some delay
     def __init__(self, database_path: str, redis_url: str):
-        self.db: sql.Connection = sql.connect(database_path)
+        self.db: sql.Connection = sql.connect(database_path, factory=SlowDatabase)
         self.db.row_factory = sql.Row
-        self.cursor: sql.Cursor = self.db.cursor()
+        self.cursor: SlowCursor = self.db.cursor()
 
         if redis_url:
             try:
-                self.redis = redis.connect(redis_url)
+                self.redis_db = redis.Redis(host=redis_url, db=0, decode_responses=True)
                 self.cache_enabled = True
+                self._setup_redis()
             except:
+                self.cache_enabled = False
+            
+            if not self.redis_db:
                 self.cache_enabled = False
         else:
             self.cache_enabled = False
+
+    def _setup_redis(self):
+        ...
 
     def get_employee(self, employee_id: int):
         query = "SELECT * FROM employee WHERE idEmployee = (?) LIMIT 1;"
