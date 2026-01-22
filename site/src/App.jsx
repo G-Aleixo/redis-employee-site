@@ -6,10 +6,11 @@ import CreateAccount from "./components/CreateAccount";
 import LoginPage from "./components/LoginPage";
 import Projects from "./components/Projects";
 import ProjectPage from "./components/ProjectPage";
+import CreateProject from "./components/CreateProject";
 
 function fetch_custom(url, data) {
-  if (false) {
-    return fetch("http://127.0.0.1:8000" + url, data);
+  if (true) {
+    return fetch("http://127.0.0.1:5000" + url, data);
   } else {
     return fetch("https://redis-employee-site.onrender.com" + url, data)
   }
@@ -34,6 +35,7 @@ export default function App() {
         </>
       }
       {page === "CreateAccount" && <CreateAccount setResponse={setResponse} setPage={setPage} fetch_custom={fetch_custom} />}
+      {page === "CreateProject" && <CreateProject setResponse={setResponse} setPage={setPage} fetch_custom={fetch_custom} />}
       {page === "LoginPage" && <LoginPage response={response} setPage={setPage} setId={setId} />}
       {page === "Projects" && <Projects setResponse={setResponse} setPage={setPage} fetch_custom={fetch_custom} />}
       {page === "ProjectPage" && <ProjectPage setPage={setPage}/>}
