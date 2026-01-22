@@ -1,11 +1,18 @@
-from flask import Flask, request, make_response, jsonify, g, session, redirect, url_for
-from flask_cors import CORS
+from flask import Flask, request, make_response, jsonify, g, session, redirect, url_for # pyright: ignore[reportMissingImports]
+from flask_cors import CORS # pyright: ignore[reportMissingModuleSource]
 from markupsafe import escape
 from functools import wraps
 
 from sqlite3 import Row
 import src.database as database
 import hashlib
+
+from os import getenv
+
+REDIS = getenv("REDIS_URL") # setup manually
+
+if not REDIS:
+    print("REDIS_URL value not found in env, cache is disabled")
 
 DATABASE = "worker_database.db"
 
@@ -19,7 +26,7 @@ def stable_hash(data: any):
 
 def get_db() -> database.DatabaseConnection:
     if "db" not in g:
-        g.db = database.DatabaseConnection(DATABASE)
+        g.db = database.DatabaseConnection(DATABASE, REDIS)
         g.db.row_factory = Row
     return g.db
 
