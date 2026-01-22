@@ -9,6 +9,18 @@ def stable_hash(data: any):
 
 CURSOR_DELAY = 0.25
 
+# redis things
+# employee:<id> name age information favoriteTeam joinedOn password idManager
+# task:<id> name content done doneTimestamp createdAt idProject
+# project:id name idManager text
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+
 class SlowCursor(sql.Cursor):
     def _delay(self):
         sleep(CURSOR_DELAY)
@@ -66,14 +78,39 @@ class DatabaseConnection:
         ...
 
     def get_employee(self, employee_id: int):
-        query = "SELECT * FROM employee WHERE idEmployee = (?) LIMIT 1;"
+        if self.cache_enabled:
+            employee = self.redis_db.hgetall(f"employee:{employee_id}")
+            if employee:
+                self.redis_db.expire(f"employee:{employee_id}", 10)
+        else:
+            query = "SELECT * FROM employee WHERE idEmployee = (?) LIMIT 1;"
 
-        return self.cursor.execute(query, (employee_id, )).fetchone()
+            employee = self.cursor.execute(query, (employee_id, )).fetchone()
+
+        if employee and self.cache_enabled:
+            self.redis_db.hset(f"employee:{employee_id}", mapping = {
+                "name": employee["name"],
+                "age": employee["age"],
+                "information": employee["information"] if employee["information"] else "",
+                "favoriteTeam": employee["favoriteTeam"],
+                "joinedOn": employee["joinedOn"],
+                "password": employee["password"],
+                "idManager": employee["idManager"] if employee["idManager"] else -1
+            })
+
+            self.redis_db.expire(f"employee:{employee_id}", 10)
+
+        return employee
 
     def get_employees(self):
+        #TODO: to cache or not to cache
         return self.cursor.execute("SELECT * FROM employee;").fetchall()
 
     def employee_exists(self, employee_id: int) -> bool:
+        if self.cache_enabled:
+            employee = self.redis_db.hget(f"employee:{employee_id}", "name")
+            if employee:
+                return True
         query = "SELECT 1 FROM employee WHERE idEmployee = ?;"
         row = self.cursor.execute(query, (employee_id, )).fetchone()
         if row:
@@ -104,17 +141,41 @@ class DatabaseConnection:
         return 200
     
     def verify_password(self, employee_id: str, password: str):
-        employee = self.cursor.execute("SELECT * FROM employee WHERE idEmployee = ?;", (employee_id, )).fetchone()
+        employee = self.get_employee(employee_id=employee_id)
 
         if employee:
             return employee["password"] == stable_hash(password + employee["name"] + employee["joinedOn"])
 
     def get_task(self, task_id: int):
-        query = "SELECT * FROM workTask WHERE idWorkTask = ?;"
+        if self.cache_enabled:
+            task = self.redis_db.hgetall(f"task:{task_id}")
+            if task:
+                self.redis_db.expire(f"task:{task_id}", 10)
+        else:
+            query = "SELECT * FROM workTask WHERE idWorkTask = ?;"
+            
+            task = self.cursor.execute(query, (task_id, )).fetchone()
 
-        return self.cursor.execute(query, (task_id, )).fetchone()
+        if task and self.cache_enabled:
+            self.redis_db.hset(f"task:{task_id}", mapping = {
+                "name": task["name"],
+                "content": task["content"],
+                "done": task["done"],
+                "doneTimestamp": task["doneTimestamp"] if task["doneTimestamp"] else "",
+                "createdAt": task["createdAt"],
+                "idProject": task["idProject"] if task["idProject"] else -1,
+            })
+
+            self.redis_db.expire(f"task:{task_id}", 10)
+
+        return task
     
     def task_exists(self, task_id: int) -> bool:
+        if self.cache_enabled:
+            task = self.redis_db.hget(f"task:{task_id}", "name")
+            if task:
+                return True
+            
         query = "SELECT 1 FROM workTask WHERE idWorkTask = ?;"
         row = self.cursor.execute(query, (task_id, )).fetchone()
         if row:
@@ -131,6 +192,8 @@ class DatabaseConnection:
         return self.cursor.execute("SELECT * FROM workTask;").fetchall()
 
     def mark_task_completed(self, task_id: int):
+        if not self.task_exists(task_id):
+            return False
         query = "UPDATE workTask SET done = TRUE WHERE idWorkTask = ?;"
 
         self.cursor.execute(query, (task_id, ))
@@ -173,9 +236,27 @@ class DatabaseConnection:
             self.db.commit()
     
     def get_project(self, project_id: int):
-        query = "SELECT * FROM project WHERE idProject = ?;"
+        if self.cache_enabled:
+            project = self.redis_db.hgetall(f"project:{project_id}")
+            if project:
+                self.redis_db.expire(f"project:{project_id}", 10)
+        else:
+            query = "SELECT * FROM project WHERE idProject = ?;"
 
-        return self.cursor.execute(query, (project_id, )).fetchone()
+            project = self.cursor.execute(query, (project_id, )).fetchone()
+
+        # project:id name idManager text
+        
+        if project and self.cache_enabled:
+            self.redis_db.hset(f"project:{project_id}", mapping = {
+                "name": project["name"],
+                "text": project["text"] if project["text"] else "",
+                "idManager": project["idManager"]
+            })
+
+            self.redis_db.expire(f"project:{project_id}", 10)
+
+        return project
     
     def get_projects(self):
         query = "SELECT * FROM project;"
@@ -196,6 +277,12 @@ class DatabaseConnection:
             self.db.commit()
 
     def project_exists(self, project_id: int) -> bool:
+        if self.cache_enabled:
+            task = self.redis_db.hget(f"project:{project_id}", "name")
+            # Unable to return false as data may not be in cache but be in db
+            if task:
+                return True
+            
         query = "SELECT 1 FROM project WHERE idProject = ?;"
         row = self.cursor.execute(query, (project_id, )).fetchone()
         if row:
