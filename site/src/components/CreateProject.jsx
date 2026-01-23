@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Alert from "./Alert";
 import CreateTasks from "./CreateTasks";
@@ -42,6 +42,13 @@ export default function CreateProject({ setResponse, fetch_custom }) {
     }
   }
 
+  useEffect(() => {
+    if (localStorage["id"] == 0 || !localStorage["id"] || localStorage["id"] === undefined) {
+      navigate("/not-found");
+      return;
+    }
+  }, [navigate]);
+
   return (
     <>
       {alert.sucess && (
@@ -77,12 +84,12 @@ export default function CreateProject({ setResponse, fetch_custom }) {
               </div>
             </div>
 
-            
+
             <div className="row justify-content-center g-0">
               <div className="col-md-10 p-3">
-                <div className="mb-3">                    
+                <div className="mb-3">
                   <label htmlFor="floatingTextarea" className="form-label">Informações do Projeto</label>
-                  <textarea className="form-control" name="information" id="floatingTextarea" aria-label="Withtextarea" placeholder="Descrição do Projeto..." style={{height : "140px"}} 
+                  <textarea className="form-control" name="information" id="floatingTextarea" aria-label="Withtextarea" placeholder="Descrição do Projeto..." style={{ height: "140px" }}
                     onChange={e => setText(e.target.value)}
                     value={text} required
                   />
@@ -114,7 +121,7 @@ export default function CreateProject({ setResponse, fetch_custom }) {
       </div>
 
       {popup && (
-        <CreateTasks setPopup={setPopup}/>
+        <CreateTasks setPopup={setPopup} />
       )}
     </>
   );

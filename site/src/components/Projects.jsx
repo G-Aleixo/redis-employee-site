@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Project({ idManager, name, text }) {
+function Project({ id, idManager, name, text }) {
   const navigate = useNavigate();
 
   return (
@@ -12,14 +12,19 @@ function Project({ idManager, name, text }) {
           <p className="card-text">{text}</p>
           <div className="d-grid gap-2">
             <div className="d-flex gap-2">
-              <button className="btn btn-primary flex-fill" onClick={() => navigate("/project-page")}>Visualizar</button>
+              <button
+                className="btn btn-primary flex-fill"
+                onClick={() => navigate(`/project/${id}`)}
+              >
+                Visualizar
+              </button>
 
               {idManager == localStorage["id"] && (
                 <button className="btn btn-secondary flex-fill">Editar</button>
               )}
             </div>
             {idManager == localStorage["id"] && (
-                <button className="btn btn-danger ">Apagar</button>
+              <button className="btn btn-danger">Apagar</button>
             )}
           </div>
         </div>
@@ -34,6 +39,11 @@ export default function Projects({ fetch_custom }) {
   const [projects, setProjects] = useState([]);
 
   async function getProjects(e) {
+    if (localStorage["id"] == 0 || !localStorage["id"] || localStorage["id"] === undefined) {
+      navigate("/not-found");
+      return;
+    }
+
     e.preventDefault();
 
     try {
@@ -51,7 +61,8 @@ export default function Projects({ fetch_custom }) {
     }
   }
 
-  getProjects({ preventDefault: () => {} });
+  // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/exhaustive-deps
+  useEffect(() => { getProjects({ preventDefault: () => { } }) }, []);
 
   return (
     <>
@@ -75,7 +86,12 @@ export default function Projects({ fetch_custom }) {
 
         <div className="row d-flex justify-content-center row-cols-1 row-cols-sm-3 g-0">
           {projects.map((projectObj) => (
-            <Project idManager={projectObj["idManager"]} name={projectObj["name"]} text={projectObj["text"]} />
+            <Project
+              id={projectObj["idProject"]}
+              idManager={projectObj["idManager"]}
+              name={projectObj["name"]}
+              text={projectObj["text"]}
+            />
           ))}
         </div>
         <div className="row border-bottom border-black w-75 mx-auto py-3"></div>

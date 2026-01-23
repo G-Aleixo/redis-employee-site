@@ -1,4 +1,16 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 export default function CreateTasks({ setPopup }) {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage["id"] == 0 || !localStorage["id"] || localStorage["id"] === undefined) {
+      navigate("/not-found");
+      return;
+    }
+  }, [navigate]);
+
   return (
     <div className="modal fade show d-block" tabIndex="-1">
       <div className="modal-dialog modal-dialog-centered">

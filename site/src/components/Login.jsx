@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Alert from "./Alert";
 import sqliteImg from "../assets/sqlite_logo.png";
 import redisImg from "../assets/Logo-redis.svg.png";
 
-export default function Login({ setResponse, usedDB, fetch_custom }) {
+export default function Login({ setResponse, setId, usedDB, fetch_custom }) {
   const navigate = useNavigate();
 
   const imageScr =
@@ -27,17 +27,11 @@ export default function Login({ setResponse, usedDB, fetch_custom }) {
   const [alert, setAlert] = useState({ pwdWrong: false, notExists: false });
   const [loading, setLoading] = useState(false);
 
-  const sleep = (ms) => new Promise(res => setTimeout(res, ms));
-
   async function login(e) {
     e.preventDefault();
     setAlert({ pwdWrong: false, notExists: false });
 
     setLoading(true);
-    const start = performance.now();
-    if (usedDB == "sqlite") {
-      await sleep(4000);
-    }
 
     try {
       const res = await fetch_custom("/login", {
@@ -50,9 +44,6 @@ export default function Login({ setResponse, usedDB, fetch_custom }) {
           password: pwd
         })
       });
-
-      const end = performance.now();
-      console.log(`tempo: ${end - start}ms`);
 
       const data = await res.json();
       setResponse(data);
@@ -71,6 +62,8 @@ export default function Login({ setResponse, usedDB, fetch_custom }) {
       console.warn("Erro de rede ou CORS:", error);
     }
   }
+
+  useEffect(() => {setId(0)}, [setId]);
 
   return (
     <div className={`container-fluid p-0 border border-2 ${borderClass}`} id="login-area">
