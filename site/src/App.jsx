@@ -7,6 +7,7 @@ import LoginPage from "./components/LoginPage";
 import Projects from "./components/Projects";
 import ProjectPage from "./components/ProjectPage";
 import CreateProject from "./components/CreateProject";
+import CreateTasks from "./components/CreateTasks";
 
 function fetch_custom(url, data) {
   if (true) {
@@ -39,6 +40,7 @@ export default function App() {
       {page === "LoginPage" && <LoginPage response={response} setPage={setPage} setId={setId} />}
       {page === "Projects" && <Projects setResponse={setResponse} setPage={setPage} fetch_custom={fetch_custom} />}
       {page === "ProjectPage" && <ProjectPage setPage={setPage}/>}
+      {page === "CreateTasks" && <CreateTasks setPage={setPage}/>}
     </>
   );
 }

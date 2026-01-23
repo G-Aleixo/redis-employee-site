@@ -50,7 +50,7 @@ export default function ProjectPage({ setPage }) {
 
       <div className="row justify-content-center g-0">
         <div className="col-sm-10 d-flex justify-content-center gap-3">
-          <button className="btn btn-success w-50" onClick={() => setPage("Login")}>Voltar</button>
+          <button className="btn btn-success w-50" onClick={() => setPage("Projects")}>Voltar</button>
           <button className="btn btn-secondary w-50" onClick={() => setPage("ProjectPage")}>Criar Tarefa</button>
         </div>
       </div>

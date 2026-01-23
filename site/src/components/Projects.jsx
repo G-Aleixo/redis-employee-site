@@ -2,18 +2,23 @@ import { useState, useEffect } from "react";
 
 function Project({ idManager, name, text, setPage }) {
   return (
-    <div className="col">
+    <div className="col p-3">
       <div className="card text-center">
         <div className="card-body">
           <h5 className="card-title">{name}</h5>
           <p className="card-text">{text}</p>
-          <button className="btn btn-primary" onClick={() => setPage("ProjectPage")}>Visualizar</button>
-          {idManager == localStorage["id"] && (
-            <>
-              <button>Editar</button>
-              <button>Apagar</button>
-            </>
-          )}
+          <div className="d-grid gap-2">
+            <div className="d-flex gap-2">
+              <button className="btn btn-primary flex-fill" onClick={() => setPage("ProjectPage")}>Visualizar</button>
+
+              {idManager == localStorage["id"] && (
+                <button className="btn btn-secondary flex-fill">Editar</button>
+              )}
+            </div>
+            {idManager == localStorage["id"] && (
+                <button className="btn btn-danger ">Apagar</button>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -41,9 +46,8 @@ export default function Projects({ setPage, fetch_custom }) {
     }
   }
 
-  useEffect(() => {
-    getProjects({ preventDefault: () => {} });
-  }, []);
+  getProjects({ preventDefault: () => {} });
+
   return (
     <>
       <div className="container-fluid p-0 border border-success border-2" id="login-area">
@@ -64,7 +68,7 @@ export default function Projects({ setPage, fetch_custom }) {
           </div>
         </div>
 
-        <div className="row d-flex justify-content-center row-cols-1 row-cols-md-3 g-0 px-3">
+        <div className="row d-flex justify-content-center row-cols-1 row-cols-sm-3 g-0">
           {projects.map((projectObj) => (
             <Project idManager={projectObj["idManager"]} name={projectObj["name"]} text={projectObj["text"]} setPage={setPage} />
           ))}

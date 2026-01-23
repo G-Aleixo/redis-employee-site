@@ -1,9 +1,11 @@
 import { useState } from "react";
 import Alert from "./Alert";
+import CreateTasks from "./CreateTasks";
 
 export default function CreateProject({ setResponse, setPage, fetch_custom }) {
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
+  const [popup, setPopup] = useState(false)
 
   const [alert, setAlert] = useState({ sucess: false, error: false });
 
@@ -50,40 +52,67 @@ export default function CreateProject({ setResponse, setPage, fetch_custom }) {
           title="Um Erro Ocorreu!" text="O nome que você escolheu já está em uso, tente outro nome."
           className="alert-danger" />
       )}
-      <form onSubmit={createProject}>
+
+      <div className="container-fluid p-0 border border-success border-2" id="login-area">
         <div className="row justify-content-center g-0">
-          <div className="col-md-5 p-3">
-            <div className="input-group shadow">
-              <span className="input-group-text" id="basic-addon1">titulo</span>
-              <input type="text" className="form-control" name="title" placeholder="Digite titulo projeto"
-                onChange={e => setTitle(e.target.value)}
-                value={title} required
-              />
-              <div className="invalid-feedback">
-                Insira um Nome Válido
-              </div>
-            </div>
+          <div className="col-12">
+            <h3 className="text-center py-3 border-bottom border-black w-75 mx-auto">Criando seu Projeto</h3>
           </div>
         </div>
 
-        <div className="row justify-content-center g-0">
-          <div className="col-md-3 p-3">
-            <div className="input-group shadow">
-              <span className="input-group-text" id="basic-addon2">texto</span>
-              <input type="text" className="form-control" name="text" placeholder="Digite texto projeto"
-                onChange={e => setText(e.target.value)}
-                value={text} required
-              />
-              <div className="invalid-feedback">
-                Insira uma Senha Válida
+        <div className="row g-0">
+          <form onSubmit={createProject}>
+            <div className="row justify-content-center g-0">
+              <div className="col-md-10 p-3">
+                <div className="input-group shadow">
+                  <span className="input-group-text" id="basic-addon1">Título</span>
+                  <input type="text" className="form-control" name="title" placeholder="Digite o Título do Projeto"
+                    onChange={e => setTitle(e.target.value)}
+                    value={title} required
+                  />
+                </div>
               </div>
             </div>
-          </div>
+
+            
+            <div className="row justify-content-center g-0">
+              <div className="col-md-10 p-3">
+                <div className="mb-3">                    
+                  <label htmlFor="floatingTextarea" className="form-label">Informações do Projeto</label>
+                  <textarea className="form-control" name="information" id="floatingTextarea" aria-label="Withtextarea" placeholder="Descrição do Projeto..." style={{height : "140px"}} 
+                    onChange={e => setText(e.target.value)}
+                    value={text} required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="row g-0">
+              <div className="col-12">
+                <h3 className="text-center py-3 border-top border-black w-75 mx-auto">Tarefas do Projeto</h3>
+              </div>
+            </div>
+
+            <div className="row py-3 g-0">
+              <div className="col-sm-12 d-flex justify-content-center">
+                <button className="btn btn-warning w-50" type="button" onClick={() => setPopup(true)}>Adicionar Tarefa</button>
+              </div>
+            </div>
+
+            <div className="row justify-content-center py-3 g-0">
+              <div className="col-sm-10 d-flex justify-content-center gap-3">
+                <button className="btn btn-secondary w-50" type="submit">Salvar Projeto</button>
+                <button className="btn btn-success w-50" onClick={() => setPage("Projects")}>Voltar</button>
+              </div>
+            </div>
+          </form>
         </div>
 
-        <button className="btn btn-success  px-4" type="submit" style={{ width: "160px" }}>Criar projeto</button>
-      </form>
-      <button onClick={() => setPage("Projects")}>Voltar Projetos</button>
+      </div>
+
+      {popup && (
+        <CreateTasks setPopup={setPopup}/>
+      )}
     </>
   );
 }
