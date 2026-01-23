@@ -267,13 +267,18 @@ class DatabaseConnection:
 
         return self.cursor.execute(query, (project_id, )).fetchall()
 
-    def add_project(self, name: int, manager_id: int):
+    def add_project(self, name: str, text: str, manager_id: int):
         if self.employee_exists(manager_id):
-            query = "INSERT INTO project (name, idManager) VALUES (?, ?);"
+            query = "INSERT INTO project (name, text, idManager) VALUES (?, ?, ?);"
+            
+            try:
+                self.cursor.execute(query, (name, text, manager_id))
+                
+                self.db.commit()
 
-            self.cursor.execute(query, (name, manager_id))
-
-            self.db.commit()
+                return 201
+            except sql.IntegrityError:
+                return 501
 
     def project_exists(self, project_id: int) -> bool:
         if self.cache_enabled:

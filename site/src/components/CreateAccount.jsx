@@ -1,18 +1,22 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Alert from "./Alert";
 
-export default function CreateAccount({ setResponse, setPage, fetch_custom }) {
+export default function CreateAccount({ setResponse, fetch_custom }) {
+  const navigate = useNavigate();
+
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [information, setInformation] = useState("");
   const [favTeam, setFavTeam] = useState({ first: "", second: "" });
   const [pwd, setPwd] = useState("");
 
+  const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState({ sucess: false, error: false });
 
   async function createAcc(e) {
     e.preventDefault();
-
+    setLoading(true);
     try {
       const res = await fetch_custom("/signup", {
         method: "POST",
@@ -32,26 +36,28 @@ export default function CreateAccount({ setResponse, setPage, fetch_custom }) {
       setResponse(data);
 
       if (res.ok) {
-        setAlert({ ...alert, sucess: true });
+        setAlert({ sucess: true, error: false });
       } else {
-        setAlert({ ...alert, error: true });
+        setAlert({ sucess: false, error: true });
       }
+        setLoading(false);
 
     } catch (error) {
       console.warn("Erro de rede ou CORS:", error);
+      setAlert({ sucess: false, error: true });
     }
   }
 
   return (
     <div className="container-fluid p-0 border border-2 border-success" id="login-area">
       {alert.sucess && (
-        <Alert setFunction={() => setAlert({...alert, sucess: false})} 
+        <Alert setFunction={() => setAlert({ sucess: false, error: false })} 
         title="Conta Criada!" text="Sua conta foi criada! Volte para home e faça login." 
         className="alert-success" />
       )} 
       
       {alert.error && (
-        <Alert setFunction={() => setAlert({...alert, error: false})} 
+        <Alert setFunction={() => setAlert({ sucess: false, error: false })} 
           title="Um Erro Ocorreu!" text="O nome que você escolheu já está em uso, tente outro nome." 
           className="alert-danger" />
       )}
@@ -135,8 +141,16 @@ export default function CreateAccount({ setResponse, setPage, fetch_custom }) {
 
         <div className="row pb-5 g-0">
           <div className="col-12 d-flex justify-content-center gap-2">
-            <button className="btn btn-success  px-4" type="submit" style={{ width: "160px" }}>Criar Conta</button>
-            <button className="btn btn-dark  px-4" type="button" style={{ width: "160px" }} onClick={() => setPage("Login")}>Voltar a Home</button>
+            <button className="btn btn-success  px-4" type="submit" style={{ width: "160px" }}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
+                  Carregando...
+                </>
+              ) : ("Criar Conta")}</button>
+            <button className="btn btn-dark  px-4" type="button" style={{ width: "160px" }} onClick={() => navigate("/")}>Voltar a Home</button>
           </div>
         </div>
       </form>
