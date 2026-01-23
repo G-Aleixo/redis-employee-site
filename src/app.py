@@ -211,7 +211,9 @@ def get_employee_api(employee_id: int | None = None):
 
     if employee:
         employee.pop("password")
-        return jsonify(dict(db.get_employee(employee_id))), 200
+        return jsonify(employee), 200
+    else:
+        return {}, 404
 
 @app.get("/employees/<int:employee_id>")
 def get_employee_page(employee_id: int | None = None):

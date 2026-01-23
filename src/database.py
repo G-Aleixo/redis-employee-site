@@ -2,7 +2,7 @@ import sqlite3 as sql
 import hashlib
 import redis
 from datetime import datetime
-from time import sleep
+from time import sleep, time
 
 def stable_hash(data: any):
     return hashlib.sha256(data.encode()).hexdigest()
@@ -13,13 +13,6 @@ CURSOR_DELAY = 0.25
 # employee:<id> name age information favoriteTeam joinedOn password idManager
 # task:<id> name content done doneTimestamp createdAt idProject
 # project:id name idManager text
-# 
-# 
-# 
-# 
-# 
-# 
-# 
 
 class SlowCursor(sql.Cursor):
     def _delay(self):
@@ -43,7 +36,7 @@ class SlowCursor(sql.Cursor):
 
 class SlowDatabase(sql.Connection):
     def cursor(self, factory: None = None):
-        return super().cursor(factory=SlowCursor)
+        return super().cursor(factory=SlowCursor) if factory else super().cursor()
 
 # Wrapper class for a db connection that implements a bunch of helper methods
 class DatabaseConnection:
@@ -53,7 +46,6 @@ class DatabaseConnection:
             try:
                 self.redis_db = redis.Redis(host=redis_url, db=0, decode_responses=True)
                 self.cache_enabled = True
-                self._setup_redis()
             except:
                 self.cache_enabled = False
             
@@ -69,20 +61,17 @@ class DatabaseConnection:
         else:
             db_factory = None
 
-        self.db: sql.Connection = sql.connect(database_path, factory=db_factory)
+        self.db: sql.Connection = sql.connect(database_path, factory=db_factory) if db_factory else sql.connect(database_path)
         self.db.row_factory = sql.Row
         self.cursor: sql.Cursor = self.db.cursor()
 
-
-    def _setup_redis(self):
-        ...
-
     def get_employee(self, employee_id: int):
+        employee = None
         if self.cache_enabled:
             employee = self.redis_db.hgetall(f"employee:{employee_id}")
             if employee:
                 self.redis_db.expire(f"employee:{employee_id}", 10)
-        else:
+        if not employee:
             query = "SELECT * FROM employee WHERE idEmployee = (?) LIMIT 1;"
 
             employee = self.cursor.execute(query, (employee_id, )).fetchone()
@@ -103,7 +92,6 @@ class DatabaseConnection:
         return employee
 
     def get_employees(self):
-        #TODO: to cache or not to cache
         return self.cursor.execute("SELECT * FROM employee;").fetchall()
 
     def employee_exists(self, employee_id: int) -> bool:
@@ -118,10 +106,15 @@ class DatabaseConnection:
         return False
 
     def add_employee(self, name: str, age: int, information: str, password: str, id_manager: int = None, favorite_team: str = "América Natal - RN"):
-        exists = "SELECT 1 FROM employee WHERE name = ?;"
-        row = self.cursor.execute(exists, (name, )).fetchone()
-        if row:
-            return 501 # Employee with this name already exists
+        if self.cache_enabled:
+            exists = self.redis_db.get(f"employee_exists:{name}")
+            if exists:
+                return 501
+        else:
+            exists = "SELECT 1 FROM employee WHERE name = ?;"
+            row = self.cursor.execute(exists, (name, )).fetchone()
+            if row:
+                return 501 # Employee with this name already exists
 
         query = "INSERT INTO employee (name, age, information, password, idManager, favoriteTeam, joinedOn) VALUES (?, ?, ?, ?, ?, ?, ?);"
 
@@ -138,6 +131,10 @@ class DatabaseConnection:
 
         self.db.commit()
 
+        # Add employee exists to cache
+        if self.cache_enabled:
+            self.redis_db.set(f"employee_exists:{name}", 1)
+
         return 200
     
     def verify_password(self, employee_id: str, password: str):
@@ -147,11 +144,12 @@ class DatabaseConnection:
             return employee["password"] == stable_hash(password + employee["name"] + employee["joinedOn"])
 
     def get_task(self, task_id: int):
+        task = None
         if self.cache_enabled:
             task = self.redis_db.hgetall(f"task:{task_id}")
             if task:
                 self.redis_db.expire(f"task:{task_id}", 10)
-        else:
+        if not task:
             query = "SELECT * FROM workTask WHERE idWorkTask = ?;"
             
             task = self.cursor.execute(query, (task_id, )).fetchone()
@@ -236,11 +234,12 @@ class DatabaseConnection:
             self.db.commit()
     
     def get_project(self, project_id: int):
+        project = None
         if self.cache_enabled:
             project = self.redis_db.hgetall(f"project:{project_id}")
             if project:
                 self.redis_db.expire(f"project:{project_id}", 10)
-        else:
+        if not project:
             query = "SELECT * FROM project WHERE idProject = ?;"
 
             project = self.cursor.execute(query, (project_id, )).fetchone()
