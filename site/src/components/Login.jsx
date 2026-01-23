@@ -75,13 +75,13 @@ export default function Login({ setResponse, usedDB, fetch_custom }) {
   return (
     <div className={`container-fluid p-0 border border-2 ${borderClass}`} id="login-area">
       {alert.notExists && (
-        <Alert setFunction={() => setAlert({ ...alert, notExists: false })}
+        <Alert setFunction={() => setAlert({ pwdWrong: false, notExists: false })}
           title="Conta Não Encontrada!" text='Sua conta não foi encontrada, tente criar uma conta no botão "Criar Conta".'
           className="alert-danger" />
       )}
 
       {alert.pwdWrong && (
-        <Alert setFunction={() => setAlert({ ...alert, pwdWrong: false })}
+        <Alert setFunction={() => setAlert({ pwdWrong: false, notExists: false })}
           title="Senha incorreta!" text="A senha inserida não pertence a essa conta ou não existe, tente novamente."
           className="alert-warning" />
       )}

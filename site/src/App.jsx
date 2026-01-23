@@ -53,6 +53,9 @@ export default function App() {
         <Route path="/project-page"
           element={<ProjectPage />}
         />
+        <Route path="/create-tasks"
+          element={<CreateTasks />}
+        />
       </Routes>
     </BrowserRouter>
   );
