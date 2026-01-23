@@ -1,4 +1,8 @@
-export default function ProjectPage({ setPage }) {
+import { useNavigate } from "react-router-dom";
+
+export default function ProjectPage() {
+  const navigate = useNavigate();
+
   return (
     <div className="container-fluid p-0 border border-success border-2" id="login-area">
       <div className="row justify-content-center g-0">
@@ -50,8 +54,8 @@ export default function ProjectPage({ setPage }) {
 
       <div className="row justify-content-center g-0">
         <div className="col-sm-10 d-flex justify-content-center gap-3">
-          <button className="btn btn-success w-50" onClick={() => setPage("Projects")}>Voltar</button>
-          <button className="btn btn-secondary w-50" onClick={() => setPage("ProjectPage")}>Criar Tarefa</button>
+          <button className="btn btn-success w-50" onClick={() => navigate("/projects")}>Voltar</button>
+          <button className="btn btn-secondary w-50" onClick={() => navigate("/create-task")}>Criar Tarefa</button>
         </div>
       </div>
     </div>

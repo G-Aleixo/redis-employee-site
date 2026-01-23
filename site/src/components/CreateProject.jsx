@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Alert from "./Alert";
 import CreateTasks from "./CreateTasks";
 
-export default function CreateProject({ setResponse, setPage, fetch_custom }) {
+export default function CreateProject({ setResponse, fetch_custom }) {
+  const navigate = useNavigate();
+
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [popup, setPopup] = useState(false)
@@ -102,7 +105,7 @@ export default function CreateProject({ setResponse, setPage, fetch_custom }) {
             <div className="row justify-content-center py-3 g-0">
               <div className="col-sm-10 d-flex justify-content-center gap-3">
                 <button className="btn btn-secondary w-50" type="submit">Salvar Projeto</button>
-                <button className="btn btn-success w-50" onClick={() => setPage("Projects")}>Voltar</button>
+                <button className="btn btn-success w-50" onClick={() => navigate("/projects")}>Voltar</button>
               </div>
             </div>
           </form>

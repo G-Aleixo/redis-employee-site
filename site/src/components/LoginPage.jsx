@@ -1,5 +1,8 @@
+import { useNavigate } from "react-router-dom";
 import renanImg from "../assets/renan.png";
-export default function LoginPage({ response, setPage, setId }) {
+
+export default function LoginPage({ response, setId }) {
+  const navigate = useNavigate();
 
   setId(response.id);
 
@@ -66,24 +69,10 @@ export default function LoginPage({ response, setPage, setId }) {
 
         <div className="row justify-content-center py-3 g-0">
           <div className="col-sm-10 d-flex justify-content-center gap-3">
-            <button className="btn btn-success w-50" onClick={() => setPage("Login")}>Voltar Home</button>
-            <button className="btn btn-secondary w-50" onClick={() => setPage("Projects")}>Ver Projetos</button>
+            <button className="btn btn-success w-50" onClick={() => navigate("/")}>Voltar Home</button>
+            <button className="btn btn-secondary w-50" onClick={() => navigate("/projects")}>Ver Projetos</button>
           </div>
         </div>
-      
       </div>
-      // {/* EDITAR PARA FICAR BONITO E ADEQUADO A SITE */}
-      // <div className="mt-4 p-3 border rounded bg-light">
-      //   <p>ID no sistema: {response.id}</p>
-      //   <p>Seu nome de usuário: {response.name}</p>
-      //   <p>Sua idade: {response.age}</p>
-      //   <p>Seu time favorito: {response.favTeam}</p>
-      //   {response.information && <p>Sobre você: {response.information}</p>}
-      //   <p>Você entrou em: 
-      //     {response.joinedOn ? " " + new Date(response.joinedOn.replace(" ", "T") + "Z")
-      //     .toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }) : "Indefinido"}
-      //   </p>
-      //   <button onClick={() => setPage("Login")}>Voltar Home</button>
-      // </div>
   );
 }

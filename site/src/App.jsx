@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Landing from "./components/Landing";
 import Login from "./components/Login";
@@ -19,7 +20,6 @@ function fetch_custom(url, data) {
 
 export default function App() {
   const [usedDB, setDB] = useState("sqlite");
-  const [page, setPage] = useState("Login");
   const [response, setResponse] = useState(null);
 
   const setId = (idNum) => {
@@ -27,20 +27,33 @@ export default function App() {
   }
 
   return (
-    <>
-      <Header setPage={setPage} />
-      {page === "Login" && 
-        <>
-          <Landing usedDB={usedDB} setDB={setDB} />
-          <Login response={response} setResponse={setResponse} usedDB={usedDB} setDB={setDB} setPage={setPage} fetch_custom={fetch_custom} />
-        </>
-      }
-      {page === "CreateAccount" && <CreateAccount setResponse={setResponse} setPage={setPage} fetch_custom={fetch_custom} />}
-      {page === "CreateProject" && <CreateProject setResponse={setResponse} setPage={setPage} fetch_custom={fetch_custom} />}
-      {page === "LoginPage" && <LoginPage response={response} setPage={setPage} setId={setId} />}
-      {page === "Projects" && <Projects setResponse={setResponse} setPage={setPage} fetch_custom={fetch_custom} />}
-      {page === "ProjectPage" && <ProjectPage setPage={setPage}/>}
-      {page === "CreateTasks" && <CreateTasks setPage={setPage}/>}
-    </>
+    <BrowserRouter basename="/redis-employee-site">
+      <Header />
+      <Routes>
+        <Route path="/"
+          element={
+            <>
+              <Landing usedDB={usedDB} setDB={setDB} />
+              <Login response={response} setResponse={setResponse} usedDB={usedDB} setDB={setDB} fetch_custom={fetch_custom} />
+            </>
+          }
+        />
+        <Route path="/create-account"
+          element={<CreateAccount setResponse={setResponse} fetch_custom={fetch_custom} />}
+        />
+        <Route path="/create-project"
+          element={<CreateProject setResponse={setResponse} fetch_custom={fetch_custom} />}
+        />
+        <Route path="/login-page"
+          element={<LoginPage response={response} setId={setId} />}
+        />
+        <Route path="/projects"
+          element={<Projects setResponse={setResponse} fetch_custom={fetch_custom} />}
+        />
+        <Route path="/project-page"
+          element={<ProjectPage />}
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }

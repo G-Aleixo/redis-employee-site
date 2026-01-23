@@ -1,7 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Alert from "./Alert";
 
-export default function CreateAccount({ setResponse, setPage, fetch_custom }) {
+export default function CreateAccount({ setResponse, fetch_custom }) {
+  const navigate = useNavigate();
+
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [information, setInformation] = useState("");
@@ -136,7 +139,7 @@ export default function CreateAccount({ setResponse, setPage, fetch_custom }) {
         <div className="row pb-5 g-0">
           <div className="col-12 d-flex justify-content-center gap-2">
             <button className="btn btn-success  px-4" type="submit" style={{ width: "160px" }}>Criar Conta</button>
-            <button className="btn btn-dark  px-4" type="button" style={{ width: "160px" }} onClick={() => setPage("Login")}>Voltar a Home</button>
+            <button className="btn btn-dark  px-4" type="button" style={{ width: "160px" }} onClick={() => navigate("/")}>Voltar a Home</button>
           </div>
         </div>
       </form>

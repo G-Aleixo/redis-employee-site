@@ -1,6 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-function Project({ idManager, name, text, setPage }) {
+function Project({ idManager, name, text }) {
+  const navigate = useNavigate();
+
   return (
     <div className="col p-3">
       <div className="card text-center">
@@ -9,7 +12,7 @@ function Project({ idManager, name, text, setPage }) {
           <p className="card-text">{text}</p>
           <div className="d-grid gap-2">
             <div className="d-flex gap-2">
-              <button className="btn btn-primary flex-fill" onClick={() => setPage("ProjectPage")}>Visualizar</button>
+              <button className="btn btn-primary flex-fill" onClick={() => navigate("/project-page")}>Visualizar</button>
 
               {idManager == localStorage["id"] && (
                 <button className="btn btn-secondary flex-fill">Editar</button>
@@ -25,7 +28,9 @@ function Project({ idManager, name, text, setPage }) {
   );
 }
 
-export default function Projects({ setPage, fetch_custom }) {
+export default function Projects({ fetch_custom }) {
+  const navigate = useNavigate();
+
   const [projects, setProjects] = useState([]);
 
   async function getProjects(e) {
@@ -70,15 +75,15 @@ export default function Projects({ setPage, fetch_custom }) {
 
         <div className="row d-flex justify-content-center row-cols-1 row-cols-sm-3 g-0">
           {projects.map((projectObj) => (
-            <Project idManager={projectObj["idManager"]} name={projectObj["name"]} text={projectObj["text"]} setPage={setPage} />
+            <Project idManager={projectObj["idManager"]} name={projectObj["name"]} text={projectObj["text"]} />
           ))}
         </div>
         <div className="row border-bottom border-black w-75 mx-auto py-3"></div>
 
         <div className="row justify-content-center py-3 g-0">
           <div className="col-sm-10 d-flex justify-content-center gap-3">
-            <button className="btn btn-secondary w-50" onClick={() => setPage("CreateProject")}>Criar Projeto</button>
-            <button className="btn btn-success w-50" onClick={() => setPage("Login")}>Voltar Home</button>
+            <button className="btn btn-secondary w-50" onClick={() => navigate("/create-project")}>Criar Projeto</button>
+            <button className="btn btn-success w-50" onClick={() => navigate("/")}>Voltar Home</button>
           </div>
         </div>
       </div>

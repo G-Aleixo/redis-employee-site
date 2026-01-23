@@ -1,9 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Alert from "./Alert";
 import sqliteImg from "../assets/sqlite_logo.png";
 import redisImg from "../assets/Logo-redis.svg.png";
 
-export default function Login({ setResponse, usedDB, setPage, fetch_custom }) {
+export default function Login({ setResponse, usedDB, fetch_custom }) {
+  const navigate = useNavigate();
+
   const imageScr =
     usedDB === "sqlite"
       ? sqliteImg
@@ -55,7 +58,7 @@ export default function Login({ setResponse, usedDB, setPage, fetch_custom }) {
       setResponse(data);
 
       if (res.ok) {
-        setPage("LoginPage");
+        navigate("/login-page");
       } else {
         if (res.status === 404) {
           setAlert({ pwdWrong: false, notExists: true });
@@ -126,7 +129,7 @@ export default function Login({ setResponse, usedDB, setPage, fetch_custom }) {
                 </>
               ) : ("Fazer Login")}
             </button>
-            <button className="btn btn-secondary" type="button" onClick={() => setPage("CreateAccount")}>Criar Conta</button>
+            <button className="btn btn-secondary" type="button" onClick={() => navigate("/create-account")}>Criar Conta</button>
           </div>
         </div>
       </form>
