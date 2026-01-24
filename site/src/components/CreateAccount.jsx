@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Alert from "./Alert";
 
@@ -47,13 +47,6 @@ export default function CreateAccount({ setResponse, fetch_custom }) {
       setAlert({ sucess: false, error: true });
     }
   }
-
-  useEffect(() => {
-    if (localStorage["id"] == 0 || !localStorage["id"] || localStorage["id"] === undefined) {
-      navigate("/not-found");
-      return;
-    }
-  }, [navigate]);
 
   return (
     <div className="container-fluid p-0 border border-2 border-success" id="login-area">
