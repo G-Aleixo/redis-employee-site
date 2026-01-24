@@ -88,11 +88,16 @@ def add_task():
 
     return {}, 201
 
-@app.put("/api/tasks/<int:task_id>/done")
-def mark_task_completed(task_id):
+@app.get("/api/tasks/<int:task_id>/set-status/<int:status>")
+def mark_task_completed(task_id, status):
+    if status != 0 and status != 1:
+        return {"error": f"Invalid status value {escape(status)} not 0 or 1"}, 400
+    
+    status = False if status == 0 else True
+
     db = get_db()
 
-    if mark_task_completed():
+    if db.mark_task_completed(task_id, status):
         return {}, 201
     return {}, 400
 

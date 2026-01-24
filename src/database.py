@@ -189,15 +189,34 @@ class DatabaseConnection:
     def get_tasks(self):
         return self.cursor.execute("SELECT * FROM workTask;").fetchall()
 
-    def mark_task_completed(self, task_id: int):
+    def mark_task_completed(self, task_id: int, status: bool):
         if not self.task_exists(task_id):
             return False
-        query = "UPDATE workTask SET done = TRUE WHERE idWorkTask = ?;"
 
-        self.cursor.execute(query, (task_id, ))
+        print(status)
+
+        query = "UPDATE workTask SET done = ? WHERE idWorkTask = ?;"
+
+        self.cursor.execute(query, (1 if status else 0, task_id))
+
+        query = "UPDATE workTask SET doneTimestamp = ? WHERE idWorkTask = ?;"
+
+        if status == True:
+            self.cursor.execute(query, (datetime.now(), task_id))
+        else:
+            self.cursor.execute(query, ("", task_id))
+
 
         task = self.get_task(task_id)
-        if task is not None and task.get("done") == True:
+
+        # update cache
+        if self.cache_enabled:
+            self.redis_db.hset(f"task:{task_id}", "done", int(task["done"]))
+            self.redis_db.hset(f"task:{task_id}", "doneTimestamp", task["doneTimestamp"])
+
+        print(task["done"])
+
+        if task is not None and bool(int(task["done"])) == status:
             return True
         return False
 
