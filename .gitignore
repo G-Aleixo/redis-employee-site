@@ -231,3 +231,5 @@ dist-ssr
 *.sln
 *.sw?
 
+# Redis dump
+dump.rdb
