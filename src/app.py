@@ -142,6 +142,21 @@ def get_project(project_id: int):
     else:
         return {}, 404
 
+@app.get("/api/projects/search/<str:project_name>")
+def get_project_by_name(project_name: int):
+    if project_name == None:
+        return {}, 501
+
+    db = get_db()
+
+    project = db.get_project_by_name(project_name)
+
+    if project:
+        project = dict(project)
+        return jsonify(project), 200
+    else:
+        return {}, 404
+
 @app.get("/api/projects/")
 def get_projects():
     db = get_db()

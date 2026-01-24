@@ -257,6 +257,20 @@ class DatabaseConnection:
 
         return project
     
+    def get_project_by_name(self, name: str):
+        if self.cache_enabled:
+            if project_id := self.redis.get(f"project_name:{name}"):
+                return self.get_project(project_id)
+
+        query = "SELECT * FROM project WHERE name LIKE (?) LIMIT 1;"
+
+        project = self.cursor.execute(query, (name, )).fetchone()
+
+        if self.cache_enabled and project:
+            self.redis.set(f"project_name:{name}", project["idProject"])
+
+        return project
+    
     def get_projects(self):
         query = "SELECT * FROM project;"
 
