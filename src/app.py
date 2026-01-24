@@ -142,7 +142,7 @@ def get_project(project_id: int):
     else:
         return {}, 404
 
-@app.get("/api/projects/search/<str:project_name>")
+@app.get("/api/projects/search/<string:project_name>")
 def get_project_by_name(project_name: int):
     if project_name == None:
         return {}, 501
