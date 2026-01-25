@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { getId } from "../functions/id";
 
 export default function ProjectPage({ fetch_custom }) {
   const navigate = useNavigate();
@@ -8,11 +9,7 @@ export default function ProjectPage({ fetch_custom }) {
   const [project, setProject] = useState({});
 
   async function getThisProject(e) {
-    if (
-      localStorage["id"] == 0 ||
-      !localStorage["id"] ||
-      localStorage["id"] === undefined
-    ) {
+    if (getId() == 0 || !getId() || getId() === undefined) {
       navigate("/not-found");
       return;
     }

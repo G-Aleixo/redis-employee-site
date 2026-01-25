@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { getId } from "../functions/id";
 import Alert from "./Alert";
 import CreateTasks from "./CreateTasks";
 
@@ -7,7 +8,11 @@ export default function CreateProject({ fetch_custom }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { valuesState = ["", ""], isEdit = false, id = 0 } = location.state || {};
+  const {
+    valuesState = ["", ""],
+    isEdit = false,
+    id = 0,
+  } = location.state || {};
 
   const [title, setTitle] = useState(valuesState[0]);
   const [text, setText] = useState(valuesState[1]);
@@ -54,7 +59,7 @@ export default function CreateProject({ fetch_custom }) {
         body: JSON.stringify({
           name: title,
           text: text,
-          manager_id: localStorage["id"],
+          manager_id: getId(),
         }),
       });
       if (res.ok) {
@@ -69,11 +74,7 @@ export default function CreateProject({ fetch_custom }) {
   }
 
   useEffect(() => {
-    if (
-      localStorage["id"] == 0 ||
-      !localStorage["id"] ||
-      localStorage["id"] === undefined
-    ) {
+    if (getId() == 0 || !getId() || getId() === undefined) {
       navigate("/not-found");
       return;
     }

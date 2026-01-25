@@ -1,15 +1,12 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getId } from "../functions/id";
 
 export default function CreateTasks({ setPopup }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (
-      localStorage["id"] == 0 ||
-      !localStorage["id"] ||
-      localStorage["id"] === undefined
-    ) {
+    if (getId() == 0 || !getId() || getId() === undefined) {
       navigate("/not-found");
       return;
     }

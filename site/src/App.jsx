@@ -23,15 +23,11 @@ function NotFound() {
   );
 }
 
-export default function App() {
+export function App() {
   const [loading, setLoading] = useState(false);
 
   const [usedDB, setDB] = useState("sqlite");
   const [response, setResponse] = useState(null);
-
-  const setId = (idNum) => {
-    localStorage["id"] = idNum;
-  };
 
   async function fetch_custom(url, options) {
     const start = performance.now();
@@ -62,7 +58,6 @@ export default function App() {
           element={
             <Login
               setResponse={setResponse}
-              setId={setId}
               usedDB={usedDB}
               fetch_custom={fetch_custom}
             />
@@ -84,7 +79,7 @@ export default function App() {
         />
         <Route
           path="/login-page"
-          element={<LoginPage response={response} setId={setId} />}
+          element={<LoginPage response={response} />}
         />
         <Route
           path="/projects"

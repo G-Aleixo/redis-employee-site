@@ -1,16 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import renanImg from "../assets/renan.png";
 import { useEffect } from "react";
+import { getId, setId } from "../functions/id";
 
-export default function LoginPage({ response, setId }) {
+export default function LoginPage({ response }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (
-      localStorage["id"] == 0 ||
-      !localStorage["id"] ||
-      localStorage["id"] === undefined
-    ) {
+    if (getId() == 0 || !getId() || getId() === undefined) {
       navigate("/not-found");
       return;
     }

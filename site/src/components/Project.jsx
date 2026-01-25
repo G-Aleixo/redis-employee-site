@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { getId } from "../functions/id";
 
 export default function Project({ id, idManager, name, text, fetch_custom }) {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ export default function Project({ id, idManager, name, text, fetch_custom }) {
 
   async function deleteProject(e) {
     e.preventDefault();
-    
+
     try {
       await fetch_custom(`/api/projects/${id}`, {
         method: "DELETE",
@@ -41,7 +42,7 @@ export default function Project({ id, idManager, name, text, fetch_custom }) {
                 Visualizar
               </button>
 
-              {idManager == localStorage["id"] && (
+              {idManager == getId() && (
                 <button
                   className="btn btn-secondary flex-fill"
                   onClick={editProject}
@@ -50,7 +51,7 @@ export default function Project({ id, idManager, name, text, fetch_custom }) {
                 </button>
               )}
             </div>
-            {idManager == localStorage["id"] && (
+            {idManager == getId() && (
               <button className="btn btn-danger" onClick={deleteProject}>
                 Apagar
               </button>
