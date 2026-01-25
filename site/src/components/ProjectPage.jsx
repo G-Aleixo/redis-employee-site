@@ -1,8 +1,9 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-export default function ProjectPage({ fetch_custom }) {
+export default function ProjectPage({ fetch_custom, usedDB }) {
   const navigate = useNavigate();
+  const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
   const { id } = useParams();
   const [project, setProject] = useState({});
@@ -43,10 +44,7 @@ export default function ProjectPage({ fetch_custom }) {
   }, []);
 
   return (
-    <div
-      className="container-fluid p-0 border border-success border-2"
-      id="login-area"
-    >
+    <div className={`container-fluid p-0 border border-2 ${borderClass}`} id="login-area">
       <div className="row justify-content-center g-0">
         <div className="col-12 border-bottom border-black w-75 mx-auto pt-1">
           <h2 className="text-center">{project["name"]}</h2>

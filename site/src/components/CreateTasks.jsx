@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function CreateTasks({ setPopup }) {
+export default function CreateTasks({ setPopup, usedDB }) {
   const navigate = useNavigate();
+
+  const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
   useEffect(() => {
     if (

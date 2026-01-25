@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Alert from "./Alert";
 
-export default function CreateAccount({ fetch_custom }) {
+export default function CreateAccount({ fetch_custom, usedDB }) {
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
@@ -13,6 +13,8 @@ export default function CreateAccount({ fetch_custom }) {
 
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState({ sucess: false, error: false });
+
+  const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
   const [otherText, setOtherText] = useState("");
   const redirectForHome = () => {
@@ -56,10 +58,7 @@ export default function CreateAccount({ fetch_custom }) {
   }
 
   return (
-    <div
-      className="container-fluid p-0 border border-2 border-success"
-      id="login-area"
-    >
+    <div className={`container-fluid p-0 border border-2 ${borderClass}`} id="login-area">
       {alert.sucess && (
         <Alert
           setFunction={() => setAlert({ sucess: false, error: false })}

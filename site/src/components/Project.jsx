@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 
-export default function Project({ id, idManager, name, text, fetch_custom }) {
+export default function Project({ id, idManager, name, text, fetch_custom, usedDB }) {
   const navigate = useNavigate();
+  const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
   function editProject(e) {
     e.preventDefault();

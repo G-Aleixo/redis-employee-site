@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import renanImg from "../assets/renan.png";
+import renanImg from "../assets/renan.jpeg";
 import { useEffect } from "react";
 
-export default function LoginPage({ response, setId }) {
+export default function LoginPage({ response, setId, usedDB }) {
   const navigate = useNavigate();
+  const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
   useEffect(() => {
     if (
@@ -20,10 +21,7 @@ export default function LoginPage({ response, setId }) {
   setId(response.id);
 
   return (
-    <div
-      className="container-fluid p-0 border border-success border-2"
-      id="login-area"
-    >
+    <div className={`container-fluid p-0 border border-2 ${borderClass}`} id="login-area">
       <div className="row justify-content-center g-0">
         <div className="col-sm-8">
           <div className="row justify-content-center g-0 pt-3">

@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Alert from "./Alert";
 import CreateTasks from "./CreateTasks";
 
-export default function CreateProject({ fetch_custom }) {
+export default function CreateProject({ fetch_custom, usedDB }) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -14,6 +14,8 @@ export default function CreateProject({ fetch_custom }) {
   const [popup, setPopup] = useState(false);
 
   const [alert, setAlert] = useState({ sucess: false, error: false });
+
+  const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
   function projectFunction(e) {
     if (isEdit) {
@@ -108,10 +110,7 @@ export default function CreateProject({ fetch_custom }) {
         />
       )}
 
-      <div
-        className="container-fluid p-0 border border-success border-2"
-        id="login-area"
-      >
+      <div className={`container-fluid p-0 border border-2 ${borderClass}`} id="login-area">
         <div className="row justify-content-center g-0">
           <div className="col-12">
             <h3 className="text-center py-3 border-bottom border-black w-75 mx-auto">

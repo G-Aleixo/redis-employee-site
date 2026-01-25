@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Project from "./Project.jsx";
 
-export default function Projects({ fetch_custom }) {
+export default function Projects({ fetch_custom, usedDB }) {
   const navigate = useNavigate();
 
   const [projectName, setProjectName] = useState("");
 
   const [projects, setProjects] = useState([]);
+
+  const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
   async function searchProject(e) {
     if (
@@ -65,10 +67,7 @@ export default function Projects({ fetch_custom }) {
 
   return (
     <>
-      <div
-        className="container-fluid p-0 border border-success border-2"
-        id="login-area"
-      >
+      <div className={`container-fluid p-0 border border-2 ${borderClass}`} id="login-area">
         <div className="row justify-content-center g-0">
           <div className="col-12 text-center">
             <h3 className="py-3 border-bottom border-black w-75 mx-auto">
@@ -81,20 +80,8 @@ export default function Projects({ fetch_custom }) {
           <div className="col-12 px-5">
             <form onSubmit={searchProject}>
               <div className="input-group mb-3 shadow">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Nome do Projeto"
-                  aria-label="pesquisa"
-                  aria-describedby="button-addon1"
-                  value={projectName}
-                  onChange={(e) => setProjectName(e.target.value)}
-                />
-                <button
-                  className="btn btn-success"
-                  type="submit"
-                  id="button-addon1"
-                >
+                <input type="text" className="form-control" placeholder="Nome do Projeto" aria-label="pesquisa" aria-describedby="button-addon1" value={projectName} onChange={(e) => setProjectName(e.target.value)}/>
+                <button className="btn btn-success" type="submit" id="button-addon1">
                   Pesquisar
                 </button>
               </div>
@@ -118,16 +105,10 @@ export default function Projects({ fetch_custom }) {
 
         <div className="row justify-content-center py-3 g-0">
           <div className="col-sm-10 d-flex justify-content-center gap-3">
-            <button
-              className="btn btn-secondary w-50"
-              onClick={() => navigate("/create-project")}
-            >
+            <button className="btn btn-secondary w-50" onClick={() => navigate("/create-project")}>
               Criar Projeto
             </button>
-            <button
-              className="btn btn-success w-50"
-              onClick={() => navigate("/")}
-            >
+            <button className="btn btn-success w-50" onClick={() => navigate("/")}>
               Voltar Home
             </button>
           </div>

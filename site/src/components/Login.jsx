@@ -59,10 +59,7 @@ export default function Login({ setResponse, setId, usedDB, fetch_custom }) {
   }, [setId]);
 
   return (
-    <div
-      className={`container-fluid p-0 border border-2 ${borderClass}`}
-      id="login-area"
-    >
+    <div className={`container-fluid p-0 border border-2 ${borderClass}`} id="login-area">
       {alert.notExists && (
         <Alert
           setFunction={() => setAlert({ pwdWrong: false, notExists: false })}
@@ -96,22 +93,10 @@ export default function Login({ setResponse, setId, usedDB, fetch_custom }) {
         <div className="row justify-content-center g-0">
           <div className="col-md-6 p-3">
             <div className="input-group shadow">
-              <span
-                className="input-group-text"
-                id="basic-addon1"
-                style={{ width: "10ex" }}
-              >
+              <span className="input-group-text" id="basic-addon1" style={{ width: "10ex" }}>
                 Usuário
               </span>
-              <input
-                type="text"
-                className="form-control"
-                name="username"
-                placeholder="Digite seu nome"
-                onChange={(e) => setName(e.target.value)}
-                required
-              ></input>
-              <div className="invalid-feedback">Insira um Nome Válido</div>
+              <input type="text" className="form-control" name="username" placeholder="Digite seu nome" onChange={(e) => setName(e.target.value)} required></input>
             </div>
           </div>
         </div>
@@ -119,21 +104,10 @@ export default function Login({ setResponse, setId, usedDB, fetch_custom }) {
         <div className="row justify-content-center g-0">
           <div className="col-md-6 p-3">
             <div className="input-group shadow">
-              <span
-                className="input-group-text"
-                id="basic-addon2"
-                style={{ width: "10ex" }}
-              >
+              <span className="input-group-text" id="basic-addon2" style={{ width: "10ex" }}>
                 Senha
               </span>
-              <input
-                type="password"
-                className="form-control"
-                name="password"
-                placeholder="Digite sua senha"
-                onChange={(e) => setPwd(e.target.value)}
-                required
-              ></input>
+              <input type="password" className="form-control" name="password" placeholder="Digite sua senha" onChange={(e) => setPwd(e.target.value)} required></input>
               <div className="invalid-feedback">Insira uma Senha Válida</div>
             </div>
           </div>
@@ -141,31 +115,17 @@ export default function Login({ setResponse, setId, usedDB, fetch_custom }) {
 
         <div className="row justify-content-center g-0">
           <div className="col-12 d-flex justify-content-center gap-3 p-4">
-            <button
-              className={`btn ${btnClass} d-flex align-items-center justify-content-center`}
-              type="submit"
-              disabled={loading}
-            >
+            <button className={`btn ${btnClass} d-flex align-items-center justify-content-center`} type="submit" disabled={loading}>
               {loading ? (
                 <>
-                  <span
-                    className="spinner-border spinner-border-sm me-2"
-                    role="status"
-                    aria-hidden="true"
-                  />
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"/>
                   Carregando...
                 </>
               ) : (
                 "Fazer Login"
               )}
             </button>
-            <button
-              className="btn btn-secondary"
-              type="button"
-              onClick={() => navigate("/create-account")}
-            >
-              Criar Conta
-            </button>
+            <button className="btn btn-secondary" type="button" onClick={() => navigate("/create-account")}>Criar Conta</button>
           </div>
         </div>
       </form>
