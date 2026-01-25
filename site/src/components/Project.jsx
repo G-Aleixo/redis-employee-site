@@ -8,7 +8,7 @@ export default function Project({ id, idManager, name, text, fetch_custom }) {
 
     navigate("/create-project", {
       state: {
-        valuesState: [name, text || ""],
+        valuesState: [name, text || "", id],
         isEdit: true,
       },
     });
@@ -16,9 +16,9 @@ export default function Project({ id, idManager, name, text, fetch_custom }) {
 
   async function deleteProject(e) {
     e.preventDefault();
-    console.log("Você clicou em apagar o projeto " + id);
+    
     try {
-      await fetch_custom("URL DE GUILHERME", {
+      await fetch_custom(`/api/projects/${id}`, {
         method: "DELETE",
       });
     } catch (error) {

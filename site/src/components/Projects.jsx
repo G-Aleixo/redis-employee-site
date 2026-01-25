@@ -5,7 +5,34 @@ import Project from "./Project.jsx";
 export default function Projects({ fetch_custom }) {
   const navigate = useNavigate();
 
+  const [projectName, setProjectName] = useState("");
+
   const [projects, setProjects] = useState([]);
+
+  async function searchProject(e) {
+    if (
+      localStorage["id"] == 0 ||
+      !localStorage["id"] ||
+      localStorage["id"] === undefined
+    ) {
+      navigate("/not-found");
+      return;
+    }
+
+    e.preventDefault();
+
+    try {
+      const res = await fetch_custom(`/api/projects/search/${projectName}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      
+      const data = await res.json();
+      setProjects(data);
+    } catch (error) {
+      console.warn("Erro de server ou CORS", error);
+    }
+  }
 
   async function getProjects(e) {
     if (
@@ -22,7 +49,7 @@ export default function Projects({ fetch_custom }) {
     try {
       const res = await fetch_custom("/api/projects", {
         method: "GET",
-        headers: { "Content-Type": "application/json", },
+        headers: { "Content-Type": "application/json" },
       });
 
       const data = await res.json();
@@ -52,7 +79,7 @@ export default function Projects({ fetch_custom }) {
 
         <div className="row justify-content-center g-0">
           <div className="col-12 px-5">
-            <form action="" method="post">
+            <form onSubmit={searchProject}>
               <div className="input-group mb-3 shadow">
                 <input
                   type="text"
@@ -60,10 +87,12 @@ export default function Projects({ fetch_custom }) {
                   placeholder="Nome do Projeto"
                   aria-label="pesquisa"
                   aria-describedby="button-addon1"
+                  value={projectName}
+                  onChange={(e) => setProjectName(e.target.value)}
                 />
                 <button
                   className="btn btn-success"
-                  type="button"
+                  type="submit"
                   id="button-addon1"
                 >
                   Pesquisar

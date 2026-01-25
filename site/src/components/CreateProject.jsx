@@ -7,7 +7,7 @@ export default function CreateProject({ fetch_custom }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { valuesState = ["", ""], isEdit = false } = location.state || {};
+  const { valuesState = ["", ""], isEdit = false, id = 0 } = location.state || {};
 
   const [title, setTitle] = useState(valuesState[0]);
   const [text, setText] = useState(valuesState[1]);
@@ -25,16 +25,16 @@ export default function CreateProject({ fetch_custom }) {
 
   async function editProject(e) {
     e.preventDefault();
+
     try {
-      await fetch_custom("URL DE GUILHERME", {
+      await fetch_custom(`/api/projects/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: "NOME PROJETO",
-          text: "TEXTO PROJETO",
-          manager_id: localStorage["id"],
+          name: title,
+          text: text,
         }),
       });
     } catch (error) {
@@ -81,7 +81,16 @@ export default function CreateProject({ fetch_custom }) {
 
   return (
     <>
-      {alert.sucess && (
+      {alert.sucess && isEdit && (
+        <Alert
+          setFunction={() => setAlert({ ...alert, sucess: false })}
+          title="Projeto Editado!"
+          text="Seu projeto foi editado! Volte para o visualizador de projetos."
+          className="alert-success"
+        />
+      )}
+
+      {alert.sucess && !isEdit && (
         <Alert
           setFunction={() => setAlert({ ...alert, sucess: false })}
           title="Projeto Criado!"
