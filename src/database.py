@@ -189,6 +189,14 @@ class DatabaseConnection:
     def get_tasks(self):
         return self.cursor.execute("SELECT * FROM workTask;").fetchall()
 
+    def delete_task(self, task_id: int):
+        #TODO: do some auth
+        query = "DELETE FROM workTask WHERE idWorkTask = ?;"
+
+        self.cursor.execute(query, (task_id, ))
+
+        # can't really fail, so nothing to return
+
     def mark_task_completed(self, task_id: int, status: bool):
         if not self.task_exists(task_id):
             return False
@@ -312,6 +320,14 @@ class DatabaseConnection:
                 return 201
             except sql.IntegrityError:
                 return 501
+    
+    def delete_project(self, project_id: int):
+        #TODO: do some auth
+        query = "DELETE FROM project WHERE idProject = ?;"
+
+        self.cursor.execute(query, (project_id, ))
+
+        # can't really fail, so nothing to return
 
     def project_exists(self, project_id: int) -> bool:
         if self.cache_enabled:
