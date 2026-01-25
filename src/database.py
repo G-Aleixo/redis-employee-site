@@ -189,15 +189,42 @@ class DatabaseConnection:
     def get_tasks(self):
         return self.cursor.execute("SELECT * FROM workTask;").fetchall()
 
-    def mark_task_completed(self, task_id: int):
-        if not self.task_exists(task_id):
-            return False
-        query = "UPDATE workTask SET done = TRUE WHERE idWorkTask = ?;"
+    def delete_task(self, task_id: int):
+        #TODO: do some auth
+        query = "DELETE FROM workTask WHERE idWorkTask = ?;"
 
         self.cursor.execute(query, (task_id, ))
 
+        # can't really fail, so nothing to return
+
+    def mark_task_completed(self, task_id: int, status: bool):
+        if not self.task_exists(task_id):
+            return False
+
+        print(status)
+
+        query = "UPDATE workTask SET done = ? WHERE idWorkTask = ?;"
+
+        self.cursor.execute(query, (1 if status else 0, task_id))
+
+        query = "UPDATE workTask SET doneTimestamp = ? WHERE idWorkTask = ?;"
+
+        if status == True:
+            self.cursor.execute(query, (datetime.now(), task_id))
+        else:
+            self.cursor.execute(query, ("", task_id))
+
+
         task = self.get_task(task_id)
-        if task is not None and task.get("done") == True:
+
+        # update cache
+        if self.cache_enabled:
+            self.redis_db.hset(f"task:{task_id}", "done", int(task["done"]))
+            self.redis_db.hset(f"task:{task_id}", "doneTimestamp", task["doneTimestamp"])
+
+        print(task["done"])
+
+        if task is not None and bool(int(task["done"])) == status:
             return True
         return False
 
@@ -257,6 +284,20 @@ class DatabaseConnection:
 
         return project
     
+    def get_project_by_name(self, name: str):
+        if self.cache_enabled:
+            if project_id := self.redis.get(f"project_name:{name}"):
+                return self.get_project(project_id)
+
+        query = "SELECT * FROM project WHERE name LIKE (?) LIMIT 1;"
+
+        project = self.cursor.execute(query, (name, )).fetchone()
+
+        if self.cache_enabled and project:
+            self.redis.set(f"project_name:{name}", project["idProject"])
+
+        return project
+    
     def get_projects(self):
         query = "SELECT * FROM project;"
 
@@ -279,6 +320,14 @@ class DatabaseConnection:
                 return 201
             except sql.IntegrityError:
                 return 501
+    
+    def delete_project(self, project_id: int):
+        #TODO: do some auth
+        query = "DELETE FROM project WHERE idProject = ?;"
+
+        self.cursor.execute(query, (project_id, ))
+
+        # can't really fail, so nothing to return
 
     def project_exists(self, project_id: int) -> bool:
         if self.cache_enabled:

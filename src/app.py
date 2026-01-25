@@ -88,11 +88,25 @@ def add_task():
 
     return {}, 201
 
-@app.put("/api/tasks/<int:task_id>/done")
-def mark_task_completed(task_id):
+@app.delete("/api/tasks/<int:task_id>")
+def delete_task(task_id: int):
+    #TODO: add auth
     db = get_db()
 
-    if mark_task_completed():
+    db.delete_task(task_id)
+
+    return {}, 201
+
+@app.get("/api/tasks/<int:task_id>/set-status/<int:status>")
+def mark_task_completed(task_id, status):
+    if status != 0 and status != 1:
+        return {"error": f"Invalid status value {escape(status)} not 0 or 1"}, 400
+    
+    status = False if status == 0 else True
+
+    db = get_db()
+
+    if db.mark_task_completed(task_id, status):
         return {}, 201
     return {}, 400
 
@@ -142,6 +156,21 @@ def get_project(project_id: int):
     else:
         return {}, 404
 
+@app.get("/api/projects/search/<string:project_name>")
+def get_project_by_name(project_name: int):
+    if project_name == None:
+        return {}, 501
+
+    db = get_db()
+
+    project = db.get_project_by_name(project_name)
+
+    if project:
+        project = dict(project)
+        return jsonify(project), 200
+    else:
+        return {}, 404
+
 @app.get("/api/projects/")
 def get_projects():
     db = get_db()
@@ -172,6 +201,15 @@ def add_project():
     code = db.add_project(name, text, manager_id=manager_id)
 
     return {}, code
+
+@app.delete("/api/projects/<int:project_id>")
+def delete_project(project_id: int):
+    #TODO: add auth
+    db = get_db()
+
+    db.delete_project(project_id)
+
+    return 201
 
 @app.get("/api/project/<int:project_id>/comments")
 def get_project_comments(project_id: int):
