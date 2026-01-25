@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import Alert from "./Alert";
 import sqliteImg from "../assets/sqlite_logo.png";
 import redisImg from "../assets/Logo-redis.svg.png";
+import { setId } from "../functions/id";
 
-export default function Login({ setResponse, setId, usedDB, fetch_custom }) {
+export default function Login({ setResponse, usedDB, fetch_custom }) {
   const navigate = useNavigate();
 
   const imageScr = usedDB === "sqlite" ? sqliteImg : redisImg;
@@ -56,7 +57,7 @@ export default function Login({ setResponse, setId, usedDB, fetch_custom }) {
 
   useEffect(() => {
     setId(0);
-  }, [setId]);
+  }, []);
 
   return (
     <div className={`container-fluid p-0 border border-2 ${borderClass}`} id="login-area">

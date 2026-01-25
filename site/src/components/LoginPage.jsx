@@ -1,17 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import renanImg from "../assets/renan.jpeg";
 import { useEffect } from "react";
+import { getId, setId } from "../functions/id";
 
-export default function LoginPage({ response, setId, usedDB }) {
+export default function LoginPage({ response, usedDB }) {
   const navigate = useNavigate();
   const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
   useEffect(() => {
-    if (
-      localStorage["id"] == 0 ||
-      !localStorage["id"] ||
-      localStorage["id"] === undefined
-    ) {
+    if (getId() == 0 || !getId() || getId() === undefined) {
       navigate("/not-found");
       return;
     }

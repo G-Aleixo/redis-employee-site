@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Project from "./Project.jsx";
+import { getId } from "../functions/id.jsx";
 
 export default function Projects({ fetch_custom, usedDB }) {
   const navigate = useNavigate();
@@ -12,15 +13,6 @@ export default function Projects({ fetch_custom, usedDB }) {
   const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
   async function searchProject(e) {
-    if (
-      localStorage["id"] == 0 ||
-      !localStorage["id"] ||
-      localStorage["id"] === undefined
-    ) {
-      navigate("/not-found");
-      return;
-    }
-
     e.preventDefault();
 
     try {
@@ -28,7 +20,7 @@ export default function Projects({ fetch_custom, usedDB }) {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
-      
+
       const data = await res.json();
       setProjects(data);
     } catch (error) {
@@ -37,15 +29,6 @@ export default function Projects({ fetch_custom, usedDB }) {
   }
 
   async function getProjects(e) {
-    if (
-      localStorage["id"] == 0 ||
-      !localStorage["id"] ||
-      localStorage["id"] === undefined
-    ) {
-      navigate("/not-found");
-      return;
-    }
-
     e.preventDefault();
 
     try {
@@ -64,6 +47,13 @@ export default function Projects({ fetch_custom, usedDB }) {
   useEffect(() => {
     getProjects({ preventDefault: () => {} });
   }, []);
+
+  useEffect(() => {
+    if (getId() == 0 || !getId() || getId() === undefined) {
+      navigate("/not-found");
+      return;
+    }
+  });
 
   return (
     <>
