@@ -21,13 +21,7 @@ export default function CreateTasks({ setPopup, usedDB }) {
           <form action="" onSubmit={() => setPopup(false)}>
             <div className="modal-header">
               <h5 className="modal-title">Criando uma Tarefa</h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-                onClick={() => setPopup(false)}
-              ></button>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setPopup(false)}></button>
             </div>
 
             <div className="modal-body">
@@ -35,29 +29,14 @@ export default function CreateTasks({ setPopup, usedDB }) {
                 <span className="input-group-text" id="basic-addon1">
                   Título
                 </span>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Título da Tarefa"
-                  aria-label="Username"
-                  aria-describedby="basic-addon1"
-                />
+                <input type="text" className="form-control" placeholder="Título da Tarefa" aria-label="Username" aria-describedby="basic-addon1" required/>
               </div>
 
               <div className="mb-3">
                 <label htmlFor="floatingTextarea" className="form-label">
                   Informações Extras
                 </label>
-                <textarea
-                  className="form-control"
-                  name="information"
-                  id="floatingTextarea"
-                  aria-label="Withtextarea"
-                  placeholder="Fale sobre você... opcional"
-                  onChange={null}
-                  value={""}
-                  style={{ height: "140px" }}
-                />
+                <textarea onChange={null} value={""} className="form-control" name="information" id="floatingTextarea" aria-label="Withtextarea" placeholder="Descreva a Tarefa" style={{ height: "140px" }} required/>
               </div>
             </div>
 
@@ -65,11 +44,7 @@ export default function CreateTasks({ setPopup, usedDB }) {
               <div className="container-fluid">
                 <div className="row justify-content-center g-0">
                   <div className="col-12 d-flex justify-content-center">
-                    <button
-                      className="btn btn-success w-50"
-                      type="submit"
-                      onClick={() => setPopup(false)}
-                    >
+                    <button className="btn btn-success w-50" type="submit" onClick={() => setPopup(false)}>
                       Salvar Tarefa
                     </button>
                   </div>

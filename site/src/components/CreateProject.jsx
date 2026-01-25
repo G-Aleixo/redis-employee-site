@@ -84,33 +84,6 @@ export default function CreateProject({ fetch_custom, usedDB }) {
 
   return (
     <>
-      {alert.sucess && isEdit && (
-        <Alert
-          setFunction={() => setAlert({ ...alert, sucess: false })}
-          title="Projeto Editado!"
-          text="Seu projeto foi editado! Volte para o visualizador de projetos."
-          className="alert-success"
-        />
-      )}
-
-      {alert.sucess && !isEdit && (
-        <Alert
-          setFunction={() => setAlert({ ...alert, sucess: false })}
-          title="Projeto Criado!"
-          text="Seu projeto foi criado! Volte para o visualizador de projetos."
-          className="alert-success"
-        />
-      )}
-
-      {alert.error && (
-        <Alert
-          setFunction={() => setAlert({ ...alert, error: false })}
-          title="Um Erro Ocorreu!"
-          text="O nome que você escolheu já está em uso, tente outro nome."
-          className="alert-danger"
-        />
-      )}
-
       <div className={`container-fluid p-0 border border-2 ${borderClass}`} id="login-area">
         <div className="row justify-content-center g-0">
           <div className="col-12">
@@ -147,17 +120,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
                   <label htmlFor="floatingTextarea" className="form-label">
                     Informações do Projeto
                   </label>
-                  <textarea
-                    className="form-control"
-                    name="information"
-                    id="floatingTextarea"
-                    aria-label="Withtextarea"
-                    placeholder="Descrição do Projeto..."
-                    style={{ height: "140px" }}
-                    onChange={(e) => setText(e.target.value)}
-                    value={text}
-                    required
-                  />
+                  <textarea className="form-control" name="information" id="floatingTextarea" aria-label="Withtextarea" placeholder="Descrição do Projeto..." style={{ height: "140px" }} onChange={(e) => setText(e.target.value)} value={text} required/>
                 </div>
               </div>
             </div>
@@ -170,27 +133,69 @@ export default function CreateProject({ fetch_custom, usedDB }) {
               </div>
             </div>
 
+            <div className="row row-cols-1 row-cols-md-3 g-1 p-4 justify-content-center">
+              <div className="col">
+                <div className="card shadow h-100 text-center">
+                  <div className="card-body">
+                    <h5 className="card-title">Card Template</h5>
+                    <p className="card-text">
+                      {["card  text"]}
+                    </p>
+                  </div>
+                  <div className="card-footer d-flex justify-content-center gap-2">
+                      <button className="btn btn-danger w-50" onClick={null}>
+                        Apagar
+                      </button>
+                      <button className="btn btn-secondary w-50" onClick={null}>
+                        Editar
+                      </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
             <div className="row py-3 g-0">
               <div className="col-sm-12 d-flex justify-content-center">
-                <button
-                  className="btn btn-warning w-50"
-                  type="button"
-                  onClick={() => setPopup(true)}
-                >
+                <button className="btn btn-warning w-50" type="button" onClick={() => setPopup(true)}>
                   Adicionar Tarefa
                 </button>
               </div>
             </div>
+
+            {alert.sucess && isEdit && (
+              <Alert
+                setFunction={() => setAlert({ ...alert, sucess: false })}
+                title="Projeto Editado!"
+                text="Seu projeto foi editado! Volte para o visualizador de projetos."
+                className="alert-success"
+              />
+            )}
+
+            {alert.sucess && !isEdit && (
+              <Alert
+                setFunction={() => setAlert({ ...alert, sucess: false })}
+                title="Projeto Criado!"
+                text="Seu projeto foi criado! Volte para o visualizador de projetos."
+                className="alert-success"
+              />
+            )}
+
+            {alert.error && (
+              <Alert
+                setFunction={() => setAlert({ ...alert, error: false })}
+                title="Um Erro Ocorreu!"
+                text="O nome que você escolheu já está em uso, tente outro nome."
+                className="alert-danger"
+              />
+            )}
 
             <div className="row justify-content-center py-3 g-0">
               <div className="col-sm-10 d-flex justify-content-center gap-3">
                 <button className="btn btn-secondary w-50" type="submit">
                   Salvar Projeto
                 </button>
-                <button
-                  className="btn btn-success w-50"
-                  onClick={() => navigate("/projects")}
-                >
+                <button className="btn btn-success w-50" onClick={() => navigate("/projects")}>
                   Voltar
                 </button>
               </div>
