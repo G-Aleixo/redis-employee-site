@@ -3,7 +3,7 @@ import "../style/loading.css";
 
 export function LoadingScreen() {
   const [qtd, setQtd] = useState(0);
-  const [slowResponse, setslowResponse] = useState(false);
+  const [isSlow, setIsSlow] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -13,22 +13,28 @@ export function LoadingScreen() {
   }, []);
 
   useEffect(() => {
-    const timeInterval = setInterval(() => {
+    let step = 0;
+    let timeoutId;
+    function loop() {
+      const time = step % 4 === 3 ? 400 : 200;
       setQtd((prev) => (prev + 1) % 4);
-    }, 200);
+      step++;
+      timeoutId = setTimeout(loop, time);
+    }
+    loop();
 
     const timeout = setTimeout(() => {
-      setslowResponse(true);
+      setIsSlow(true);
     }, 5500);
 
     return () => {
-      clearInterval(timeInterval);
+      clearTimeout(timeoutId);
       clearTimeout(timeout);
     };
   }, []);
 
-  const loadingText = slowResponse
-    ? "Está demorando... recomendamos que recarregue a página."
+  const loadingText = isSlow
+    ? `Está demorando muito... recomendamos que recarregue a página${".".repeat(qtd)}`
     : `Carregando${".".repeat(qtd)}`;
 
   return (
