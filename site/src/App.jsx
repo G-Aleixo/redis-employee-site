@@ -66,7 +66,7 @@ export function App() {
         <Route path="/credits" element={<Credits />} />
         <Route
           path="/create-account"
-          element={<CreateAccount fetch_custom={fetch_custom} />}
+          element={<CreateAccount fetch_custom={fetch_custom} usedDB={usedDB} />}
         />
         <Route
           path="/create-project"
@@ -74,22 +74,23 @@ export function App() {
             <CreateProject
               setResponse={setResponse}
               fetch_custom={fetch_custom}
+              usedDB={usedDB}
             />
           }
         />
         <Route
           path="/login-page"
-          element={<LoginPage response={response} />}
+          element={<LoginPage response={response} usedDB={usedDB}/>}
         />
         <Route
           path="/projects"
           element={
-            <Projects setResponse={setResponse} fetch_custom={fetch_custom} />
+            <Projects setResponse={setResponse} fetch_custom={fetch_custom} usedDB={usedDB} />
           }
         />
         <Route
           path="/project/:id"
-          element={<ProjectPage fetch_custom={fetch_custom} />}
+          element={<ProjectPage fetch_custom={fetch_custom} usedDB={usedDB} />}
         />
         <Route path="/create-tasks" element={<CreateTasks />} />
         <Route path="*" element={<NotFound />} />

@@ -101,6 +101,7 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
                 </td>
               </tr>
             </tbody>
+            
           </table>
         </div>
       </div>
