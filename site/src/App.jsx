@@ -32,7 +32,6 @@ function fetch_custom(url, data) {
 
 function NotFound() {
   const navigate = useNavigate();
-
   return (
     <div className="text-center p-5">
       <h1>404</h1>
@@ -66,20 +65,10 @@ export default function App() {
             />
           }
         />
-        <Route
-          path="/credits"
-          element={
-            <Credits />
-          }
-        />
+        <Route path="/credits" element={<Credits />} />
         <Route
           path="/create-account"
-          element={
-            <CreateAccount
-              setResponse={setResponse}
-              fetch_custom={fetch_custom}
-            />
-          }
+          element={<CreateAccount fetch_custom={fetch_custom} />}
         />
         <Route
           path="/create-project"
@@ -92,9 +81,7 @@ export default function App() {
         />
         <Route
           path="/login-page"
-          element={
-            <LoginPage response={response} setId={setId} />
-          }
+          element={<LoginPage response={response} setId={setId} />}
         />
         <Route
           path="/projects"
@@ -104,22 +91,10 @@ export default function App() {
         />
         <Route
           path="/project/:id"
-          element={
-            <ProjectPage fetch_custom={fetch_custom} />
-          }
+          element={<ProjectPage fetch_custom={fetch_custom} />}
         />
-        <Route 
-          path="/create-tasks" 
-          element={
-            <CreateTasks />
-          } 
-        />
-        <Route 
-          path="*" 
-          element={
-            <NotFound />
-          } 
-        />
+        <Route path="/create-tasks" element={<CreateTasks />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

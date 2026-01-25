@@ -1,16 +1,46 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Alert from "./Alert";
 import CreateTasks from "./CreateTasks";
 
-export default function CreateProject({ setResponse, fetch_custom }) {
+export default function CreateProject({ fetch_custom }) {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [title, setTitle] = useState("");
-  const [text, setText] = useState("");
+  const { valuesState = ["", ""], isEdit = false } = location.state || {};
+
+  const [title, setTitle] = useState(valuesState[0]);
+  const [text, setText] = useState(valuesState[1]);
   const [popup, setPopup] = useState(false);
 
   const [alert, setAlert] = useState({ sucess: false, error: false });
+
+  function projectFunction(e) {
+    if (isEdit) {
+      editProject(e);
+    } else {
+      createProject(e);
+    }
+  }
+
+  async function editProject(e) {
+    e.preventDefault();
+    try {
+      await fetch_custom("URL DE GUILHERME", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: "NOME PROJETO",
+          text: "TEXTO PROJETO",
+          manager_id: localStorage["id"],
+        }),
+      });
+    } catch (error) {
+      console.warn("Erro de server ou CORS", error);
+    }
+  }
 
   async function createProject(e) {
     e.preventDefault();
@@ -27,17 +57,14 @@ export default function CreateProject({ setResponse, fetch_custom }) {
           manager_id: localStorage["id"],
         }),
       });
-
-      const data = await res.json();
-      setResponse(data);
-
       if (res.ok) {
-        setAlert({ ...alert, sucess: true });
+        setAlert({ error: false, sucess: true });
       } else {
-        setAlert({ ...alert, error: true });
+        setAlert({ sucess: false, error: true });
       }
     } catch (error) {
       console.warn("Erro de server ou CORS", error);
+      setAlert({ sucess: false, error: true });
     }
   }
 
@@ -85,7 +112,7 @@ export default function CreateProject({ setResponse, fetch_custom }) {
         </div>
 
         <div className="row g-0">
-          <form onSubmit={createProject}>
+          <form onSubmit={projectFunction}>
             <div className="row justify-content-center g-0">
               <div className="col-md-10 p-3">
                 <div className="input-group shadow">

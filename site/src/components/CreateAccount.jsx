@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Alert from "./Alert";
 
-export default function CreateAccount({ setResponse, fetch_custom }) {
+export default function CreateAccount({ fetch_custom }) {
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
@@ -31,9 +31,6 @@ export default function CreateAccount({ setResponse, fetch_custom }) {
           password: pwd,
         }),
       });
-
-      const data = await res.json();
-      setResponse(data);
 
       if (res.ok) {
         setAlert({ sucess: true, error: false });

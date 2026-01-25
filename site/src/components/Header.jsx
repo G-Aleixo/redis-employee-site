@@ -65,12 +65,12 @@ export default function Header() {
                 </a>
               </li>
               <li className="nav-item h-100 flex-fill">
-                <a 
+                <a
                   className="nav-link"
                   aria-disabled="true"
                   aria-current="page"
                   onClick={() => navigate("/credits")}
-                  >
+                >
                   Créditos
                 </a>
               </li>

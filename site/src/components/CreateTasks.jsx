@@ -20,11 +20,11 @@ export default function CreateTasks({ setPopup }) {
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <form action="" onSubmit={() => setPopup(false)}>
-            <div class="modal-header">
-              <h5 class="modal-title">Criando uma Tarefa</h5>
+            <div className="modal-header">
+              <h5 className="modal-title">Criando uma Tarefa</h5>
               <button
                 type="button"
-                class="btn-close"
+                className="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
                 onClick={() => setPopup(false)}
@@ -32,13 +32,13 @@ export default function CreateTasks({ setPopup }) {
             </div>
 
             <div className="modal-body">
-              <div class="input-group mb-3">
-                <span class="input-group-text" id="basic-addon1">
+              <div className="input-group mb-3">
+                <span className="input-group-text" id="basic-addon1">
                   Título
                 </span>
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   placeholder="Título da Tarefa"
                   aria-label="Username"
                   aria-describedby="basic-addon1"
