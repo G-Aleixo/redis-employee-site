@@ -10,7 +10,7 @@ import ProjectPage from "./components/ProjectPage";
 import CreateProject from "./components/CreateProject";
 import CreateTasks from "./components/CreateTasks";
 import Credits from "./components/Credits";
-import LoadingScreen from "./components/LoadingScreen";
+import { LoadingScreen } from "./components/LoadingScreen";
 
 function NotFound() {
   const navigate = useNavigate();
