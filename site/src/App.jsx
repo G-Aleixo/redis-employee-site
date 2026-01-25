@@ -10,7 +10,7 @@ import ProjectPage from "./components/ProjectPage";
 import CreateProject from "./components/CreateProject";
 import CreateTasks from "./components/CreateTasks";
 import Credits from "./components/Credits";
-import { LoadingScreen } from "./components/LoadingScreen";
+import LoadingScreen from "./components/LoadingScreen";
 
 function NotFound() {
   const navigate = useNavigate();
@@ -35,14 +35,14 @@ export default function App() {
 
   async function fetch_custom(url, options) {
     const start = performance.now();
-    // const baseUrl = window.location.href.includes("localhost")
-    //   ? "http://127.0.0.1:5000"
-    //   : "https://redis-employee-site.onrender.com";
+    const baseUrl = window.location.href.includes("localhost")
+      ? "http://127.0.0.1:5000"
+      : "https://redis-employee-site.onrender.com";
 
     setLoading(true);
 
     try {
-      const response = await fetch("https://redis-employee-site.onrender.com" + url, options);
+      const response = await fetch(baseUrl + url, options);
       return response;
     } finally {
       const end = performance.now();

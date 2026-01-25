@@ -14,6 +14,16 @@ export default function CreateAccount({ fetch_custom }) {
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState({ sucess: false, error: false });
 
+  const [otherText, setOtherText] = useState("");
+  const redirectForHome = () => {
+    setTimeout(() => {
+      setOtherText("\nVocê será redirecionado para a página inicial.");
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
+    }, 1500);
+  };
+
   async function createAcc(e) {
     e.preventDefault();
     setLoading(true);
@@ -34,6 +44,7 @@ export default function CreateAccount({ fetch_custom }) {
 
       if (res.ok) {
         setAlert({ sucess: true, error: false });
+        redirectForHome();
       } else {
         setAlert({ sucess: false, error: true });
       }
@@ -53,7 +64,9 @@ export default function CreateAccount({ fetch_custom }) {
         <Alert
           setFunction={() => setAlert({ sucess: false, error: false })}
           title="Conta Criada!"
-          text="Sua conta foi criada! Volte para home e faça login."
+          text={
+            "Sua conta foi criada! Volte para home e faça login." + otherText
+          }
           className="alert-success"
         />
       )}
