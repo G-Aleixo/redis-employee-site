@@ -8,7 +8,11 @@ export default function ProjectPage({ fetch_custom }) {
   const [project, setProject] = useState({});
 
   async function getThisProject(e) {
-    if (localStorage["id"] == 0 || !localStorage["id"] || localStorage["id"] === undefined) {
+    if (
+      localStorage["id"] == 0 ||
+      !localStorage["id"] ||
+      localStorage["id"] === undefined
+    ) {
       navigate("/not-found");
       return;
     }
@@ -18,42 +22,56 @@ export default function ProjectPage({ fetch_custom }) {
     try {
       const res = await fetch_custom(`/api/projects/${id}`, {
         method: "GET",
-        headers: { "Content-Type": "application/json" }
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
 
-      const data = await res.json()
+      const data = await res.json();
       setProject(data);
 
       if (res.status !== 200) {
         navigate("/not-found");
       }
-
     } catch (error) {
       console.warn("Erro de server ou CORS", error);
     }
   }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {getThisProject({preventDefault: () => {}})}, []);
+  useEffect(() => {
+    getThisProject({ preventDefault: () => {} });
+  }, []);
 
   return (
-    <div className="container-fluid p-0 border border-success border-2" id="login-area">
+    <div
+      className="container-fluid p-0 border border-success border-2"
+      id="login-area"
+    >
       <div className="row justify-content-center g-0">
         <div className="col-12 border-bottom border-black w-75 mx-auto pt-1">
           <h2 className="text-center">{project["name"]}</h2>
         </div>
       </div>
 
-      {project["text"] &&
+      {project["text"] && (
         <div className="row justify-content-center pt-3 g-0">
           <div className="col-sm-10 px-3">
             <div className="mb-3">
-              <label htmlFor="floatingTextarea" className="form-label">Descrição Projeto:</label>
-              <textarea className="form-control shadow rounded" placeholder="Leave a comment here" id="floatingTextarea" readOnly value={project["text"]} style={{ height: '180px' }}></textarea>
+              <label htmlFor="floatingTextarea" className="form-label">
+                Descrição Projeto:
+              </label>
+              <textarea
+                className="form-control shadow rounded"
+                placeholder="Leave a comment here"
+                id="floatingTextarea"
+                readOnly
+                value={project["text"]}
+                style={{ height: "180px" }}
+              ></textarea>
             </div>
           </div>
         </div>
-      }
+      )}
       <p>id do criador: {project["idManager"]}</p>
       <p>id projeto: {project["idProject"]}</p>
       <p>quando projeto foi criado: </p>
@@ -82,7 +100,9 @@ export default function ProjectPage({ fetch_custom }) {
                 <th scope="row">1</th>
                 <td>Task</td>
                 <td>
-                  <button className="btn btn-warning" onClick={null}>Verificar</button>
+                  <button className="btn btn-warning" onClick={null}>
+                    Verificar
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -92,8 +112,18 @@ export default function ProjectPage({ fetch_custom }) {
 
       <div className="row justify-content-center g-0">
         <div className="col-sm-10 d-flex justify-content-center gap-3">
-          <button className="btn btn-success w-50" onClick={() => navigate("/projects")}>Voltar</button>
-          <button className="btn btn-secondary w-50" onClick={() => navigate("/create-task")}>Criar Tarefa</button>
+          <button
+            className="btn btn-success w-50"
+            onClick={() => navigate("/projects")}
+          >
+            Voltar
+          </button>
+          <button
+            className="btn btn-secondary w-50"
+            onClick={() => navigate("/create-task")}
+          >
+            Criar Tarefa
+          </button>
         </div>
       </div>
     </div>

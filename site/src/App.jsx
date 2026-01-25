@@ -12,14 +12,17 @@ import CreateTasks from "./components/CreateTasks";
 
 function fetch_custom(url, data) {
   const start = performance.now();
-  // eslint-disable-next-line no-constant-condition
-  if (true) {
-    const result = fetch("http://127.0.0.1:5000" + url, data)
+  const urlNow = window.location.href;
+  if (urlNow.includes("localhost")) {
+    const result = fetch("http://127.0.0.1:5000" + url, data);
     const end = performance.now();
     console.log(`tempo: ${end - start}ms`);
     return result;
   } else {
-    const result = fetch("https://redis-employee-site.onrender.com" + url, data)
+    const result = fetch(
+      "https://redis-employee-site.onrender.com" + url,
+      data,
+    );
     const end = performance.now();
     console.log(`tempo: ${end - start}ms`);
     return result;
@@ -38,28 +41,78 @@ function NotFound() {
   );
 }
 
-
 export default function App() {
   const [usedDB, setDB] = useState("sqlite");
   const [response, setResponse] = useState(null);
 
   const setId = (idNum) => {
-    localStorage["id"] = idNum
-  }
+    localStorage["id"] = idNum;
+  };
 
   return (
     <BrowserRouter basename="/redis-employee-site">
       <Header />
       <Landing usedDB={usedDB} setDB={setDB} />
       <Routes>
-        <Route path="/" element={<Login setResponse={setResponse} setId={setId} usedDB={usedDB} fetch_custom={fetch_custom} />} />
-        <Route path="/create-account" element={<CreateAccount setResponse={setResponse} fetch_custom={fetch_custom} />} />
-        <Route path="/create-project" element={<CreateProject setResponse={setResponse} fetch_custom={fetch_custom} />} />
-        <Route path="/login-page" element={<LoginPage response={response} setId={setId} />} />
-        <Route path="/projects" element={<Projects setResponse={setResponse} fetch_custom={fetch_custom} />} />
-        <Route path="/project/:id" element={<ProjectPage fetch_custom={fetch_custom} />} />
-        <Route path="/create-tasks" element={<CreateTasks />} />
-        <Route path="*" element={<NotFound />} />
+        <Route
+          path="/"
+          element={
+            <Login
+              setResponse={setResponse}
+              setId={setId}
+              usedDB={usedDB}
+              fetch_custom={fetch_custom}
+            />
+          }
+        />
+        <Route
+          path="/create-account"
+          element={
+            <CreateAccount
+              setResponse={setResponse}
+              fetch_custom={fetch_custom}
+            />
+          }
+        />
+        <Route
+          path="/create-project"
+          element={
+            <CreateProject
+              setResponse={setResponse}
+              fetch_custom={fetch_custom}
+            />
+          }
+        />
+        <Route
+          path="/login-page"
+          element={
+            <LoginPage response={response} setId={setId} />
+          }
+        />
+        <Route
+          path="/projects"
+          element={
+            <Projects setResponse={setResponse} fetch_custom={fetch_custom} />
+          }
+        />
+        <Route
+          path="/project/:id"
+          element={
+            <ProjectPage fetch_custom={fetch_custom} />
+          }
+        />
+        <Route 
+          path="/create-tasks" 
+          element={
+            <CreateTasks />
+          } 
+        />
+        <Route 
+          path="*" 
+          element={
+            <NotFound />
+          } 
+        />
       </Routes>
     </BrowserRouter>
   );
