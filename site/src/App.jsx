@@ -9,6 +9,7 @@ import Projects from "./components/Projects";
 import ProjectPage from "./components/ProjectPage";
 import CreateProject from "./components/CreateProject";
 import CreateTasks from "./components/CreateTasks";
+import Credits from "./components/Credits";
 
 function fetch_custom(url, data) {
   const start = performance.now();
@@ -63,6 +64,12 @@ export default function App() {
               usedDB={usedDB}
               fetch_custom={fetch_custom}
             />
+          }
+        />
+        <Route
+          path="/credits"
+          element={
+            <Credits />
           }
         />
         <Route

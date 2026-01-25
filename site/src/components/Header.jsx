@@ -60,19 +60,24 @@ export default function Header() {
                   aria-disabled="true"
                   aria-current="page"
                   onClick={() => navigate("/")}
-                  href=""
                 >
                   Home
                 </a>
               </li>
               <li className="nav-item h-100 flex-fill">
-                <a className="nav-link" href="#">
+                <a 
+                  className="nav-link"
+                  aria-disabled="true"
+                  aria-current="page"
+                  onClick={() => navigate("/credits")}
+                  >
                   Créditos
                 </a>
               </li>
               <li className="nav-item h-100 flex-fill">
                 <a
                   className="nav-link"
+                  aria-disabled="true"
                   href="https://br.linkedin.com/in/renan-alves-de-morais-rocha-453427184"
                 >
                   Conheça Renan
