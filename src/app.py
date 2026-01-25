@@ -93,9 +93,7 @@ def delete_task(task_id: int):
     #TODO: add auth
     db = get_db()
 
-    db.delete_task(task_id)
-
-    return {}, 201
+    return {}, db.delete_task(task_id)
 
 @app.get("/api/tasks/<int:task_id>/set-status/<int:status>")
 def mark_task_completed(task_id, status):
@@ -207,9 +205,7 @@ def delete_project(project_id: int):
     #TODO: add auth
     db = get_db()
 
-    db.delete_project(project_id)
-
-    return 201
+    return {}, db.delete_project(project_id)
 
 @app.get("/api/project/<int:project_id>/comments")
 def get_project_comments(project_id: int):

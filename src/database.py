@@ -65,6 +65,9 @@ class DatabaseConnection:
         self.db.row_factory = sql.Row
         self.cursor: sql.Cursor = self.db.cursor()
 
+        # set foreign keys to actually be enforced
+        self.cursor.execute("PRAGMA foreign_keys = ON;")
+
     def get_employee(self, employee_id: int):
         employee = None
         if self.cache_enabled:
@@ -191,11 +194,30 @@ class DatabaseConnection:
 
     def delete_task(self, task_id: int):
         #TODO: do some auth
-        query = "DELETE FROM workTask WHERE idWorkTask = ?;"
+        try:
+            # try to just delete the project
+            query = "DELETE FROM workTask WHERE idWorkTask = ?;"
+            self.cursor.execute(query, (task_id, ))
+        except sql.IntegrityError:
+            #WARN: code doesn't work
+            # delete all comments referenced by the task comments
+            #query = "DELETE FROM comment AS c WHERE c.idComment IN (SELECT tc.idComment FROM taskComment AS tc WHERE tc.idWorkTask = ?);"
+            #self.cursor.execute(query, (task_id, ))
 
-        self.cursor.execute(query, (task_id, ))
+            # delete all task comments referencing this
+            query = "DELETE FROM taskComment AS tc WHERE tc.idWorkTask = ?;"
+            self.cursor.execute(query, (task_id, ))
 
-        # can't really fail, so nothing to return
+            # delete all assignments referencing this
+            query = "DELETE FROM assignment AS a WHERE a.idWorkTask = ?;"
+            self.cursor.execute(query, (task_id, ))
+
+            # now delete the project
+            query = "DELETE FROM workTask WHERE idWorkTask = ?;"
+            self.cursor.execute(query, (task_id, ))
+
+        return 201
+        
 
     def mark_task_completed(self, task_id: int, status: bool):
         if not self.task_exists(task_id):
@@ -325,9 +347,32 @@ class DatabaseConnection:
         #TODO: do some auth
         query = "DELETE FROM project WHERE idProject = ?;"
 
-        self.cursor.execute(query, (project_id, ))
+        try:
+            self.cursor.execute(query, (project_id, ))
+        except sql.IntegrityError:
+            return 401;
 
-        # can't really fail, so nothing to return
+        #TODO: do some auth
+        try:
+            # try to just delete the project
+            query = "DELETE FROM project WHERE idProject = ?;"
+            self.cursor.execute(query, (project_id, ))
+        except sql.IntegrityError:
+            #WARN: code doesn't work
+            # delete all comments referenced by the project comments
+            #query = "DELETE FROM comment c WHERE c.idComment IN (SELECT pc.idComment FROM projectComment AS pc WHERE pc.idProject = ?);"
+            #self.cursor.execute(query, (project_id, ))
+
+            # delete all task comments referencing this
+            query = "DELETE FROM projectComment AS pc WHERE pc.idProject = ?;"
+            self.cursor.execute(query, (project_id, ))
+
+            # now delete the project
+            query = "DELETE FROM project WHERE idProject = ?;"
+            self.cursor.execute(query, (project_id, ))
+
+        return 201
+        
 
     def project_exists(self, project_id: int) -> bool:
         if self.cache_enabled:
