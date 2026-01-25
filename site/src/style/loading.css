@@ -1,0 +1,23 @@
+.loading {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: all;
+}
+
+
+.loading-text {
+    margin-top: 1vw;
+    color: #e0e0e0;
+    font-size: 1.5rem;
+}
+
+.loading .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.4em;
+}

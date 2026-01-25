@@ -10,25 +10,7 @@ import ProjectPage from "./components/ProjectPage";
 import CreateProject from "./components/CreateProject";
 import CreateTasks from "./components/CreateTasks";
 import Credits from "./components/Credits";
-
-function fetch_custom(url, data) {
-  const start = performance.now();
-  const urlNow = window.location.href;
-  if (urlNow.includes("localhost")) {
-    const result = fetch("http://127.0.0.1:5000" + url, data);
-    const end = performance.now();
-    console.log(`tempo: ${end - start}ms`);
-    return result;
-  } else {
-    const result = fetch(
-      "https://redis-employee-site.onrender.com" + url,
-      data,
-    );
-    const end = performance.now();
-    console.log(`tempo: ${end - start}ms`);
-    return result;
-  }
-}
+import { LoadingScreen } from "./components/LoadingScreen";
 
 function NotFound() {
   const navigate = useNavigate();
@@ -42,6 +24,8 @@ function NotFound() {
 }
 
 export default function App() {
+  const [loading, setLoading] = useState(false);
+
   const [usedDB, setDB] = useState("sqlite");
   const [response, setResponse] = useState(null);
 
@@ -49,8 +33,27 @@ export default function App() {
     localStorage["id"] = idNum;
   };
 
+  async function fetch_custom(url, options) {
+    const start = performance.now();
+    const baseUrl = window.location.href.includes("localhost")
+      ? "http://127.0.0.1:5000"
+      : "https://redis-employee-site.onrender.com";
+
+    setLoading(true);
+
+    try {
+      const response = await fetch(baseUrl + url, options);
+      return response;
+    } finally {
+      const end = performance.now();
+      console.log(`tempo: ${end - start}ms`);
+      setLoading(false);
+    }
+  }
+
   return (
     <BrowserRouter basename="/redis-employee-site">
+      {loading && <LoadingScreen />}
       <Header />
       <Landing usedDB={usedDB} setDB={setDB} />
       <Routes>
