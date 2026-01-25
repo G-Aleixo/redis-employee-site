@@ -216,6 +216,10 @@ class DatabaseConnection:
             query = "DELETE FROM workTask WHERE idWorkTask = ?;"
             self.cursor.execute(query, (task_id, ))
 
+        if self.cache_enabled:
+            # remove task from cache
+            self.redis_db.delete(f"task:{task_id}")
+
         return 201
         
 
@@ -370,6 +374,10 @@ class DatabaseConnection:
             # now delete the project
             query = "DELETE FROM project WHERE idProject = ?;"
             self.cursor.execute(query, (project_id, ))
+
+        if self.cache_enabled:
+            # remove project from cache
+            self.redis_db.delete(f"project:{project_id}")
 
         return 201
         
