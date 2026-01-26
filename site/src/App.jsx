@@ -31,7 +31,7 @@ export function App() {
 
   async function fetch_custom(url, options) {
     const start = performance.now();
-    const baseUrl = window.location.href.includes("localhost")
+    const baseUrl = window.location.href.includes("localhost") && false
       ? "http://127.0.0.1:5000"
       : "https://redis-employee-site.onrender.com";
 

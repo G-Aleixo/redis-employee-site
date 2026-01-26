@@ -9,9 +9,8 @@ export default function CreateProject({ fetch_custom, usedDB }) {
   const location = useLocation();
 
   const {
-    valuesState = ["", ""],
-    isEdit = false,
-    id = 0,
+    valuesState = ["", "", 0],
+    isEdit = false
   } = location.state || {};
 
   const [title, setTitle] = useState(valuesState[0]);
@@ -34,14 +33,14 @@ export default function CreateProject({ fetch_custom, usedDB }) {
     e.preventDefault();
 
     try {
-      await fetch_custom(`/api/projects/${id}`, {
+      await fetch_custom(`/api/projects/${valuesState[2]}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name: title,
-          text: text,
+          text: text || "",
         }),
       });
     } catch (error) {
@@ -120,7 +119,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
                   <label htmlFor="floatingTextarea" className="form-label">
                     Informações do Projeto
                   </label>
-                  <textarea className="form-control" name="information" id="floatingTextarea" aria-label="Withtextarea" placeholder="Descrição do Projeto..." style={{ height: "140px" }} onChange={(e) => setText(e.target.value)} value={text} required/>
+                  <textarea className="form-control" name="information" id="floatingTextarea" aria-label="Withtextarea" placeholder="Descrição do Projeto... opcional" style={{ height: "140px" }} onChange={(e) => setText(e.target.value)} value={text} />
                 </div>
               </div>
             </div>

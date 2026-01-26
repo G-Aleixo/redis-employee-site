@@ -88,6 +88,7 @@ export default function Projects({ fetch_custom, usedDB }) {
               name={projectObj.name}
               text={projectObj.text}
               fetch_custom={fetch_custom}
+              getProjects={getProjects}
             />
           ))}
         </div>

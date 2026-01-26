@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { getId } from "../functions/id";
 
-export default function Project({ id, idManager, name, text, fetch_custom, usedDB }) {
+export default function Project({ id, idManager, name, text, fetch_custom, usedDB, getProjects }) {
   const navigate = useNavigate();
   const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
@@ -26,6 +26,8 @@ export default function Project({ id, idManager, name, text, fetch_custom, usedD
     } catch (error) {
       console.warn("Erro de server ou CORS", error);
     }
+
+    getProjects({ preventDefault: () => {} });
   }
 
   return (
