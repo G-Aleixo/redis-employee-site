@@ -88,6 +88,32 @@ def add_task():
 
     return {}, 201
 
+@app.put("/api/tasks/<int:task_id>")
+def edit_task(task_id: int):
+    data = request.get_json()
+    
+    # Validate correct JSON format
+    if not data or "name" not in data:
+        return jsonify({"error": "Missing required field: name"}), 400
+    if not data or "content" not in data:
+        return jsonify({"error": "Missing required field: content"}), 400
+    if not data or "done" not in data:
+        return jsonify({"error": "Missing required field: done"}), 400
+    if not data or "done_time" not in data:
+        return jsonify({"error": "Missing required field: done_time"}), 400
+    # if not data or "project_id" not in data:
+    #     return jsonify({"error": "Missing required field: project_id"}), 400
+
+    name = data.get("name")
+    content = data.get("content")
+    done = data.get("done")
+    done_time = data.get("")
+    project_id = data.get("project_id")
+
+    db = get_db()
+
+    return {}, db.edit_task(task_id, name, content, done, done_time, project_id)
+
 @app.delete("/api/tasks/<int:task_id>")
 def delete_task(task_id: int):
     #TODO: add auth
@@ -199,6 +225,23 @@ def add_project():
     code = db.add_project(name, text, manager_id=manager_id)
 
     return {}, code
+
+@app.put("/api/projects/<int:project_id>")
+def edit_project(project_id: int):
+    data = request.get_json()
+    
+    # Validate correct JSON format
+    if not data or "name" not in data:
+        return jsonify({"error": "Missing required field: name"}), 400
+    if not data or "text" not in data:
+        return jsonify({"error": "Missing required field: text"}), 400
+    
+    name = data.get("name")
+    text = data.get("text")
+
+    db = get_db()
+
+    return {}, db.edit_project(project_id, name, text)
 
 @app.delete("/api/projects/<int:project_id>")
 def delete_project(project_id: int):
