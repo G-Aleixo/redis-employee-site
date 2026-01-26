@@ -169,6 +169,8 @@ class DatabaseConnection:
 
             self.redis_db.expire(f"task:{task_id}", 10)
 
+        self.db.commit()
+
         return task
     
     def task_exists(self, task_id: int) -> bool:
@@ -237,6 +239,8 @@ class DatabaseConnection:
             # remove task from cache
             self.redis_db.delete(f"task:{task_id}")
 
+        self.db.commit()
+
         return 201
         
 
@@ -265,7 +269,8 @@ class DatabaseConnection:
             self.redis_db.hset(f"task:{task_id}", "done", int(task["done"]))
             self.redis_db.hset(f"task:{task_id}", "doneTimestamp", task["doneTimestamp"])
 
-        print(task["done"])
+
+        self.db.commit()
 
         if task is not None and bool(int(task["done"])) == status:
             return True
@@ -383,14 +388,6 @@ class DatabaseConnection:
     
     def delete_project(self, project_id: int):
         #TODO: do some auth
-        query = "DELETE FROM project WHERE idProject = ?;"
-
-        try:
-            self.cursor.execute(query, (project_id, ))
-        except sql.IntegrityError:
-            return 401
-
-        #TODO: do some auth
         try:
             # try to just delete the project
             query = "DELETE FROM project WHERE idProject = ?;"
@@ -400,6 +397,10 @@ class DatabaseConnection:
             # delete all comments referenced by the project comments
             #query = "DELETE FROM comment c WHERE c.idComment IN (SELECT pc.idComment FROM projectComment AS pc WHERE pc.idProject = ?);"
             #self.cursor.execute(query, (project_id, ))
+
+            # delete all tasks referencing this
+            query = "UPDATE workTask AS wt SET wt.idProject = NULL WHERE wt.idProject = ?;"
+            self.cursor.execute(query, (project_id, ))
 
             # delete all task comments referencing this
             query = "DELETE FROM projectComment AS pc WHERE pc.idProject = ?;"
@@ -412,6 +413,8 @@ class DatabaseConnection:
         if self.cache_enabled:
             # remove project from cache
             self.redis_db.delete(f"project:{project_id}")
+
+        self.db.commit()
 
         return 201
         
