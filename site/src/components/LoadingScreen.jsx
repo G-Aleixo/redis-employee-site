@@ -16,7 +16,7 @@ export function LoadingScreen() {
     let step = 0;
     let timeoutId;
     function loop() {
-      const time = step % 4 === 3 ? 400 : 200;
+      const time = step % 4 === 3 ? 700 : 300;
       setQtd((prev) => (prev + 1) % 4);
       step++;
       timeoutId = setTimeout(loop, time);
@@ -25,7 +25,7 @@ export function LoadingScreen() {
 
     const timeout = setTimeout(() => {
       setIsSlow(true);
-    }, 5500);
+    }, 7000);
 
     return () => {
       clearTimeout(timeoutId);
@@ -34,7 +34,7 @@ export function LoadingScreen() {
   }, []);
 
   const loadingText = isSlow
-    ? `Está demorando muito... recomendamos que recarregue a página${".".repeat(qtd)}`
+    ? `Está demorando muito... recomendamos que espere mais um pouco${".".repeat(qtd)}`
     : `Carregando${".".repeat(qtd)}`;
 
   return (
