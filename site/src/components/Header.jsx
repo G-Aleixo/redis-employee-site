@@ -6,7 +6,6 @@ export default function Header() {
   return (
     <div className="container-fluid" id="header-area">
       <div className="row justify-content-center align-items-center">
-
         <div className="row justify-content-center position-relative align-items-center custom-header">
           <div className="col-12 text-center">
             <h1 id="title-text">Renan's Software</h1>
@@ -20,7 +19,7 @@ export default function Header() {
                 top: "0%",
                 height: "100%",
                 width: "auto",
-                objectFit: "cover"
+                objectFit: "cover",
               }}
             />
           </div>
@@ -35,25 +34,54 @@ export default function Header() {
               top: "0%",
               height: "100%",
               width: "auto",
-              objectFit: "cover"
+              objectFit: "cover",
             }}
           />
         </div>
 
-        <div className="row justify-content-center border m-0 p-0 d-none d-sm-block" id="nav-bar">
+        <div
+          className="row justify-content-center border m-0 p-0 d-none d-sm-block"
+          id="nav-bar"
+        >
           <div className="col-12 m-0 p-0">
             <ul className="nav navbar-expand-md gap-1">
               <li className="nav-item h-100 flex-fill">
-                <a className="nav-link active" aria-disabled="true" href="https://pt.wikipedia.org/wiki/Extra%C3%A7%C3%A3o_de_petr%C3%B3leo">Empresas Renan</a>
+                <a
+                  className="nav-link active"
+                  aria-disabled="true"
+                  href="https://pt.wikipedia.org/wiki/Extra%C3%A7%C3%A3o_de_petr%C3%B3leo"
+                >
+                  Empresas Renan
+                </a>
               </li>
               <li className="nav-item h-100 flex-fill">
-                <a className="nav-link active" aria-disabled="true" aria-current="page" onClick={() => navigate("/")} href="">Home</a>
+                <a
+                  className="nav-link active"
+                  aria-disabled="true"
+                  aria-current="page"
+                  onClick={() => navigate("/")}
+                >
+                  Home
+                </a>
               </li>
               <li className="nav-item h-100 flex-fill">
-                <a className="nav-link" href="#">Créditos</a>
+                <a
+                  className="nav-link"
+                  aria-disabled="true"
+                  aria-current="page"
+                  onClick={() => navigate("/credits")}
+                >
+                  Créditos
+                </a>
               </li>
               <li className="nav-item h-100 flex-fill">
-                <a className="nav-link" href="https://br.linkedin.com/in/renan-alves-de-morais-rocha-453427184">Conheça Renan</a>
+                <a
+                  className="nav-link"
+                  aria-disabled="true"
+                  href="https://br.linkedin.com/in/renan-alves-de-morais-rocha-453427184"
+                >
+                  Conheça Renan
+                </a>
               </li>
             </ul>
           </div>
