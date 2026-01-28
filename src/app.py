@@ -187,11 +187,17 @@ def get_project_by_name(project_name: int):
 
     db = get_db()
 
-    project = db.get_project_by_name(project_name)
+    names_array = project_name.split()
+    project_array = []
+    for name in names_array:
+        project = db.get_project_by_name(name)
+        if project:
+            project_array.append(project)
+    
 
-    if project:
-        project = dict(project)
-        return jsonify(project), 200
+    if project_array:
+        projects_found = dict(project_array)
+        return jsonify(projects_found), 200
     else:
         return {}, 404
 

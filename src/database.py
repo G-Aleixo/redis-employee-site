@@ -337,9 +337,9 @@ class DatabaseConnection:
             if project_id := self.redis.get(f"project_name:{name}"):
                 return self.get_project(project_id)
 
-        query = "SELECT * FROM project WHERE name LIKE (?) LIMIT 1;"
+        query = "SELECT * FROM project WHERE name LIKE ? LIMIT 1;"
 
-        project = self.cursor.execute(query, (name, )).fetchone()
+        project = self.cursor.execute(query, (f"%{name}%", )).fetchone()
 
         if self.cache_enabled and project:
             self.redis.set(f"project_name:{name}", project["idProject"])
