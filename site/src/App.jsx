@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { HashRouter, Routes, Route, useNavigate } from "react-router-dom";
 import Header from "./components/Header";
 import Landing from "./components/Landing";
 import Login from "./components/Login";
@@ -31,7 +31,7 @@ export function App() {
 
   async function fetch_custom(url, options) {
     const start = performance.now();
-    const baseUrl = window.location.href.includes("localhost") && false
+    const baseUrl = window.location.href.includes("localhost")
       ? "http://127.0.0.1:5000"
       : "https://redis-employee-site.onrender.com";
 
@@ -48,7 +48,7 @@ export function App() {
   }
 
   return (
-    <BrowserRouter basename="/redis-employee-site">
+    <HashRouter>
       {loading && <LoadingScreen />}
       <Header />
       <Landing usedDB={usedDB} setDB={setDB} />
@@ -95,6 +95,6 @@ export function App() {
         <Route path="/create-tasks" element={<CreateTasks />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }

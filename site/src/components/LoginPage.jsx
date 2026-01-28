@@ -1,21 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import renanImg from "../assets/renan.jpeg";
 import { useEffect } from "react";
-import { getId, setId } from "../functions/id";
 
 export default function LoginPage({ response, usedDB }) {
   const navigate = useNavigate();
   const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
   useEffect(() => {
-    if (getId() == 0 || !getId() || getId() === undefined) {
-      navigate("/not-found");
-      return;
+    if (response) {
+      localStorage["id"] = response.id;
     }
-  }, [navigate]);
-
-  if (response == null) return null;
-  setId(response.id);
+  }, [response]);
 
   return (
     <div className={`container-fluid p-0 border border-2 ${borderClass}`} id="login-area">

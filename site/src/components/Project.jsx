@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { getId } from "../functions/id";
 
 export default function Project({ id, idManager, name, text, fetch_custom, usedDB, getProjects }) {
   const navigate = useNavigate();
+
   const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
   function editProject(e) {
@@ -18,15 +18,7 @@ export default function Project({ id, idManager, name, text, fetch_custom, usedD
 
   async function deleteProject(e) {
     e.preventDefault();
-
-    try {
-      await fetch_custom(`/api/projects/${id}`, {
-        method: "DELETE",
-      });
-    } catch (error) {
-      console.warn("Erro de server ou CORS", error);
-    }
-
+    await fetch_custom(`/api/projects/${id}`, { method: "DELETE", });
     getProjects({ preventDefault: () => {} });
   }
 
@@ -45,7 +37,7 @@ export default function Project({ id, idManager, name, text, fetch_custom, usedD
                 Visualizar
               </button>
 
-              {idManager == getId() && (
+              {idManager == localStorage["id"] && (
                 <button
                   className="btn btn-secondary flex-fill"
                   onClick={editProject}
@@ -54,7 +46,7 @@ export default function Project({ id, idManager, name, text, fetch_custom, usedD
                 </button>
               )}
             </div>
-            {idManager == getId() && (
+            {idManager == localStorage["id"] && (
               <button className="btn btn-danger" onClick={deleteProject}>
                 Apagar
               </button>

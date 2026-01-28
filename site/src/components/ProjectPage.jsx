@@ -1,16 +1,16 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getId } from "../functions/id";
 
 export default function ProjectPage({ fetch_custom, usedDB }) {
   const navigate = useNavigate();
   const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
-  const { id } = useParams();
   const [project, setProject] = useState({});
 
+  const { id } = useParams();
+
   async function getThisProject(e) {
-    if (getId() == 0 || !getId() || getId() === undefined) {
+    if (localStorage["id"] == 0 || !localStorage["id"] || localStorage["id"] === undefined) {
       navigate("/not-found");
       return;
     }

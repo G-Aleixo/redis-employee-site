@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import Alert from "./Alert";
 import sqliteImg from "../assets/sqlite_logo.png";
 import redisImg from "../assets/Logo-redis.svg.png";
-import { setId } from "../functions/id";
 
 export default function Login({ setResponse, usedDB, fetch_custom }) {
   const navigate = useNavigate();
@@ -56,7 +55,7 @@ export default function Login({ setResponse, usedDB, fetch_custom }) {
   }
 
   useEffect(() => {
-    setId(0);
+    localStorage["id"] = 0;
   }, []);
 
   return (
