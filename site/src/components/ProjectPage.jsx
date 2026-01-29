@@ -27,7 +27,6 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
 
       const data = await res.json();
       setProject(data);
-      console.log(data)
 
       if (res.status !== 200) {
         navigate("/not-found");
