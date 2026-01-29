@@ -331,6 +331,15 @@ class DatabaseConnection:
 
         return project
     
+    def search_projects_by_names(self, names):
+        conditions = " OR ".join(["name LIKE ?"] * len(names))
+
+        query = f"SELECT * FROM project WHERE {conditions}"
+
+        params = [f"%{name}%" for name in names]
+
+        return self.cursor.execute(query, params).fetchall()
+
     def get_project_by_name(self, name: str):
         if self.cache_enabled:
             if project_id := self.redis.get(f"project_name:{name}"):

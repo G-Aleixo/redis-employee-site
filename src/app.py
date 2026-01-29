@@ -181,25 +181,19 @@ def get_project(project_id: int):
         return {}, 404
 
 @app.get("/api/projects/search/<string:project_name>")
-def get_project_by_name(project_name: int):
+def get_project_by_name(project_name: str):
     if project_name == None:
         return {}, 501
 
     db = get_db()
 
     names_array = project_name.split()
-    project_array = []
-    for name in names_array:
-        project = db.get_project_by_name(name)
-        if project:
-            project_array.append(project)
+    projects = db.search_projects_by_names(names_array)
     
-
-    if project_array:
-        projects_found = dict(project_array)
-        return jsonify(projects_found), 200
+    if projects:
+        return jsonify([dict(row) for row in projects]), 200
     else:
-        return {}, 404
+        return jsonify([]), 404
 
 @app.get("/api/projects/")
 def get_projects():
