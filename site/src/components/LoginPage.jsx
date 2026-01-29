@@ -97,14 +97,7 @@ export default function LoginPage({ response, usedDB }) {
           <div className="input-group mb-3 shadow rounded">
             <span className="input-group-text" id="basic-addon5" style={{ width: "17ex" }}>Cadastro em:</span>
             <input type="text" className="form-control" aria-label="whenRegistred" aria-describedby="basic-addon5" readOnly
-              value={
-                response.joinedOn
-                  ? " " +
-                    new Date(
-                      response.joinedOn.replace(" ", "T") + "Z",
-                    ).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })
-                  : "Indefinido"
-              }
+              value={response.joinedOn}
             />
           </div>
         </div>

@@ -108,7 +108,7 @@ class DatabaseConnection:
             return True
         return False
 
-    def add_employee(self, name: str, age: int, information: str, password: str, id_manager: int = None, favorite_team: str = "América Natal - RN"):
+    def add_employee(self, name: str, age: int, information: str, password: str, id_manager: int = None, favorite_team: str = "América Natal - RN", joinedOn: datetime = None):
         if self.cache_enabled:
             exists = self.redis_db.get(f"employee_exists:{name}")
             if exists:
@@ -124,13 +124,11 @@ class DatabaseConnection:
         # we know better
         favorite_team = "América Natal - RN"
 
-        joined_on = str(datetime.now())
-
-        salt = name + joined_on # none yet
+        salt = name + joinedOn # none yet
 
         hashed_password = stable_hash(password + salt)
 
-        self.cursor.execute(query, (name, age, information, hashed_password, id_manager, favorite_team, joined_on))
+        self.cursor.execute(query, (name, age, information, hashed_password, id_manager, favorite_team, joinedOn))
 
         self.db.commit()
 

@@ -36,6 +36,7 @@ export default function CreateAccount({ fetch_custom, usedDB }) {
           information: information,
           favorite_team: favTeam.first,
           password: pwd,
+          joinedOn: new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })
         }),
       });
 

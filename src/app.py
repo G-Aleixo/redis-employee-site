@@ -336,9 +336,10 @@ def signup():
         info = data["information"]
         password = data["password"]
         favorite_team = data["favorite_team"]
+        joinedOn = data["joinedOn"]
 
         db = get_db()
-        sucess = db.add_employee(username, age, info, password, 1, favorite_team)
+        sucess = db.add_employee(username, age, info, password, 1, favorite_team, joinedOn)
         db.close()
         if sucess == 501:
             return {"error": "User with this name already exists"}, 501
