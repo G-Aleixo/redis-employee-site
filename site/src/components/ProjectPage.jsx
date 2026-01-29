@@ -27,6 +27,7 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
 
       const data = await res.json();
       setProject(data);
+      console.log(data)
 
       if (res.status !== 200) {
         navigate("/not-found");
@@ -79,7 +80,7 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
         <div className="col-sm-10 px-3">
           <div className="input-group mb-3">
             <span class="input-group-text" id="basic-addon3">Criado em: </span>
-            <input type="text" value={null} class="form-control shadow rounded-end" placeholder="Error Info Missing"aria-label="Username" aria-describedby="basic-addon3" readOnly/>
+            <input type="text" value={project["createdAt"]} class="form-control shadow rounded-end" placeholder="Error Info Missing"aria-label="Username" aria-describedby="basic-addon3" readOnly/>
           </div>
         </div>
 

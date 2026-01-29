@@ -221,14 +221,17 @@ def add_project():
         return jsonify({"error": "Missing required field: manager_id"}), 400
     if not data or "text" not in data:
         return jsonify({"error": "Missing required field: text"}), 400
+    if not data or "createdAt" not in data:
+        return jsonify({"error": "Missing required field: createdAt"}), 400
 
     name = data.get("name")
     manager_id = data.get("manager_id")
     text = data.get("text")
+    createdAt = data.get("createdAt")
 
     db = get_db()
 
-    code = db.add_project(name, text, manager_id=manager_id)
+    code = db.add_project(name, text, manager_id, createdAt)
 
     return {}, code
 

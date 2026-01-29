@@ -325,7 +325,8 @@ class DatabaseConnection:
             self.redis_db.hset(f"project:{project_id}", mapping = {
                 "name": project["name"],
                 "text": project["text"] if project["text"] else "",
-                "idManager": project["idManager"]
+                "idManager": project["idManager"],
+                "createdAt": project["createdAt"]
             })
 
             self.redis_db.expire(f"project:{project_id}", 10)
@@ -356,12 +357,12 @@ class DatabaseConnection:
 
         return self.cursor.execute(query, (project_id, )).fetchall()
 
-    def add_project(self, name: str, text: str, manager_id: int):
+    def add_project(self, name: str, text: str, manager_id: int, createdAt: datetime):
         if self.employee_exists(manager_id):
-            query = "INSERT INTO project (name, text, idManager) VALUES (?, ?, ?);"
+            query = "INSERT INTO project (name, text, idManager, createdAt) VALUES (?, ?, ?, ?);"
             
             try:
-                self.cursor.execute(query, (name, text, manager_id))
+                self.cursor.execute(query, (name, text, manager_id, createdAt))
                 
                 self.db.commit()
 
