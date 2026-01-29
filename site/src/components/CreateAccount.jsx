@@ -12,19 +12,14 @@ export default function CreateAccount({ fetch_custom, usedDB }) {
   const [pwd, setPwd] = useState("");
 
   const [loading, setLoading] = useState(false);
-  const [alert, setAlert] = useState({ sucess: false, error: false });
+  const [alert, setAlert] = useState({ 
+    showAlert: false, 
+    title: "", 
+    text: "", 
+    className: "" 
+  });
 
   const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
-
-  const [otherText, setOtherText] = useState("");
-  const redirectForHome = () => {
-    setTimeout(() => {
-      setOtherText("\nVocê será redirecionado para a página inicial.");
-      setTimeout(() => {
-        navigate("/");
-      }, 1500);
-    }, 1500);
-  };
 
   async function createAcc(e) {
     e.preventDefault();
@@ -45,37 +40,40 @@ export default function CreateAccount({ fetch_custom, usedDB }) {
       });
 
       if (res.ok) {
-        setAlert({ sucess: true, error: false });
-        redirectForHome();
+        setAlert({ 
+          showAlert: true, 
+          title: "Conta Criada!", 
+          text: "Sua conta foi criada! Volte para home e faça login.",
+          className: "alert-success"
+        });
       } else {
-        setAlert({ sucess: false, error: true });
+        setAlert({ 
+          showAlert: true, 
+          title: "Um Erro Ocorreu!", 
+          text: "O nome que você escolheu já está em uso, tente outro nome.", 
+          className: "alert-danger" 
+        });
       }
       setLoading(false);
     } catch (error) {
       console.warn("Erro de rede ou CORS:", error);
-      setAlert({ sucess: false, error: true });
+      setAlert({ 
+          showAlert: true, 
+          title: "Um Erro Ocorreu!", 
+          text: "O servidor não conseguiu se comunicar. Recarregue a página e tente novamente.", 
+          className: "alert-danger" 
+        });
     }
   }
 
   return (
     <div className={`container-fluid p-0 border border-2 ${borderClass}`} id="login-area">
-      {alert.sucess && (
+      {alert.showAlert && (
         <Alert
-          setFunction={() => setAlert({ sucess: false, error: false })}
-          title="Conta Criada!"
-          text={
-            "Sua conta foi criada! Volte para home e faça login." + otherText
-          }
-          className="alert-success"
-        />
-      )}
-
-      {alert.error && (
-        <Alert
-          setFunction={() => setAlert({ sucess: false, error: false })}
-          title="Um Erro Ocorreu!"
-          text="O nome que você escolheu já está em uso, tente outro nome."
-          className="alert-danger"
+          setFunction={(prev) => setAlert({ ...prev, showAlert: false })}
+          title={alert.title}
+          text={alert.text}
+          className={alert.className}
         />
       )}
 

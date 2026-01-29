@@ -13,8 +13,12 @@ export default function CreateProject({ fetch_custom, usedDB }) {
   const [text, setText] = useState(valuesState[1]);
   const [popup, setPopup] = useState(false);
 
-  const [alert, setAlert] = useState(null);
-  const [showAlert, setShowAlert] = useState(false);
+  const [alert, setAlert] = useState({ 
+    showAlert: false, 
+    title: "", 
+    text: "", 
+    className: "" 
+  });
 
   const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
@@ -40,36 +44,29 @@ export default function CreateProject({ fetch_custom, usedDB }) {
           text: text || "",
         }),
       });
-      setShowAlert(true);
       if (res.ok) {
-        setAlert(
-          <Alert
-            setFunction={() => {setShowAlert(false);}}
-            title={"Projeto Editado!"}
-            text={"Seu projeto foi editado! Volte para o visualizador de projetos."}
-          />
-        );
+        setAlert({ 
+          showAlert: true, 
+          title: "Projeto Editado!", 
+          text: "Seu projeto foi editado! Volte para o visualizador de projetos.",
+          className: "alert-success"
+        });
       } else {
-        setAlert(
-          <Alert
-            setFunction={() => {setShowAlert(false);}}
-            title={"Um Erro Ocorreu!"}
-            text={"O nome que você escolheu já está em uso, tente outro nome."}
-            className={"alert-danger"}
-          />
-        );
+        setAlert({ 
+          showAlert: true, 
+          title: "Um Erro Ocorreu!", 
+          text: "O nome que você escolheu já está em uso, tente outro nome.",
+          className: "alert-danger"
+        });
       }
     } catch (error) {
       console.warn("Erro de server ou CORS", error);
-      setShowAlert(true);
-      setAlert(
-          <Alert
-            setFunction={() => {setShowAlert(false);}}
-            title={"Um Erro Ocorreu!"}
-            text={"O servidor não conseguiu editar seu projeto. Recarregue a página e tente novamente."}
-            className={"alert-danger"}
-          />
-        );
+      setAlert({ 
+        showAlert: true, 
+        title: "Um Erro Ocorreu!", 
+        text: "O servidor não conseguiu editar seu projeto. Recarregue a página e tente novamente.",
+        className: "alert-danger"
+      });
     }
   }
 
@@ -88,36 +85,29 @@ export default function CreateProject({ fetch_custom, usedDB }) {
           manager_id: localStorage["id"],
         }),
       });
-      setShowAlert(true);
       if (res.ok) {
-        setAlert(
-          <Alert
-            setFunction={() => {setShowAlert(false);}}
-            title={"Projeto Criado!"}
-            text={"Seu projeto foi criado! Volte para o visualizador de projetos."}
-          />
-        );
+        setAlert({ 
+          showAlert: true, 
+          title: "Projeto Criado!", 
+          text: "Seu projeto foi criado! Volte para o visualizador de projetos.",
+          className: "alert-success"
+        });
       } else {
-        setAlert(
-          <Alert
-            setFunction={() => {setShowAlert(false);}}
-            title={"Um Erro Ocorreu!"}
-            text={"O nome que você escolheu já está em uso, tente outro nome."}
-            className={"alert-danger"}
-          />
-        );
+        setAlert({ 
+          showAlert: true, 
+          title: "Um Erro Ocorreu!", 
+          text: "O nome que você escolheu já está em uso, tente outro nome.",
+          className: "alert-danger"
+        });
       }
     } catch (error) {
       console.warn("Erro de server ou CORS", error);
-      setShowAlert(true);
-      setAlert(
-          <Alert
-            setFunction={() => {setShowAlert(false);}}
-            title={"Um Erro Ocorreu!"}
-            text={"O servidor não conseguiu editar seu projeto. Recarregue a página e tente novamente."}
-            className={"alert-danger"}
-          />
-        );
+      setAlert({ 
+        showAlert: true, 
+        title: "Um Erro Ocorreu!", 
+        text: "O servidor não conseguiu criar seu projeto. Recarregue a página e tente novamente.",
+        className: "alert-danger"
+      });
     }
   }
 
@@ -139,7 +129,14 @@ export default function CreateProject({ fetch_custom, usedDB }) {
           </div>
         </div>
 
-        {showAlert && alert}
+        {alert.showAlert && (
+          <Alert
+            setFunction={(prev) => setAlert({ ...prev, showAlert: false })}
+            title={alert.title}
+            text={alert.text}
+            className={alert.className}
+          />
+        )}
 
         <div className="row g-0">
           <form onSubmit={projectFunction}>

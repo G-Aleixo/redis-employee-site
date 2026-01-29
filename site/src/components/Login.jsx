@@ -15,12 +15,17 @@ export default function Login({ setResponse, usedDB, fetch_custom }) {
 
   const [name, setName] = useState("");
   const [pwd, setPwd] = useState("");
-  const [alert, setAlert] = useState({ pwdWrong: false, notExists: false });
   const [loading, setLoading] = useState(false);
+
+  const [alert, setAlert] = useState({ 
+    showAlert: false, 
+    title: "", 
+    text: "", 
+    className: "" 
+  });
 
   async function login(e) {
     e.preventDefault();
-    setAlert({ pwdWrong: false, notExists: false });
 
     setLoading(true);
 
@@ -43,14 +48,30 @@ export default function Login({ setResponse, usedDB, fetch_custom }) {
         navigate("/login-page");
       } else {
         if (res.status === 404) {
-          setAlert({ pwdWrong: false, notExists: true });
+          setAlert({ 
+            showAlert: true, 
+            title: "Conta Não Encontrada!", 
+            text: "Sua conta não foi encontrada, tente criar uma conta no botão 'Criar Conta'.",
+            className: "alert-danger"
+          });
         } else if (res.status === 401) {
-          setAlert({ pwdWrong: true, notExists: false });
+          setAlert({ 
+            showAlert: true, 
+            title: "Senha incorreta!", 
+            text: "O nome que você escolheu já está em uso, tente outro nome.",
+            className: "alert-danger"
+          });
         }
       }
       setLoading(false);
     } catch (error) {
       console.warn("Erro de rede ou CORS:", error);
+      setAlert({ 
+        showAlert: true, 
+        title: "Um Erro Ocorreu!", 
+        text: "A senha inserida não está correta, tente novamente.",
+        className: "alert-warning"
+      });
     }
   }
 
@@ -60,21 +81,12 @@ export default function Login({ setResponse, usedDB, fetch_custom }) {
 
   return (
     <div className={`container-fluid p-0 border border-2 ${borderClass}`} id="login-area">
-      {alert.notExists && (
+      {alert.showAlert && (
         <Alert
-          setFunction={() => setAlert({ pwdWrong: false, notExists: false })}
-          title="Conta Não Encontrada!"
-          text='Sua conta não foi encontrada, tente criar uma conta no botão "Criar Conta".'
-          className="alert-danger"
-        />
-      )}
-
-      {alert.pwdWrong && (
-        <Alert
-          setFunction={() => setAlert({ pwdWrong: false, notExists: false })}
-          title="Senha incorreta!"
-          text="A senha inserida não pertence a essa conta ou não existe, tente novamente."
-          className="alert-warning"
+          setFunction={(prev) => setAlert({ ...prev, showAlert: false })}
+          title={alert.title}
+          text={alert.text}
+          className={alert.className}
         />
       )}
 
