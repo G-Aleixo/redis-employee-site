@@ -156,8 +156,12 @@ export default function CreateProject({ fetch_custom, usedDB }) {
     function getKeyDown(event) {
       if (event.key == "Escape") setPopup(false);
     }
-    window.addEventListener("keydown", getKeyDown)
+    window.addEventListener("keydown", getKeyDown);
   }, [setPopup]);
+
+  useEffect(() => {
+    setPopup(false)
+  }, [tasksData]);
 
   return (
     <>
