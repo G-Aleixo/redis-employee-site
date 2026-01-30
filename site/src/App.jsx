@@ -38,6 +38,7 @@ export function App() {
     setLoading(true);
 
     try {
+      options["usedDB"] = usedDB;
       const response = await fetch(baseUrl + url, options);
       return response;
     } finally {
