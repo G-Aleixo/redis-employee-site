@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Alert from "./Alert";
 import CreateTasks from "./CreateTasks";
+import Task from "./Task";
 
 export default function CreateProject({ fetch_custom, usedDB }) {
   const navigate = useNavigate();
@@ -13,6 +14,9 @@ export default function CreateProject({ fetch_custom, usedDB }) {
   const [text, setText] = useState(valuesState[1]);
   const [popup, setPopup] = useState(false);
 
+  const [nameTask, setNameTask] = useState("");
+  const [contentTask, setContentTask] = useState("");
+
   const [alert, setAlert] = useState({ 
     showAlert: false, 
     title: "", 
@@ -20,15 +24,17 @@ export default function CreateProject({ fetch_custom, usedDB }) {
     className: ""
   });
 
-  const [tasksData, setTasksData] = useState([{}]);
+  const [tasksData, setTasksData] = useState([]);
 
   const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
-  function setTaskData(title, text) {
-    setTasksData(tasksData + [{
-      name: title,
-      content: text
-    }])
+  function setTaskData(e) {
+    e.preventDefault();
+
+    setTasksData((prev) => [...prev, {
+      name: nameTask,
+      content: contentTask
+    }]);
   }
 
   function projectFunction(e) {
@@ -42,8 +48,11 @@ export default function CreateProject({ fetch_custom, usedDB }) {
   async function createTask(e, projectId) {
     e.preventDefault();
 
-    await fetch_custom("/api/task", {
+    await fetch_custom("/api/tasks", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: {
         tasks: tasksData,
         project_id: projectId
@@ -96,7 +105,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
     e.preventDefault();
 
     try {
-      const res = await ("/api/projects", {
+      let res = await fetch_custom("/api/projects", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -109,8 +118,8 @@ export default function CreateProject({ fetch_custom, usedDB }) {
         }),
       });
       const data = await res.json();
-      const resTask = await createTask({ preventDefault: () => {} }, data.project_id);
-      if (resTask.ok) {
+      if (tasksData.length > 0) res = await createTask({ preventDefault: () => {} }, data.project_id);
+      if (res.ok) {
         setAlert({ 
           showAlert: true, 
           title: "Projeto Criado!", 
@@ -202,35 +211,20 @@ export default function CreateProject({ fetch_custom, usedDB }) {
               </div>
             </div>
 
-            <div className="row g-0">
-              <div className="col-12">
-                <h3 className="text-center py-3 border-top border-black w-75 mx-auto">
-                  Tarefas do Projeto
-                </h3>
-              </div>
-            </div>
-
-            <div className="row row-cols-1 row-cols-md-3 g-1 p-4 justify-content-center">
-              <div className="col">
-                <div className="card shadow h-100 text-center">
-                  <div className="card-body">
-                    <h5 className="card-title">Card Template</h5>
-                    <p className="card-text">
-                      {["card  text"]}
-                    </p>
-                  </div>
-                  <div className="card-footer d-flex justify-content-center gap-2">
-                      <button className="btn btn-danger w-50" onClick={null}>
-                        Apagar
-                      </button>
-                      <button className="btn btn-secondary w-50" onClick={null}>
-                        Editar
-                      </button>
+            {tasksData.length > 0 && (
+              <>
+                <div className="row g-0">
+                  <div className="col-12">
+                    <h3 className="text-center py-3 border-top border-black w-75 mx-auto">
+                      Tarefas do Projeto
+                    </h3>
                   </div>
                 </div>
-              </div>
-
-            </div>
+                {tasksData.map((taskObj) => (
+                  <Task key={taskObj.name} name={taskObj.name} content={taskObj.content} />
+                ))}
+              </>
+            )}
 
             <div className="row py-3 g-0">
               <div className="col-sm-12 d-flex justify-content-center">
@@ -254,7 +248,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
         </div>
       </div>
 
-      {popup && <CreateTasks setPopup={setPopup} setTaskData={setTaskData} />}
+      {popup && <CreateTasks setPopup={setPopup} setNameTask={setNameTask} setContentTask={setContentTask} setTaskData={setTaskData} />}
     </>
   );
 }
