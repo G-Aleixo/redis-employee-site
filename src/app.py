@@ -37,15 +37,6 @@ def close_db(exception):
         db.close()
 
 
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if "user_id" not in session:
-            return jsonify({"error": "Authentication required"}), 401
-        return f(*args, **kwargs)
-    return decorated_function
-
-
 @app.route("/")
 def hello_world():
     name = request.args.get("name", "Flask")
@@ -81,20 +72,17 @@ def add_task():
     data = request.get_json()
     
     # Validate correct JSON format
-    if not data or "name" not in data:
-        return jsonify({"error": "Missing required field: name"}), 400
-    if not data or "content" not in data:
-        return jsonify({"error": "Missing required field: content"}), 400
-    # if not data or "project_id" not in data:
-    #     return jsonify({"error": "Missing required field: project_id"}), 400
+    if not data or "tasks" not in data:
+        return jsonify({"error": "Missing required field: tasks"}), 400
+    if not data or "project_id" not in data:
+        return jsonify({"error": "Missing required field: project_id"}), 400
 
-    name = data.get("name")
-    content = data.get("content")
+    tasks = data.get("tasks")
     project_id = data.get("project_id")
 
     db = get_db()
 
-    db.add_task(name, content, project_id=project_id)
+    db.add_tasks(tasks, project_id)
 
     return {}, 201
 
@@ -235,9 +223,9 @@ def add_project():
 
     db = get_db()
 
-    code = db.add_project(name, text, manager_id, createdAt)
+    id, code = db.add_project(name, text, manager_id, createdAt)
 
-    return {}, code
+    return {"project_id": id}, code
 
 @app.put("/api/projects/<int:project_id>")
 def edit_project(project_id: int):

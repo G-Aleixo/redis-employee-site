@@ -188,6 +188,14 @@ class DatabaseConnection:
         self.cursor.execute(query, (name, content, done, done_time, str(datetime.now()), project_id))
 
         self.db.commit()
+    
+    def add_tasks(self, tasks, project_id):
+        tasks = [(task["name"], task["content"], datetime(), project_id) for task in tasks]
+
+        query = "INSERT INTO workTask (name, content, createdAt, idProject) VALUES (?, ?, ?, ?);"
+        self.cursor.executemany(query, tasks)
+
+        self.db.commit()
 
     def edit_task(self, task_id: int, name: str, content: str, done: bool = False, done_time: str = None, project_id: int = None):
         if self.task_exists(project_id):
@@ -241,7 +249,6 @@ class DatabaseConnection:
 
         return 201
         
-
     def mark_task_completed(self, task_id: int, status: bool):
         if not self.task_exists(task_id):
             return False
@@ -371,11 +378,13 @@ class DatabaseConnection:
             try:
                 self.cursor.execute(query, (name, text, manager_id, createdAt))
                 
-                self.db.commit()
+                id = self.cursor.lastrowid
 
-                return 201
+                self.db.commit()  
+
+                return id, 201
             except sql.IntegrityError:
-                return 501
+                return None, 501
     
     def edit_project(self, project_id: int, name: str, text: str):
         if self.project_exists(project_id):
