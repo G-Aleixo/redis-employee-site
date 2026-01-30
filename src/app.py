@@ -66,6 +66,16 @@ def get_task(task_id: int):
     else:
         return {}, 404
 
+@app.get("/api/tasks/")
+def get_tasks():
+    db = get_db()
+
+    tasks = db.get_tasks()
+
+    tasks = [dict(task) for task in tasks]
+
+    return tasks, 200
+
 @app.post("/api/tasks")
 def add_task():
     data = request.get_json()
