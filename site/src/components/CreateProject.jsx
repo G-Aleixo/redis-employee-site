@@ -48,15 +48,15 @@ export default function CreateProject({ fetch_custom, usedDB }) {
   async function createTask(e, projectId) {
     e.preventDefault();
 
-    await fetch_custom("/api/tasks", {
+    const res = await fetch_custom("/api/tasks", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: {
+      body: JSON.stringify({
         tasks: tasksData,
         project_id: projectId
-      }
+      })
     })
   }
 

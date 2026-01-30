@@ -190,9 +190,9 @@ class DatabaseConnection:
         self.db.commit()
     
     def add_tasks(self, tasks, project_id):
-        tasks = [(task["name"], task["content"], datetime(), project_id) for task in tasks]
+        tasks = [(task["name"], task["content"], project_id, datetime.now()) for task in tasks]
 
-        query = "INSERT INTO workTask (name, content, createdAt, idProject) VALUES (?, ?, ?, ?);"
+        query = "INSERT INTO workTask (name, content, idProject, done, createdAt) VALUES (?, ?, ?, false, ?);"
         self.cursor.executemany(query, tasks)
 
         self.db.commit()
