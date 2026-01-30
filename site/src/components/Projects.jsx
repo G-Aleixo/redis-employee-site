@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Project from "./Project.jsx";
+import CreateTasks from "./CreateTasks.jsx"
 
 export default function Projects({ fetch_custom, usedDB }) {
   const navigate = useNavigate();
@@ -8,6 +9,8 @@ export default function Projects({ fetch_custom, usedDB }) {
   const [projectName, setProjectName] = useState("");
 
   const [projects, setProjects] = useState([]);
+
+  const [popup, setPopup] = useState(false);
 
   const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
@@ -95,8 +98,11 @@ export default function Projects({ fetch_custom, usedDB }) {
 
         <div className="row justify-content-center py-3 g-0">
           <div className="col-sm-10 d-flex justify-content-center gap-3">
-            <button className="btn btn-secondary w-50" onClick={() => navigate("/create-project")}>
+            <button className="btn btn-secondary w-25" onClick={() => navigate("/create-project")}>
               Criar Projeto
+            </button>
+            <button className="btn btn-secondary w-25" onClick={() => setPopup(true)}>
+              Criar Tarefa
             </button>
             <button className="btn btn-success w-50" onClick={() => navigate("/")}>
               Voltar Home
@@ -104,6 +110,8 @@ export default function Projects({ fetch_custom, usedDB }) {
           </div>
         </div>
       </div>
+
+      {popup && <CreateTasks setPopup={setPopup} />}
     </>
   );
 }

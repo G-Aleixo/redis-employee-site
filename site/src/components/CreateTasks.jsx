@@ -1,23 +1,14 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-export default function CreateTasks({ setPopup, usedDB }) {
-  const navigate = useNavigate();
-
-  const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
-
-  useEffect(() => {
-    if (localStorage["id"] == 0 || !localStorage["id"] || localStorage["id"] === undefined) {
-      navigate("/not-found");
-      return;
-    }
-  }, [navigate]);
+export default function CreateTasks({ setPopup, setTaskData }) {
+  const [title, setTitle] = useState("");
+  const [text, setText] = useState("");
 
   return (
     <div className="modal fade show d-block" tabIndex="-1">
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
-          <form action="" onSubmit={() => setPopup(false)}>
+          <form action="" onSubmit={setTaskData(title, text)}>
             <div className="modal-header">
               <h5 className="modal-title">Criando uma Tarefa</h5>
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setPopup(false)}></button>
@@ -28,14 +19,14 @@ export default function CreateTasks({ setPopup, usedDB }) {
                 <span className="input-group-text" id="basic-addon1">
                   Título
                 </span>
-                <input type="text" className="form-control" placeholder="Título da Tarefa" aria-label="Username" aria-describedby="basic-addon1" required/>
+                <input type="text" className="form-control" placeholder="Título da Tarefa" aria-label="Username" aria-describedby="basic-addon1" value={title} onChange={(e) => setTitle(e.target.value)} required/>
               </div>
 
               <div className="mb-3">
                 <label htmlFor="floatingTextarea" className="form-label">
                   Informações Extras
                 </label>
-                <textarea onChange={null} value={""} className="form-control" name="information" id="floatingTextarea" aria-label="Withtextarea" placeholder="Descreva a Tarefa" style={{ height: "140px" }} required/>
+                <textarea className="form-control" name="information" id="floatingTextarea" aria-label="Withtextarea" placeholder="Descreva a Tarefa" style={{ height: "140px" }} value={text} onChange={(e) => setText(e.target.value)} required/>
               </div>
             </div>
 

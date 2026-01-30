@@ -17,10 +17,19 @@ export default function CreateProject({ fetch_custom, usedDB }) {
     showAlert: false, 
     title: "", 
     text: "", 
-    className: "" 
+    className: ""
   });
 
+  const [tasksData, setTasksData] = useState([{}]);
+
   const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
+
+  function setTaskData(title, text) {
+    setTasksData(tasksData + [{
+      name: title,
+      content: text
+    }])
+  }
 
   function projectFunction(e) {
     if (isEdit) {
@@ -28,6 +37,18 @@ export default function CreateProject({ fetch_custom, usedDB }) {
     } else {
       createProject(e);
     }
+  }
+
+  async function createTask(e, projectId) {
+    e.preventDefault();
+
+    await fetch_custom("/api/task", {
+      method: "POST",
+      body: {
+        tasks: tasksData,
+        project_id: projectId
+      }
+    })
   }
 
   async function editProject(e) {
@@ -51,6 +72,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
           text: "Seu projeto foi editado! Volte para o visualizador de projetos.",
           className: "alert-success"
         });
+        createTask({ preventDefault: () => {} }, valuesState[2]);
       } else {
         setAlert({ 
           showAlert: true, 
@@ -74,7 +96,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
     e.preventDefault();
 
     try {
-      const res = await fetch_custom("/api/projects", {
+      const res = await ("/api/projects", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -86,7 +108,9 @@ export default function CreateProject({ fetch_custom, usedDB }) {
           createdAt: new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })
         }),
       });
-      if (res.ok) {
+      const data = await res.json();
+      const resTask = await createTask({ preventDefault: () => {} }, data.project_id);
+      if (resTask.ok) {
         setAlert({ 
           showAlert: true, 
           title: "Projeto Criado!", 
@@ -118,6 +142,13 @@ export default function CreateProject({ fetch_custom, usedDB }) {
       return;
     }
   }, [navigate]);
+
+  useEffect(() => {
+    function getKeyDown(event) {
+      if (event.key == "Escape") setPopup(false);
+    }
+    window.addEventListener("keydown", getKeyDown)
+  }, [setPopup]);
 
   return (
     <>
@@ -223,7 +254,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
         </div>
       </div>
 
-      {popup && <CreateTasks setPopup={setPopup} />}
+      {popup && <CreateTasks setPopup={setPopup} setTaskData={setTaskData} />}
     </>
   );
 }
