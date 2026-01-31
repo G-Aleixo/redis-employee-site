@@ -5,15 +5,60 @@ export default function Credits() {
 
   return (
     <>
-      <p>feito por</p>
-      <ul>
-        <li>Brasilicio</li>
-        <li>Guilherme</li>
-        <li>Kaio</li>
-        <li>Vinícius</li>
-      </ul>
-      <p>Apoio de: Renan, The Rocha</p>
-      <button onClick={() => navigate("/")}>Voltar Home</button>
+      <div className="container-fluid g-0 p-0" id="login-area">
+        <div className="row justify-content-center g-0 pb-2 pt-4">
+          <div className="col-12 text-center mx-auto">
+            <h4>Créditos</h4>
+          </div>
+        </div>
+
+        <div className="row border-bottom border-black w-75 mx-auto g-0 py-1"></div>
+        
+        <div className="row justify-content-center g-0 py-4">
+          <div className="col-12 text-center mx-auto">
+            <h4>Front-end: Kaio Henrique</h4>
+            <em>"Dev Front-end nem dev é." - Kaio H.</em>
+          </div>
+        </div>
+
+        <div className="row justify-content-center g-0 py-4">
+          <div className="col-12 text-center mx-auto">
+            <h4>Back-end: Guilherme Aleixo</h4>
+            <em>"Summone ele Kaio." - Brasilicio Henrique</em>
+          </div>
+        </div>
+
+        <div className="row justify-content-center g-0 py-4">
+          <div className="col-12 text-center mx-auto">
+            <h4>Fullstack: Brasilicio Henrique</h4>
+            <em>"Eu ja fudi e desfudi esse código 3 vezes." - Brasilicio Henrique</em>
+          </div>
+        </div>
+
+        <div className="row justify-content-center g-0 py-4">
+          <div className="col-12 text-center mx-auto">
+            <h4>Slides: Vinicius Miguel</h4>
+            <em>"Sem Terraria hoje, pela terceira vez." - Vinicius Miguel</em>
+          </div>
+        </div>
+
+        <div className="row border-bottom border-black w-75 mx-auto g-0 py-1"></div>
+
+        <div className="row justify-content-center g-0 py-4">
+          <div className="col-12 text-center mx-auto">
+            <h5>Apoio: Renan, The Rocha</h5>
+            <em>O grande, o homem, aquele que chutou uma bola e hoje ela se chama lua. <br /> - <br /> O nosso Professor.</em>
+          </div>
+        </div>
+
+        <div className="row justify-content-center g-0 pb-4">
+          <div className="col-sm-10 d-flex justify-content-center gap-3">
+            <button className="btn btn-success w-50" onClick={() => navigate("/")}>
+              Voltar a Home
+            </button>
+          </div>
+      </div>
+      </div>
     </>
   );
 }
