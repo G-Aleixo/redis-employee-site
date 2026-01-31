@@ -1,16 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Project from "./Project.jsx";
-import CreateTasks from "./CreateTasks.jsx"
 
 export default function Projects({ fetch_custom, usedDB }) {
   const navigate = useNavigate();
 
   const [projectName, setProjectName] = useState("");
 
-  const [projects, setProjects] = useState([]);
-
-  const [popup, setPopup] = useState(false);
+  const [projects, setProjects] = useState([])
 
   const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
@@ -107,8 +104,6 @@ export default function Projects({ fetch_custom, usedDB }) {
           </div>
         </div>
       </div>
-
-      {popup && <CreateTasks setPopup={setPopup} />}
     </>
   );
 }
