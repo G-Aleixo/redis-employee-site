@@ -6,17 +6,28 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
   const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
   const [project, setProject] = useState({});
+  const [projectsTasks, setProjectsTasks] = useState([]);
 
   const { id } = useParams();
 
-  async function getThisProject(e) {
-    if (localStorage["id"] == 0 || !localStorage["id"] || localStorage["id"] === undefined) {
-      navigate("/not-found");
-      return;
+  async function getTasksThisProject() {
+    try {
+      const res = await fetch_custom(`/api/projects/${id}/tasks`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+      const data = await res.json();
+      setProjectsTasks(data);
+
+      console.log(projectsTasks);
+    } catch (error) {
+      console.warn("Erro de server ou CORS", error);
     }
+  }
 
-    e.preventDefault();
-
+  async function getThisProject() {
     try {
       const res = await fetch_custom(`/api/projects/${id}`, {
         method: "GET",
@@ -37,7 +48,12 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
   }
 
   useEffect(() => {
-    getThisProject({ preventDefault: () => {} });
+    if (localStorage["id"] == 0 || !localStorage["id"] || localStorage["id"] === undefined) {
+      navigate("/not-found");
+      return;
+    }
+    getThisProject();
+    getTasksThisProject();
   }, []);
 
   return (
