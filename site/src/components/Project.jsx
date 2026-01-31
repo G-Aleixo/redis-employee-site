@@ -1,9 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
-export default function Project({ id, idManager, name, text, fetch_custom, usedDB, getProjects }) {
+export default function Project({ id, idManager, name, text, fetch_custom, getProjects }) {
   const navigate = useNavigate();
-
-  const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
   function editProject(e) {
     e.preventDefault();
@@ -32,7 +30,7 @@ export default function Project({ id, idManager, name, text, fetch_custom, usedD
             <div className="d-flex gap-2">
               <button
                 className="btn btn-primary flex-fill"
-                onClick={() => navigate(`/project/${id}`)}
+                onClick={() => navigate(`/project/${id}`, {state: {idManager: idManager}})}
               >
                 Visualizar
               </button>

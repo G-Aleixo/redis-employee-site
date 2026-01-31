@@ -45,18 +45,15 @@ export default function CreateProject({ fetch_custom, usedDB }) {
     }
   }
 
-  async function createTask(e, projectId) {
-    e.preventDefault();
+  async function createTask(projectId) {
     return await fetch_custom("/api/tasks", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         tasks: tasksData,
         project_id: projectId
       })
-    })
+    });
   }
 
   async function editProject(e) {
@@ -80,7 +77,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
           text: "Seu projeto foi editado! Volte para o visualizador de projetos.",
           className: "alert-success"
         });
-        createTask({ preventDefault: () => {} }, valuesState[2]);
+        await createTask(valuesState[2]);
       } else {
         setAlert({ 
           showAlert: true, 
@@ -116,8 +113,9 @@ export default function CreateProject({ fetch_custom, usedDB }) {
           createdAt: new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })
         }),
       });
+      if (!res.ok) throw new Error("Erro ao criar projeto");
       const data = await res.json();
-      if (tasksData.length > 0) res = await createTask({ preventDefault: () => {} }, data.project_id);
+      if (tasksData.length > 0) res = await createTask(data.project_id);
       if (res.ok) {
         setAlert({ 
           showAlert: true, 
@@ -153,10 +151,11 @@ export default function CreateProject({ fetch_custom, usedDB }) {
 
   useEffect(() => {
     function getKeyDown(event) {
-      if (event.key == "Escape") setPopup(false);
+      if (event.key === "Escape") setPopup(false);
     }
     window.addEventListener("keydown", getKeyDown);
-  }, [setPopup]);
+    return () => window.removeEventListener("keydown", getKeyDown);
+  }, []);
 
   useEffect(() => {
     setPopup(false)
@@ -223,9 +222,12 @@ export default function CreateProject({ fetch_custom, usedDB }) {
                     </h3>
                   </div>
                 </div>
-                {tasksData.map((taskObj) => (
-                  <Task key={taskObj.name} name={taskObj.name} content={taskObj.content} />
-                ))}
+                
+                <div className="row row-cols-1 row-cols-md-3 g-1 p-4 justify-content-center">
+                  {tasksData.map((taskObj) => (
+                    <Task key={taskObj.name} name={taskObj.name} content={taskObj.content} idManager={-1} />
+                  ))}
+                </div>
               </>
             )}
 
@@ -242,7 +244,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
                 <button className="btn btn-secondary w-50" type="submit">
                   Salvar Projeto
                 </button>
-                <button className="btn btn-success w-50" onClick={() => navigate("/projects")}>
+                <button type="button" className="btn btn-success w-50" onClick={() => navigate("/projects")}>
                   Voltar
                 </button>
               </div>

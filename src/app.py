@@ -268,7 +268,7 @@ def get_project_comments(project_id: int):
 @app.get("/api/project/<int:project_id>/tasks")
 def get_project_tasks(project_id: int):
     if project_id == None:
-        return {}, 501
+        return jsonify({"error": "Don't has an id"}), 501
 
     db = get_db()
 
@@ -277,7 +277,7 @@ def get_project_tasks(project_id: int):
     if project:
         return jsonify([dict(row) for row in db.get_project_tasks(project_id)]), 200
     else:
-        return {}, 404
+        return jsonify({"error": "Project not found"}), 404
 
 @app.get("/api/employees/<int:employee_id>")
 def get_employee_api(employee_id: int | None = None):
