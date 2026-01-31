@@ -1,4 +1,4 @@
-export default function CreateTasks({ setPopup, setNameTask, setContentTask, setTaskData }) {
+export default function CreateTasks({ setPopup, nameTask, setNameTask, contentTask, setContentTask, setTaskData }) {
   return (
     <div className="modal fade show d-block" tabIndex="-1">
       <div className="modal-dialog modal-dialog-centered">
@@ -14,14 +14,14 @@ export default function CreateTasks({ setPopup, setNameTask, setContentTask, set
                 <span className="input-group-text" id="basic-addon1">
                   Título
                 </span>
-                <input type="text" className="form-control" placeholder="Título da Tarefa" aria-label="Username" aria-describedby="basic-addon1" onChange={(e) => setNameTask(e.target.value)} required/>
+                <input type="text" className="form-control" placeholder="Título da Tarefa" aria-label="Username" aria-describedby="basic-addon1" value={nameTask} onChange={(e) => setNameTask(e.target.value)} required/>
               </div>
 
               <div className="mb-3">
                 <label htmlFor="floatingTextarea" className="form-label">
                   Informações Extras
                 </label>
-                <textarea className="form-control" name="information" id="floatingTextarea" aria-label="Withtextarea" placeholder="Descreva a Tarefa" style={{ height: "140px" }} onChange={(e) => setContentTask(e.target.value)} required/>
+                <textarea className="form-control" name="information" id="floatingTextarea" aria-label="Withtextarea" placeholder="Descreva a Tarefa" style={{ height: "140px" }} value={contentTask} onChange={(e) => setContentTask(e.target.value)} required/>
               </div>
             </div>
 

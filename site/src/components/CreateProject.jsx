@@ -26,12 +26,19 @@ export default function CreateProject({ fetch_custom, usedDB }) {
 
   const [tasksData, setTasksData] = useState([]);
 
+  const [editTaskObj, setEditTaskObj] = useState(null);
+
   const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
-  function setTaskData(e) {
+  async function setTaskData(e) {
     e.preventDefault();
 
-    if (tasksData.some(obj => obj.name == nameTask)) {
+    if (editTaskObj != null) {
+      await setTasksData(prev =>
+        prev.filter(item => !(item.name == editTaskObj.name && item.content == editTaskObj.content))
+      );
+      setEditTaskObj(null);
+    } else if (tasksData.some(obj => obj.name == nameTask)) {
       setAlert({ 
         showAlert: true, 
         title: "Um Erro Ocorreu!", 
@@ -45,6 +52,19 @@ export default function CreateProject({ fetch_custom, usedDB }) {
       name: nameTask,
       content: contentTask
     }]);
+  }
+
+  async function editTask(obj) {
+    setEditTaskObj(obj);
+    setNameTask(obj.name);
+    setContentTask(obj.content);
+    setPopup(true);
+  }
+
+  function deleteTask(obj) {
+    setTasksData(prev =>
+      prev.filter(item => !(item.name == obj.name && item.content == obj.content))
+    );
   }
 
   function projectFunction(e) {
@@ -239,7 +259,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
                 
                 <div className="row row-cols-1 row-cols-md-3 g-1 p-4 justify-content-center">
                   {tasksData.map((taskObj) => (
-                    <Task key={taskObj.name} name={taskObj.name} content={taskObj.content} idManager={-1} />
+                    <Task key={taskObj.name} name={taskObj.name} content={taskObj.content} idManager={localStorage["id"]} editTask={editTask} deleteTask={deleteTask} />
                   ))}
                 </div>
               </>
@@ -247,7 +267,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
 
             <div className="row py-3 g-0">
               <div className="col-sm-12 d-flex justify-content-center">
-                <button className="btn btn-warning w-50" type="button" onClick={() => setPopup(true)}>
+                <button className="btn btn-warning w-50" type="button" onClick={() => (setNameTask(""), setContentTask(""), setPopup(true))}>
                   Adicionar Tarefa
                 </button>
               </div>
@@ -267,7 +287,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
         </div>
       </div>
 
-      {popup && <CreateTasks setPopup={setPopup} popup={popup} setNameTask={setNameTask} setContentTask={setContentTask} setTaskData={setTaskData} />}
+      {popup && <CreateTasks setPopup={setPopup} nameTask={nameTask} setNameTask={setNameTask} contentTask={contentTask} setContentTask={setContentTask} setTaskData={setTaskData} />}
     </>
   );
 }

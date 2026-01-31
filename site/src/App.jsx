@@ -8,7 +8,6 @@ import LoginPage from "./components/LoginPage";
 import Projects from "./components/Projects";
 import ProjectPage from "./components/ProjectPage";
 import CreateProject from "./components/CreateProject";
-import CreateTasks from "./components/CreateTasks";
 import Credits from "./components/Credits";
 import { LoadingScreen } from "./components/LoadingScreen";
 
@@ -93,7 +92,6 @@ export function App() {
           path="/project/:id"
           element={<ProjectPage fetch_custom={fetch_custom} usedDB={usedDB} />}
         />
-        <Route path="/create-tasks" element={<CreateTasks />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </HashRouter>
