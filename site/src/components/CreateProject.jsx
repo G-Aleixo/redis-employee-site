@@ -31,6 +31,16 @@ export default function CreateProject({ fetch_custom, usedDB }) {
   function setTaskData(e) {
     e.preventDefault();
 
+    if (tasksData.some(obj => obj.name == nameTask)) {
+      setAlert({ 
+        showAlert: true, 
+        title: "Um Erro Ocorreu!", 
+        text: "O nome que você escolheu já está em uso, tente outro nome.",
+        className: "alert-danger"
+      });
+      return;
+    }
+
     setTasksData((prev) => [...prev, {
       name: nameTask,
       content: contentTask
@@ -161,6 +171,10 @@ export default function CreateProject({ fetch_custom, usedDB }) {
     setPopup(false)
   }, [tasksData]);
 
+  useEffect(() => {
+    document.body.style.overflow = popup ? "hidden" : "auto";
+  }, [popup]);
+
   return (
     <>
       <div className={`container-fluid p-0 border border-2 ${borderClass}`} id="login-area">
@@ -253,7 +267,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
         </div>
       </div>
 
-      {popup && <CreateTasks setPopup={setPopup} setNameTask={setNameTask} setContentTask={setContentTask} setTaskData={setTaskData} />}
+      {popup && <CreateTasks setPopup={setPopup} popup={popup} setNameTask={setNameTask} setContentTask={setContentTask} setTaskData={setTaskData} />}
     </>
   );
 }
