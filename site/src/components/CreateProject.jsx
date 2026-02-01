@@ -58,7 +58,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
       ...prev,
       {
         name: nameTask,
-        content: contentTask,
+        content: contentTask || "",
       },
     ]);
   }

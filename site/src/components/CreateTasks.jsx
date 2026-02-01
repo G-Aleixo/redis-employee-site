@@ -21,7 +21,7 @@ export default function CreateTasks({ setPopup, nameTask, setNameTask, contentTa
                 <label htmlFor="floatingTextarea" className="form-label">
                   Informações Extras
                 </label>
-                <textarea className="form-control" name="information" id="floatingTextarea" aria-label="Withtextarea" placeholder="Descreva a Tarefa" style={{ height: "140px" }} value={contentTask} onChange={(e) => setContentTask(e.target.value)} required/>
+                <textarea className="form-control" name="information" id="floatingTextarea" aria-label="Withtextarea" placeholder="Descreva a tarefa... opcional" style={{ height: "140px" }} value={contentTask} onChange={(e) => setContentTask(e.target.value)} />
               </div>
             </div>
 
