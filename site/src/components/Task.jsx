@@ -13,7 +13,7 @@ export default function Task({
 
   function deleteFunction(e) {
     e.preventDefault();
-    deleteTask({ idWorkTask });
+    deleteTask({ idWorkTask, name, content });
   }
 
   return (
@@ -21,8 +21,12 @@ export default function Task({
       <div className="card shadow h-100 text-center">
         <div className="card-body">
           <h5 className="card-title title-limited">{name}</h5>
-          <hr />
-          <p className="card-text text-limited">{content}</p>
+          {content && (
+            <>
+              <hr />
+              <p className="card-text text-limited">{content}</p>
+            </>
+          )}
         </div>
         {idManager == localStorage["id"] &&
           (editTask != null || deleteTask != null) && (

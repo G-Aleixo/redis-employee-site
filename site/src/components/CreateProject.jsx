@@ -73,9 +73,9 @@ export default function CreateProject({ fetch_custom, usedDB }) {
   function deleteTask(obj) {
     setTasksData((prev) =>
       prev.filter((item) =>
-        obj.idWorkTask.trim()
-          ? item.idWorkTask.trim() !== obj.idWorkTask.trim()
-          : item.name.trim() !== obj.name.trim(),
+        obj.idWorkTask?.trim()
+          ? item.idWorkTask?.trim() !== obj.idWorkTask?.trim()
+          : item.name?.trim() !== obj.name?.trim(),
       ),
     );
   }
