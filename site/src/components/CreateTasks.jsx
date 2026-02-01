@@ -1,6 +1,6 @@
 export default function CreateTasks({ setPopup, nameTask, setNameTask, contentTask, setContentTask, setTaskData }) {
   return (
-    <div className="modal fade show d-block" tabIndex="-1">
+    <div className="modal fade show d-block" tabIndex="-1" style={{zIndex: 100}}>
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <form action="" onSubmit={setTaskData}>
