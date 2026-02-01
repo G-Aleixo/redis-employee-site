@@ -28,6 +28,21 @@ def get_db() -> database.DatabaseConnection:
     if "db" not in g:
         g.db = database.DatabaseConnection(DATABASE, REDIS)
         g.db.row_factory = Row
+    
+    try:
+        data = request.get_json()
+
+        used_db = data.get("usedDB")
+
+        match used_db:
+            case "sqlite":
+                g.db.cache_enabled = False
+            case "redis":
+                if g.db.cache_avaliable:
+                    g.db.cache_enabled = True
+    except RuntimeError:
+        print("get_db used outside of a request")
+
     return g.db
 
 @app.teardown_appcontext
