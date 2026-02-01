@@ -57,8 +57,8 @@ export default function CreateProject({ fetch_custom, usedDB }) {
     setTasksData((prev) => [
       ...prev,
       {
-        name: nameTask,
-        content: contentTask || "",
+        name: nameTask.trim(),
+        content: contentTask.trim() || "",
       },
     ]);
   }
@@ -73,9 +73,9 @@ export default function CreateProject({ fetch_custom, usedDB }) {
   function deleteTask(obj) {
     setTasksData((prev) =>
       prev.filter((item) =>
-        obj.idWorkTask
-          ? item.idWorkTask !== obj.idWorkTask
-          : item.name !== obj.name,
+        obj.idWorkTask.trim()
+          ? item.idWorkTask.trim() !== obj.idWorkTask.trim()
+          : item.name.trim() !== obj.name.trim(),
       ),
     );
   }
@@ -89,8 +89,8 @@ export default function CreateProject({ fetch_custom, usedDB }) {
       body: JSON.stringify({
         project_id: projectId,
         tasks: tasksData.map((t) => ({
-          name: t.name,
-          content: t.content,
+          name: t.name.trim(),
+          content: t.content.trim(),
         })),
       }),
     });
@@ -115,8 +115,8 @@ export default function CreateProject({ fetch_custom, usedDB }) {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: title,
-          text,
+          name: title.trim(),
+          text: text.trim(),
         }),
       });
 
@@ -149,10 +149,10 @@ export default function CreateProject({ fetch_custom, usedDB }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: title,
-          text,
-          manager_id: localStorage["id"],
-          createdAt: new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }),
+          name: title.trim(),
+          text: text.trim(),
+          manager_id: localStorage["id"].trim(),
+          createdAt: new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }).trim(),
         }),
       });
 
@@ -225,8 +225,8 @@ export default function CreateProject({ fetch_custom, usedDB }) {
         }
 
         const project = await projectRes.json();
-        setTitle(project.name);
-        setText(project.text || "");
+        setTitle(project.name.trim());
+        setText(project.text.trim() || "");
 
         const tasksRes = await fetch_custom(`/api/projects/${id}/tasks`);
         const tasks = await tasksRes.json();

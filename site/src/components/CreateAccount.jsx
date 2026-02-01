@@ -32,14 +32,14 @@ export default function CreateAccount({ fetch_custom, usedDB }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: name,
+          name: name.trim(),
           age: age,
-          information: information,
-          favorite_team: favTeam.first,
-          password: pwd,
+          information: information.trim(),
+          favorite_team: favTeam.first.trim(),
+          password: pwd.trim(),
           joinedOn: new Date().toLocaleString("pt-BR", {
             timeZone: "America/Sao_Paulo",
-          }),
+          }).trim(),
         }),
       });
 

@@ -33,8 +33,8 @@ export default function Login({ setResponse, usedDB, fetch_custom }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: name,
-          password: pwd,
+          name: name.trim(),
+          password: pwd.trim(),
         }),
       });
 
