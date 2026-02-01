@@ -1,5 +1,6 @@
 html{
     width: 100%;
+    overflow-x: hidden ;
 }
 #header-area{
     background-color: rgb(190, 190, 190);
