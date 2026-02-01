@@ -295,7 +295,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
                     id="floatingTextarea"
                     aria-label="Withtextarea"
                     placeholder="Descrição do Projeto... opcional"
-                    style={{ height: "140px" }}
+                    style={{ height: "140px", resize: "none" }}
                     onChange={(e) => setText(e.target.value)}
                     value={text}
                   />

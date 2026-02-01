@@ -195,6 +195,7 @@ export default function CreateAccount({ fetch_custom, usedDB }) {
                 id="floatingTextarea"
                 aria-label="Withtextarea"
                 placeholder="Fale sobre você... opcional"
+                style={{ resize: "none" }}
                 onChange={(e) => setInformation(e.target.value)}
                 value={information}
               />

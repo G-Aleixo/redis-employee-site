@@ -79,7 +79,7 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
                   placeholder="Error Info Missing"
                   id="floatingTextarea"
                   readOnly
-                  style={{ height: "180px" }}
+                  style={{ height: "180px", resize: "none" }}
                 ></textarea>
               </div>
             </div>

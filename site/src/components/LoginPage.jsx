@@ -77,7 +77,7 @@ export default function LoginPage({ response, usedDB }) {
               <label htmlFor="floatingTextarea" className="form-label">
                 Sobre você:
               </label>
-              <textarea className="form-control shadow rounded" placeholder="Leave a comment here" id="floatingTextarea" readOnly value={response.information}></textarea>
+              <textarea className="form-control shadow rounded" placeholder="Leave a comment here" id="floatingTextarea" style={{ resize: "none" }} readOnly value={response.information}></textarea>
             </div>
           </div>
         </div>
