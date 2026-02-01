@@ -62,7 +62,7 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
       >
         <div className="row justify-content-center g-0">
           <div className="col-12 border-bottom border-black w-75 mx-auto pt-1">
-            <h2 className="text-center">{project["name"]}</h2>
+            <h2 className="text-center big-title-limited">{project["name"]}</h2>
           </div>
         </div>
 

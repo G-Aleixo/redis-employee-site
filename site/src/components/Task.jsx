@@ -20,8 +20,9 @@ export default function Task({
     <div className="col">
       <div className="card shadow h-100 text-center">
         <div className="card-body">
-          <h5 className="card-title">{name}</h5>
-          <p className="card-text">{content}</p>
+          <h5 className="card-title title-limited">{name}</h5>
+          <hr />
+          <p className="card-text text-limited">{content}</p>
         </div>
         {idManager == localStorage["id"] &&
           (editTask != null || deleteTask != null) && (

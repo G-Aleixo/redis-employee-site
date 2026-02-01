@@ -25,8 +25,9 @@ export default function Project({
     <div className="col p-3">
       <div className="card text-center">
         <div className="card-body">
-          <h5 className="card-title">{name}</h5>
-          <p className="card-text">{text}</p>
+          <h5 className="card-title title-limited">{name}</h5>
+          <hr />
+          <p className="card-text text-limited">{text}</p>
           <div className="d-grid gap-2">
             <div className="d-flex gap-2">
               <button

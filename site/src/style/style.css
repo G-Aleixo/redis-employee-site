@@ -46,3 +46,18 @@ html{
 .nav-link:hover {
     cursor: pointer;
 }
+
+.big-title-limited {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.title-limited{
+    max-height: 80px;
+    overflow-y: auto;
+}
+
+.text-limited{
+    max-height: 120px;
+    overflow-y: auto;
+}
