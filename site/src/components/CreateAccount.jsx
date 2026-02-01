@@ -28,9 +28,7 @@ export default function CreateAccount({ fetch_custom, usedDB }) {
     try {
       const res = await fetch_custom("/signup", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: name.trim(),
           age: age,

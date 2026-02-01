@@ -31,7 +31,7 @@ export default function Projects({ fetch_custom, usedDB }) {
     e.preventDefault();
 
     try {
-      const res = await fetch_custom("/api/projects", {
+      const res = await fetch_custom("/api/projects/", {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });

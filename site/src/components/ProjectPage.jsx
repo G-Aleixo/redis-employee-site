@@ -16,9 +16,7 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
     try {
       const res = await fetch_custom(`/api/projects/${id}`, {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       });
       if (!res.ok) {
         navigate("/not-found");
@@ -30,9 +28,7 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
 
       const taskRes = await fetch_custom(`/api/projects/${id}/tasks`, {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       });
       if (!taskRes.ok) throw new Error("Erro ao buscar tarefas");
       const taskData = await taskRes.json();

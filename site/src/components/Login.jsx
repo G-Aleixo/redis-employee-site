@@ -29,9 +29,7 @@ export default function Login({ setResponse, usedDB, fetch_custom }) {
     try {
       const res = await fetch_custom("/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: name.trim(),
           password: pwd.trim(),

@@ -37,8 +37,14 @@ export function App() {
     setLoading(true);
 
     try {
-      options["usedDB"] = usedDB;
-      const response = await fetch(baseUrl + url, options);
+      options = {
+        ...options,
+        headers: {
+          ...options.headers,
+          usedDB: usedDB,
+        },
+      };
+      const response = await fetch(baseUrl + url, {...options});
       return response;
     } finally {
       const end = performance.now();

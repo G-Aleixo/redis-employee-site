@@ -97,11 +97,17 @@ export default function CreateProject({ fetch_custom, usedDB }) {
   }
 
   async function syncTasks(projectId) {
-    const oldRes = await fetch_custom(`/api/projects/${projectId}/tasks`);
+    const oldRes = await fetch_custom(`/api/projects/${projectId}/tasks`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
     const oldTasks = await oldRes.json();
 
     for (const t of oldTasks) {
-      await fetch_custom(`/api/tasks/${t.idWorkTask}`, { method: "DELETE" });
+      await fetch_custom(`/api/tasks/${t.idWorkTask}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     await createTasks(projectId);
@@ -218,7 +224,10 @@ export default function CreateProject({ fetch_custom, usedDB }) {
 
     async function loadProject() {
       try {
-        const projectRes = await fetch_custom(`/api/projects/${id}`);
+        const projectRes = await fetch_custom(`/api/projects/${id}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
         if (!projectRes.ok) {
           navigate("/not-found");
           return;
@@ -228,7 +237,10 @@ export default function CreateProject({ fetch_custom, usedDB }) {
         setTitle(project.name.trim());
         setText(project.text.trim() || "");
 
-        const tasksRes = await fetch_custom(`/api/projects/${id}/tasks`);
+        const tasksRes = await fetch_custom(`/api/projects/${id}/tasks`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
         const tasks = await tasksRes.json();
         setTasksData(tasks);
       } catch (err) {

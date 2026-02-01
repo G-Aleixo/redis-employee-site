@@ -17,7 +17,10 @@ export default function Project({
 
   async function deleteProject(e) {
     e.preventDefault();
-    const res = await fetch_custom(`/api/projects/${id}`, { method: "DELETE" });
+    const res = await fetch_custom(`/api/projects/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
     if (res.ok) getProjects({ preventDefault: () => {} });
   }
 
