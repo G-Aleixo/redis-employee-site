@@ -30,9 +30,9 @@ def get_db() -> database.DatabaseConnection:
         g.db.row_factory = Row
     
     try:
-        data = request.get_json()
+        headers = dict(request.headers)
 
-        used_db = data.get("usedDB")
+        used_db = headers.get("usedDB")
 
         match used_db:
             case "sqlite":
