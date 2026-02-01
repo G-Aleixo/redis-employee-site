@@ -12,16 +12,17 @@ export default function CreateAccount({ fetch_custom, usedDB }) {
   const [pwd, setPwd] = useState("");
 
   const [loading, setLoading] = useState(false);
-  const [alert, setAlert] = useState({ 
-    showAlert: false, 
-    title: "", 
-    text: "", 
-    className: "" 
+  const [alert, setAlert] = useState({
+    showAlert: false,
+    title: "",
+    text: "",
+    className: "",
   });
 
   const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
   async function createAcc(e) {
+    document.activeElement?.blur();
     e.preventDefault();
     setLoading(true);
     try {
@@ -36,39 +37,44 @@ export default function CreateAccount({ fetch_custom, usedDB }) {
           information: information,
           favorite_team: favTeam.first,
           password: pwd,
-          joinedOn: new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })
+          joinedOn: new Date().toLocaleString("pt-BR", {
+            timeZone: "America/Sao_Paulo",
+          }),
         }),
       });
 
       if (res.ok) {
-        setAlert({ 
-          showAlert: true, 
-          title: "Conta Criada!", 
+        setAlert({
+          showAlert: true,
+          title: "Conta Criada!",
           text: "Sua conta foi criada! Volte para home e faça login.",
-          className: "alert-success"
+          className: "alert-success",
         });
       } else {
-        setAlert({ 
-          showAlert: true, 
-          title: "Um Erro Ocorreu!", 
-          text: "O nome que você escolheu já está em uso, tente outro nome.", 
-          className: "alert-danger" 
+        setAlert({
+          showAlert: true,
+          title: "Um Erro Ocorreu!",
+          text: "O nome que você escolheu já está em uso, tente outro nome.",
+          className: "alert-danger",
         });
       }
       setLoading(false);
     } catch (error) {
       console.warn("Erro de rede ou CORS:", error);
-      setAlert({ 
-          showAlert: true, 
-          title: "Um Erro Ocorreu!", 
-          text: "O servidor não conseguiu se comunicar. Recarregue a página e tente novamente.", 
-          className: "alert-danger" 
-        });
+      setAlert({
+        showAlert: true,
+        title: "Um Erro Ocorreu!",
+        text: "O servidor não conseguiu se comunicar. Recarregue a página e tente novamente.",
+        className: "alert-danger",
+      });
     }
   }
 
   return (
-    <div className={`container-fluid p-0 border border-2 ${borderClass}`} id="login-area">
+    <div
+      className={`container-fluid p-0 border border-2 ${borderClass}`}
+      id="login-area"
+    >
       {alert.showAlert && (
         <Alert
           setFunction={(prev) => setAlert({ ...prev, showAlert: false })}
@@ -161,8 +167,7 @@ export default function CreateAccount({ fetch_custom, usedDB }) {
                   setFavTeam((prev) => ({ ...prev, first: e.target.value }))
                 }
                 onBlur={() =>
-                  setFavTeam((prev) => ({
-                    ...prev,
+                  setFavTeam(() => ({
                     first: "América Natal - RN",
                     second: "América Natal - RN",
                   }))
@@ -171,6 +176,8 @@ export default function CreateAccount({ fetch_custom, usedDB }) {
               />
               <datalist id="datalistOptions">
                 <option value="América Natal - RN" />
+                <option value="ABC Futebol Clube" />
+                <option value="CR Flamengo - RJ" />
               </datalist>
             </div>
           </div>
@@ -203,18 +210,7 @@ export default function CreateAccount({ fetch_custom, usedDB }) {
               style={{ width: "160px" }}
               disabled={loading}
             >
-              {loading ? (
-                <>
-                  <span
-                    className="spinner-border spinner-border-sm me-2"
-                    role="status"
-                    aria-hidden="true"
-                  />
-                  Carregando...
-                </>
-              ) : (
-                "Criar Conta"
-              )}
+              Criar Conta
             </button>
             <button
               className="btn btn-dark  px-4"
