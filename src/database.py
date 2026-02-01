@@ -3,11 +3,17 @@ import hashlib
 import redis
 from datetime import datetime
 from time import sleep, time
+from os import getenv
 
 def stable_hash(data: any):
     return hashlib.sha256(data.encode()).hexdigest()
 
-CURSOR_DELAY = 0.25
+CURSOR_DELAY = getenv("DATABASE_CURSOR_DELAY")
+if CURSOR_DELAY != None:
+    CURSOR_DELAY = float(CURSOR_DELAY)
+else:
+    # default delay value
+    CURSOR_DELAY = 2
 
 # redis things
 # employee:<id> name age information favoriteTeam joinedOn password idManager
