@@ -95,22 +95,22 @@ def edit_task(task_id: int):
         return jsonify({"error": "Missing required field: name"}), 400
     if not data or "content" not in data:
         return jsonify({"error": "Missing required field: content"}), 400
-    if not data or "done" not in data:
-        return jsonify({"error": "Missing required field: done"}), 400
-    if not data or "done_time" not in data:
-        return jsonify({"error": "Missing required field: done_time"}), 400
+    # if not data or "done" not in data:
+    #     return jsonify({"error": "Missing required field: done"}), 400
+    # if not data or "done_time" not in data:
+    #     return jsonify({"error": "Missing required field: done_time"}), 400
     # if not data or "project_id" not in data:
     #     return jsonify({"error": "Missing required field: project_id"}), 400
 
     name = data.get("name")
     content = data.get("content")
-    done = data.get("done")
-    done_time = data.get("")
+    # done = data.get("done")
+    # done_time = data.get("")
     project_id = data.get("project_id")
 
     db = get_db()
 
-    return {}, db.edit_task(task_id, name, content, done, done_time, project_id)
+    return {}, db.edit_task(task_id, name, content, project_id=project_id)
 
 @app.delete("/api/tasks/<int:task_id>")
 def delete_task(task_id: int):
@@ -251,7 +251,7 @@ def delete_project(project_id: int):
 
     return {}, db.delete_project(project_id)
 
-@app.get("/api/project/<int:project_id>/comments")
+@app.get("/api/projects/<int:project_id>/comments")
 def get_project_comments(project_id: int):
     if project_id == None:
         return {}, 501
@@ -265,7 +265,7 @@ def get_project_comments(project_id: int):
     else:
         return {}, 404
 
-@app.get("/api/project/<int:project_id>/tasks")
+@app.get("/api/projects/<int:project_id>/tasks")
 def get_project_tasks(project_id: int):
     if project_id == None:
         return jsonify({"error": "Don't has an id"}), 501

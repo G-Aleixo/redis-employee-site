@@ -1,23 +1,24 @@
 import { useNavigate } from "react-router-dom";
 
-export default function Project({ id, idManager, name, text, fetch_custom, getProjects }) {
+export default function Project({
+  id,
+  idManager,
+  name,
+  text,
+  fetch_custom,
+  getProjects,
+}) {
   const navigate = useNavigate();
 
   function editProject(e) {
     e.preventDefault();
-
-    navigate("/create-project", {
-      state: {
-        valuesState: [name, text || "", id],
-        isEdit: true,
-      },
-    });
+    navigate(`/create-project/${id}`);
   }
 
   async function deleteProject(e) {
     e.preventDefault();
-    await fetch_custom(`/api/projects/${id}`, { method: "DELETE", });
-    getProjects({ preventDefault: () => {} });
+    const res = await fetch_custom(`/api/projects/${id}`, { method: "DELETE" });
+    if (res.ok) getProjects({ preventDefault: () => {} });
   }
 
   return (
@@ -30,7 +31,11 @@ export default function Project({ id, idManager, name, text, fetch_custom, getPr
             <div className="d-flex gap-2">
               <button
                 className="btn btn-primary flex-fill"
-                onClick={() => navigate(`/project/${id}`, {state: {idManager: idManager}})}
+                onClick={() =>
+                  navigate(`/project/${id}`, {
+                    state: { idManager: idManager },
+                  })
+                }
               >
                 Visualizar
               </button>

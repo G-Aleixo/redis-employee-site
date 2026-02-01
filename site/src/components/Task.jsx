@@ -1,12 +1,19 @@
-export default function Task({ name, content, idManager, editTask, deleteTask }) {
+export default function Task({
+  idWorkTask,
+  name,
+  content,
+  idManager,
+  editTask = null,
+  deleteTask = null,
+}) {
   function editFunction(e) {
     e.preventDefault();
-    editTask({name: name, content: content});
+    editTask({ idWorkTask, name, content });
   }
 
   function deleteFunction(e) {
     e.preventDefault();
-    deleteTask({name: name, content: content});
+    deleteTask({ idWorkTask });
   }
 
   return (
@@ -16,12 +23,17 @@ export default function Task({ name, content, idManager, editTask, deleteTask })
           <h5 className="card-title">{name}</h5>
           <p className="card-text">{content}</p>
         </div>
-        {idManager == localStorage["id"] && (
-          <div className="card-footer d-flex justify-content-center gap-2">
-            <button className="btn btn-danger w-50" onClick={deleteFunction}>Apagar</button>
-            <button className="btn btn-secondary w-50" onClick={editFunction}>Editar</button>
-          </div>
-        )}
+        {idManager == localStorage["id"] &&
+          (editTask != null || deleteTask != null) && (
+            <div className="card-footer d-flex justify-content-center gap-2">
+              <button className="btn btn-danger w-50" onClick={deleteFunction}>
+                Apagar
+              </button>
+              <button className="btn btn-secondary w-50" onClick={editFunction}>
+                Editar
+              </button>
+            </div>
+          )}
       </div>
     </div>
   );

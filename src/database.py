@@ -198,21 +198,20 @@ class DatabaseConnection:
         self.db.commit()
 
     def edit_task(self, task_id: int, name: str, content: str, done: bool = False, done_time: str = None, project_id: int = None):
-        if self.task_exists(project_id):
-            query = "UPDATE project SET name = ?, content = ?, done = ?, done_time = ?, idProject = ? WHERE idWorkTask = ?;"
-            
-            try:
-                self.cursor.execute(query, (name, content, done, done_time, project_id, task_id))
-                
-                self.db.commit()
+        if not self.task_exists(task_id):
+            return 404
+        query = "UPDATE workTask SET name = ?, content = ?, idProject = ? WHERE idWorkTask = ?;"
 
-                if self.cache_enabled:
-                    # remove task from cache
-                    self.redis_db.delete(f"task:{task_id}")
+        try:
+            self.cursor.execute(query, (name, content, project_id, task_id))
+            self.db.commit()
 
-                return 201
-            except sql.IntegrityError:
-                return 501
+            if self.cache_enabled:
+                self.redis_db.delete(f"task:{task_id}")
+
+            return 201
+        except sql.IntegrityError:
+            return 501
 
     def get_tasks(self):
         return self.cursor.execute("SELECT * FROM workTask;").fetchall()
@@ -416,7 +415,7 @@ class DatabaseConnection:
             #self.cursor.execute(query, (project_id, ))
 
             # delete all tasks referencing this
-            query = "UPDATE workTask AS wt SET wt.idProject = NULL WHERE wt.idProject = ?;"
+            query = "UPDATE workTask SET idProject = NULL WHERE idProject = ?;"
             self.cursor.execute(query, (project_id, ))
 
             # delete all task comments referencing this

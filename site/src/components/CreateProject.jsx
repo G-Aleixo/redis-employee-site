@@ -1,30 +1,30 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Alert from "./Alert";
 import CreateTasks from "./CreateTasks";
 import Task from "./Task";
 
 export default function CreateProject({ fetch_custom, usedDB }) {
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const { valuesState = ["", "", 0], isEdit = false } = location.state || {};
+  const { id } = useParams();
+  const isEdit = !!id;
 
-  const [title, setTitle] = useState(valuesState[0]);
-  const [text, setText] = useState(valuesState[1]);
+  const [title, setTitle] = useState("");
+  const [text, setText] = useState("");
+  const [tasksData, setTasksData] = useState([]);
+
   const [popup, setPopup] = useState(false);
 
   const [nameTask, setNameTask] = useState("");
   const [contentTask, setContentTask] = useState("");
 
-  const [alert, setAlert] = useState({ 
-    showAlert: false, 
-    title: "", 
-    text: "", 
-    className: ""
+  const [alert, setAlert] = useState({
+    showAlert: false,
+    title: "",
+    text: "",
+    className: "",
   });
-
-  const [tasksData, setTasksData] = useState([]);
 
   const [editTaskObj, setEditTaskObj] = useState(null);
 
@@ -34,24 +34,33 @@ export default function CreateProject({ fetch_custom, usedDB }) {
     e.preventDefault();
 
     if (editTaskObj != null) {
-      await setTasksData(prev =>
-        prev.filter(item => !(item.name == editTaskObj.name && item.content == editTaskObj.content))
+      await setTasksData((prev) =>
+        prev.filter(
+          (item) =>
+            !(
+              item.name == editTaskObj.name &&
+              item.content == editTaskObj.content
+            ),
+        ),
       );
       setEditTaskObj(null);
-    } else if (tasksData.some(obj => obj.name == nameTask)) {
-      setAlert({ 
-        showAlert: true, 
-        title: "Um Erro Ocorreu!", 
+    } else if (tasksData.some((obj) => obj.name == nameTask)) {
+      setAlert({
+        showAlert: true,
+        title: "Um Erro Ocorreu!",
         text: "O nome que você escolheu já está em uso, tente outro nome.",
-        className: "alert-danger"
+        className: "alert-danger",
       });
       return;
     }
 
-    setTasksData((prev) => [...prev, {
-      name: nameTask,
-      content: contentTask
-    }]);
+    setTasksData((prev) => [
+      ...prev,
+      {
+        name: nameTask,
+        content: contentTask,
+      },
+    ]);
   }
 
   async function editTask(obj) {
@@ -62,67 +71,72 @@ export default function CreateProject({ fetch_custom, usedDB }) {
   }
 
   function deleteTask(obj) {
-    setTasksData(prev =>
-      prev.filter(item => !(item.name == obj.name && item.content == obj.content))
+    setTasksData((prev) =>
+      prev.filter((item) =>
+        obj.idWorkTask
+          ? item.idWorkTask !== obj.idWorkTask
+          : item.name !== obj.name,
+      ),
     );
   }
 
-  function projectFunction(e) {
-    if (isEdit) {
-      editProject(e);
-    } else {
-      createProject(e);
-    }
-  }
+  async function createTasks(projectId) {
+    if (tasksData.length === 0) return;
 
-  async function createTask(projectId) {
     return await fetch_custom("/api/tasks", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        tasks: tasksData,
-        project_id: projectId
-      })
+        project_id: projectId,
+        tasks: tasksData.map((t) => ({
+          name: t.name,
+          content: t.content,
+        })),
+      }),
     });
+  }
+
+  async function syncTasks(projectId) {
+    const oldRes = await fetch_custom(`/api/projects/${projectId}/tasks`);
+    const oldTasks = await oldRes.json();
+
+    for (const t of oldTasks) {
+      await fetch_custom(`/api/tasks/${t.idWorkTask}`, { method: "DELETE" });
+    }
+
+    await createTasks(projectId);
   }
 
   async function editProject(e) {
     e.preventDefault();
 
     try {
-      const res = await fetch_custom(`/api/projects/${valuesState[2]}`, {
+      const res = await fetch_custom(`/api/projects/${id}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: title,
-          text: text || "",
+          text,
         }),
       });
+
+      await syncTasks(id);
+
       if (res.ok) {
-        setAlert({ 
-          showAlert: true, 
-          title: "Projeto Editado!", 
+        setAlert({
+          showAlert: true,
+          title: "Projeto Editado!",
           text: "Seu projeto foi editado! Volte para o visualizador de projetos.",
-          className: "alert-success"
-        });
-        await createTask(valuesState[2]);
-      } else {
-        setAlert({ 
-          showAlert: true, 
-          title: "Um Erro Ocorreu!", 
-          text: "O nome que você escolheu já está em uso, tente outro nome.",
-          className: "alert-danger"
+          className: "alert-success",
         });
       }
     } catch (error) {
       console.warn("Erro de server ou CORS", error);
-      setAlert({ 
-        showAlert: true, 
-        title: "Um Erro Ocorreu!", 
+      setAlert({
+        showAlert: true,
+        title: "Um Erro Ocorreu!",
         text: "O servidor não conseguiu editar seu projeto. Recarregue a página e tente novamente.",
-        className: "alert-danger"
+        className: "alert-danger",
       });
     }
   }
@@ -131,49 +145,53 @@ export default function CreateProject({ fetch_custom, usedDB }) {
     e.preventDefault();
 
     try {
-      let res = await fetch_custom("/api/projects", {
+      const res = await fetch_custom("/api/projects", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: title,
-          text: text,
+          text,
           manager_id: localStorage["id"],
-          createdAt: new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })
+          createdAt: new Date().toISOString(),
         }),
       });
-      if (!res.ok) throw new Error("Erro ao criar projeto");
+
       const data = await res.json();
-      if (tasksData.length > 0) res = await createTask(data.project_id);
+
+      await createTasks(data.project_id);
+
       if (res.ok) {
-        setAlert({ 
-          showAlert: true, 
-          title: "Projeto Criado!", 
+        setAlert({
+          showAlert: true,
+          title: "Projeto Criado!",
           text: "Seu projeto foi criado! Volte para o visualizador de projetos.",
-          className: "alert-success"
+          className: "alert-success",
         });
       } else {
-        setAlert({ 
-          showAlert: true, 
-          title: "Um Erro Ocorreu!", 
+        setAlert({
+          showAlert: true,
+          title: "Um Erro Ocorreu!",
           text: "O nome que você escolheu já está em uso, tente outro nome.",
-          className: "alert-danger"
+          className: "alert-danger",
         });
       }
     } catch (error) {
       console.warn("Erro de server ou CORS", error);
-      setAlert({ 
-        showAlert: true, 
-        title: "Um Erro Ocorreu!", 
+      setAlert({
+        showAlert: true,
+        title: "Um Erro Ocorreu!",
         text: "O servidor não conseguiu criar seu projeto. Recarregue a página e tente novamente.",
-        className: "alert-danger"
+        className: "alert-danger",
       });
     }
   }
 
   useEffect(() => {
-    if (localStorage["id"] == 0 || !localStorage["id"] || localStorage["id"] === undefined) {
+    if (
+      localStorage["id"] == 0 ||
+      !localStorage["id"] ||
+      localStorage["id"] === undefined
+    ) {
       navigate("/not-found");
       return;
     }
@@ -188,16 +206,45 @@ export default function CreateProject({ fetch_custom, usedDB }) {
   }, []);
 
   useEffect(() => {
-    setPopup(false)
+    setPopup(false);
   }, [tasksData]);
 
   useEffect(() => {
     document.body.style.overflow = popup ? "hidden" : "auto";
   }, [popup]);
 
+  useEffect(() => {
+    if (!id) return;
+
+    async function loadProject() {
+      try {
+        const projectRes = await fetch_custom(`/api/projects/${id}`);
+        if (!projectRes.ok) {
+          navigate("/not-found");
+          return;
+        }
+
+        const project = await projectRes.json();
+        setTitle(project.name);
+        setText(project.text || "");
+
+        const tasksRes = await fetch_custom(`/api/projects/${id}/tasks`);
+        const tasks = await tasksRes.json();
+        setTasksData(tasks);
+      } catch (err) {
+        console.warn("Erro ao carregar projeto", err);
+      }
+    }
+
+    loadProject();
+  }, [id]);
+
   return (
     <>
-      <div className={`container-fluid p-0 border border-2 ${borderClass}`} id="login-area">
+      <div
+        className={`container-fluid p-0 border border-2 ${borderClass}`}
+        id="login-area"
+      >
         <div className="row justify-content-center g-0">
           <div className="col-12">
             <h3 className="text-center py-3 border-bottom border-black w-75 mx-auto">
@@ -216,7 +263,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
         )}
 
         <div className="row g-0">
-          <form onSubmit={projectFunction}>
+          <form onSubmit={isEdit ? editProject : createProject}>
             <div className="row justify-content-center g-0">
               <div className="col-md-10 p-3">
                 <div className="input-group shadow">
@@ -242,7 +289,16 @@ export default function CreateProject({ fetch_custom, usedDB }) {
                   <label htmlFor="floatingTextarea" className="form-label">
                     Informações do Projeto
                   </label>
-                  <textarea className="form-control" name="information" id="floatingTextarea" aria-label="Withtextarea" placeholder="Descrição do Projeto... opcional" style={{ height: "140px" }} onChange={(e) => setText(e.target.value)} value={text} />
+                  <textarea
+                    className="form-control"
+                    name="information"
+                    id="floatingTextarea"
+                    aria-label="Withtextarea"
+                    placeholder="Descrição do Projeto... opcional"
+                    style={{ height: "140px" }}
+                    onChange={(e) => setText(e.target.value)}
+                    value={text}
+                  />
                 </div>
               </div>
             </div>
@@ -256,10 +312,18 @@ export default function CreateProject({ fetch_custom, usedDB }) {
                     </h3>
                   </div>
                 </div>
-                
+
                 <div className="row row-cols-1 row-cols-md-3 g-1 p-4 justify-content-center">
                   {tasksData.map((taskObj) => (
-                    <Task key={taskObj.name} name={taskObj.name} content={taskObj.content} idManager={localStorage["id"]} editTask={editTask} deleteTask={deleteTask} />
+                    <Task
+                      key={taskObj.idWorkTask ?? taskObj.name}
+                      idWorkTask={taskObj.idWorkTask}
+                      name={taskObj.name}
+                      content={taskObj.content}
+                      idManager={localStorage["id"]}
+                      editTask={editTask}
+                      deleteTask={deleteTask}
+                    />
                   ))}
                 </div>
               </>
@@ -267,7 +331,15 @@ export default function CreateProject({ fetch_custom, usedDB }) {
 
             <div className="row py-3 g-0">
               <div className="col-sm-12 d-flex justify-content-center">
-                <button className="btn btn-warning w-50" type="button" onClick={() => (setNameTask(""), setContentTask(""), setPopup(true))}>
+                <button
+                  className="btn btn-warning w-50"
+                  type="button"
+                  onClick={() => (
+                    setNameTask(""),
+                    setContentTask(""),
+                    setPopup(true)
+                  )}
+                >
                   Adicionar Tarefa
                 </button>
               </div>
@@ -278,7 +350,11 @@ export default function CreateProject({ fetch_custom, usedDB }) {
                 <button className="btn btn-secondary w-50" type="submit">
                   Salvar Projeto
                 </button>
-                <button type="button" className="btn btn-success w-50" onClick={() => navigate("/projects")}>
+                <button
+                  type="button"
+                  className="btn btn-success w-50"
+                  onClick={() => navigate("/projects")}
+                >
                   Voltar
                 </button>
               </div>
@@ -287,7 +363,16 @@ export default function CreateProject({ fetch_custom, usedDB }) {
         </div>
       </div>
 
-      {popup && <CreateTasks setPopup={setPopup} nameTask={nameTask} setNameTask={setNameTask} contentTask={contentTask} setContentTask={setContentTask} setTaskData={setTaskData} />}
+      {popup && (
+        <CreateTasks
+          setPopup={setPopup}
+          nameTask={nameTask}
+          setNameTask={setNameTask}
+          contentTask={contentTask}
+          setContentTask={setContentTask}
+          setTaskData={setTaskData}
+        />
+      )}
     </>
   );
 }

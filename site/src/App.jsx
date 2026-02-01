@@ -28,7 +28,7 @@ export function App() {
   const [usedDB, setDB] = useState("sqlite");
   const [response, setResponse] = useState(null);
 
-  async function fetch_custom(url, options) {
+  async function fetch_custom(url, options = {}) {
     const start = performance.now();
     const baseUrl = window.location.href.includes("localhost")
       ? "http://127.0.0.1:5000"
@@ -66,26 +66,32 @@ export function App() {
         <Route path="/credits" element={<Credits />} />
         <Route
           path="/create-account"
-          element={<CreateAccount fetch_custom={fetch_custom} usedDB={usedDB} />}
+          element={
+            <CreateAccount fetch_custom={fetch_custom} usedDB={usedDB} />
+          }
         />
         <Route
-          path="/create-project"
+          path="/create-project/:id?"
           element={
             <CreateProject
-              setResponse={setResponse}
               fetch_custom={fetch_custom}
               usedDB={usedDB}
             />
           }
         />
+
         <Route
           path="/login-page"
-          element={<LoginPage response={response} usedDB={usedDB}/>}
+          element={<LoginPage response={response} usedDB={usedDB} />}
         />
         <Route
           path="/projects"
           element={
-            <Projects setResponse={setResponse} fetch_custom={fetch_custom} usedDB={usedDB} />
+            <Projects
+              setResponse={setResponse}
+              fetch_custom={fetch_custom}
+              usedDB={usedDB}
+            />
           }
         />
         <Route

@@ -1,7 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Task from "./Task";
-import CreateTasks from "./CreateTasks";
 
 export default function ProjectPage({ fetch_custom, usedDB }) {
   const navigate = useNavigate();
@@ -9,41 +8,9 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
   const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
   const [project, setProject] = useState({});
-
   const [projectsTasks, setProjectsTasks] = useState([]);
-  const [nameTask, setNameTask] = useState("");
-  const [contentTask, setContentTask] = useState("");
-
-  const [popup, setPopup] = useState(false);
 
   const { id } = useParams();
-
-  async function addTask(e) {
-    e.preventDefault();
-
-    const task = [
-      {
-        name: nameTask,
-        content: contentTask,
-      },
-    ];
-
-    try {
-      const res = await fetch_custom("/api/tasks", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          tasks: task,
-          project_id: id,
-        }),
-      });
-      if (res.ok) {
-        loadProjectPage();
-      }
-    } catch (error) {
-      console.warn("Erro de server ou de CORS", error);
-    }
-  }
 
   async function loadProjectPage() {
     try {
@@ -61,7 +28,7 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
       const projectData = await res.json();
       setProject(projectData);
 
-      const taskRes = await fetch_custom(`/api/project/${id}/tasks`, {
+      const taskRes = await fetch_custom(`/api/projects/${id}/tasks`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -76,10 +43,6 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
   }
 
   useEffect(() => {
-    document.body.style.overflow = popup ? "hidden" : "auto";
-  }, [popup]);
-
-  useEffect(() => {
     if (
       localStorage["id"] == 0 ||
       !localStorage["id"] ||
@@ -90,18 +53,6 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
     }
     loadProjectPage();
   }, []);
-
-  useEffect(() => {
-    function getKeyDown(event) {
-      if (event.key === "Escape") setPopup(false);
-    }
-    window.addEventListener("keydown", getKeyDown);
-    return () => window.removeEventListener("keydown", getKeyDown);
-  }, []);
-
-  useEffect(() => {
-    setPopup(false);
-  }, [projectsTasks]);
 
   return (
     <>
@@ -203,7 +154,7 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
             <div className="row row-cols-1 row-cols-md-3 g-1 p-4 justify-content-center">
               {projectsTasks.map((taskObj) => (
                 <Task
-                  key={taskObj.name}
+                  id={taskObj.idProject}
                   name={taskObj.name}
                   content={taskObj.content}
                   idManager={project["idManager"]}
@@ -221,28 +172,9 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
             >
               Voltar
             </button>
-            {project["idManager"] == localStorage["id"] && (
-              <button
-                className="btn btn-secondary w-50"
-                onClick={() => setPopup(true)}
-              >
-                Adicionar Tarefa
-              </button>
-            )}
           </div>
         </div>
       </div>
-
-      {popup && (
-        <CreateTasks
-          setPopup={setPopup}
-          nameTask={nameTask}
-          setNameTask={setNameTask}
-          contentTask={contentTask}
-          setContentTask={setContentTask}
-          setTaskData={addTask}
-        />
-      )}
     </>
   );
 }
