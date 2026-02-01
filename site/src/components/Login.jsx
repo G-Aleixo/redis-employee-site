@@ -124,7 +124,7 @@ export default function Login({ setResponse, usedDB, fetch_custom }) {
         <div className="row justify-content-center g-0">
           <div className="col-12 d-flex justify-content-center gap-3 p-4">
             <button className={`btn ${btnClass} d-flex align-items-center justify-content-center`} type="submit">
-              "Fazer Login"
+              Fazer Login
             </button>
             <button className="btn btn-secondary" type="button" onClick={() => navigate("/create-account")}>Criar Conta</button>
           </div>
