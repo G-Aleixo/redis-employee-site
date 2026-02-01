@@ -313,7 +313,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
                   </div>
                 </div>
 
-                <div className="row row-cols-1 row-cols-md-3 g-1 p-4 justify-content-center">
+                <div className="row row-cols-1 row-cols-md-3 g-4 p-4 justify-content-center">
                   {tasksData.map((taskObj) => (
                     <Task
                       key={taskObj.idWorkTask ?? taskObj.name}

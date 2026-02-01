@@ -164,7 +164,7 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
           </>
         )}
 
-        <div className="row justify-content-center g-0">
+        <div className="row justify-content-center g-0 pb-4">
           <div className="col-sm-10 d-flex justify-content-center gap-3">
             <button
               className="btn btn-success w-50"

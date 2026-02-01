@@ -17,7 +17,7 @@ function NotFound() {
     <div className="text-center p-5">
       <h1>404</h1>
       <p>Recurso não encontrado</p>
-      <button onClick={() => navigate("/")}>Voltar Home</button>
+      <button className="btn btn-primary" onClick={() => navigate("/")}>Voltar Home</button>
     </div>
   );
 }
