@@ -88,7 +88,6 @@ export function App() {
           path="/projects"
           element={
             <Projects
-              setResponse={setResponse}
               fetch_custom={fetch_custom}
               usedDB={usedDB}
             />

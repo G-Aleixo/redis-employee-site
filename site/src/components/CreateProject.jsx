@@ -152,7 +152,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
           name: title,
           text,
           manager_id: localStorage["id"],
-          createdAt: new Date().toISOString(),
+          createdAt: new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }),
         }),
       });
 
