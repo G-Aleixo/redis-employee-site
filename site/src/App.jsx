@@ -29,7 +29,6 @@ export function App() {
   const [response, setResponse] = useState(null);
 
   async function fetch_custom(url, options = {}) {
-    const start = performance.now();
     const baseUrl = window.location.href.includes("localhost")
       ? "http://127.0.0.1:5000"
       : "https://redis-employee-site.onrender.com";
@@ -47,8 +46,6 @@ export function App() {
       const response = await fetch(baseUrl + url, {...options});
       return response;
     } finally {
-      const end = performance.now();
-      console.log(`tempo: ${end - start}ms`);
       setLoading(false);
     }
   }
