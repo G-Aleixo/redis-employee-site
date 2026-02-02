@@ -400,7 +400,7 @@ def login():
         password = data["password"]
 
         db = get_db()
-        user = db.cursor.execute("SELECT * FROM employee WHERE name = ?", (username,)).fetchone()
+        user = db.cursor.execute("SELECT * FROM employee WHERE name = ?", (username,), no_delay=True).fetchone()
         db.close()
 
         if user is None:

@@ -233,7 +233,7 @@ class DatabaseConnection:
             return 501
 
     def get_tasks(self):
-        return self.cursor.execute("SELECT * FROM workTask;").fetchall()
+        return self.cursor.execute("SELECT * FROM workTask;", no_delay=True).fetchall()
 
     def delete_task(self, task_id: int):
         #TODO: do some auth
@@ -382,12 +382,12 @@ class DatabaseConnection:
     def get_projects(self):
         query = "SELECT * FROM project;"
 
-        return self.cursor.execute(query).fetchall()
+        return self.cursor.execute(query, no_delay=True).fetchall()
 
     def get_project_tasks(self, project_id: int):
         query = "SELECT * FROM workTask WHERE idProject = ?;"
 
-        return self.cursor.execute(query, (project_id, )).fetchall()
+        return self.cursor.execute(query, (project_id, ), no_delay=True).fetchall()
 
     def add_project(self, name: str, text: str, manager_id: int, createdAt: datetime):
         if self.employee_exists(manager_id):
