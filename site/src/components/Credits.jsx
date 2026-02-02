@@ -16,15 +16,15 @@ export default function Credits() {
         
         <div className="row justify-content-center g-0 py-4">
           <div className="col-12 text-center mx-auto">
-            <h4>Front-end: Kaio Henrique</h4>
+            <h4>Frontend: Kaio Henrique</h4>
             <em>"Dev Front-end nem dev é." - Kaio H.</em>
           </div>
         </div>
 
         <div className="row justify-content-center g-0 py-4">
           <div className="col-12 text-center mx-auto">
-            <h4>Back-end: Guilherme Aleixo</h4>
-            <em>"Summone ele Kaio." - Brasilicio Henrique</em>
+            <h4>Backend: Guilherme Aleixo</h4>
+            <em>"Já tentou ligar e desligar o servidor?" - Guilherme Aleixo</em>
           </div>
         </div>
 
