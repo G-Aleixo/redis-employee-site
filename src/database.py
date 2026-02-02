@@ -9,11 +9,15 @@ def stable_hash(data: any):
     return hashlib.sha256(data.encode()).hexdigest()
 
 CURSOR_DELAY = getenv("DATABASE_CURSOR_DELAY")
+print(f"DATABASE_CURSOR_DELAY env variable is {CURSOR_DELAY}")
 if CURSOR_DELAY != None:
     CURSOR_DELAY = float(CURSOR_DELAY)
 else:
     # default delay value
     CURSOR_DELAY = 2
+
+
+print(f"CURSOR_DELAY is {CURSOR_DELAY}")
 
 # redis things
 # employee:<id> name age information favoriteTeam joinedOn password idManager
@@ -22,6 +26,7 @@ else:
 
 class SlowCursor(sql.Cursor):
     def _delay(self):
+        print(f"Sleeping for {CURSOR_DELAY} seconds")
         sleep(CURSOR_DELAY)
 
     def execute(self, *args, **kwargs):
@@ -33,16 +38,14 @@ class SlowCursor(sql.Cursor):
         return super().executemany(*args, **kwargs)
     
     def fetchone(self, *args, **kwargs):
-        self._delay()
         return super().fetchone(*args, **kwargs)
     
     def fetchall(self, *args, **kwargs):
-        self._delay()
         return super().fetchall(*args, **kwargs)
 
 class SlowDatabase(sql.Connection):
     def cursor(self, factory: None = None):
-        return super().cursor(factory=SlowCursor) if factory else super().cursor()
+        return super().cursor(factory=factory) if factory else super().cursor()
 
 # Wrapper class for a db connection that implements a bunch of helper methods
 class DatabaseConnection:
@@ -72,17 +75,17 @@ class DatabaseConnection:
 
         self.db: sql.Connection = sql.connect(database_path, factory=db_factory) if db_factory else sql.connect(database_path)
         self.db.row_factory = sql.Row
-        self.cursor: sql.Cursor = self.db.cursor()
+        self.cursor: sql.Cursor = self.db.cursor(SlowCursor)
 
         # set foreign keys to actually be enforced
-        self.cursor.execute("PRAGMA foreign_keys = ON;")
+        self.db.cursor(None).execute("PRAGMA foreign_keys = ON;")
 
     def get_employee(self, employee_id: int):
         employee = None
         if self.cache_enabled:
             employee = self.redis_db.hgetall(f"employee:{employee_id}")
             if employee:
-                self.redis_db.expire(f"employee:{employee_id}", 10)
+                self.redis_db.expire(f"employee:{employee_id}", 30)
         if not employee:
             query = "SELECT * FROM employee WHERE idEmployee = (?) LIMIT 1;"
 
@@ -99,7 +102,7 @@ class DatabaseConnection:
                 "idManager": employee["idManager"] if employee["idManager"] else -1
             })
 
-            self.redis_db.expire(f"employee:{employee_id}", 10)
+            self.redis_db.expire(f"employee:{employee_id}", 30)
 
         return employee
 
@@ -158,7 +161,8 @@ class DatabaseConnection:
         if self.cache_enabled:
             task = self.redis_db.hgetall(f"task:{task_id}")
             if task:
-                self.redis_db.expire(f"task:{task_id}", 10)
+                self.redis_db.expire(f"task:{task_id}", 30)
+
         if not task:
             query = "SELECT * FROM workTask WHERE idWorkTask = ?;"
             
@@ -174,7 +178,7 @@ class DatabaseConnection:
                 "idProject": task["idProject"] if task["idProject"] else -1,
             })
 
-            self.redis_db.expire(f"task:{task_id}", 10)
+            self.redis_db.expire(f"task:{task_id}", 30)
 
         self.db.commit()
 
@@ -326,7 +330,7 @@ class DatabaseConnection:
         if self.cache_enabled:
             project = self.redis_db.hgetall(f"project:{project_id}")
             if project:
-                self.redis_db.expire(f"project:{project_id}", 10)
+                self.redis_db.expire(f"project:{project_id}", 30)
         if not project:
             query = "SELECT * FROM project WHERE idProject = ?;"
 
@@ -342,7 +346,7 @@ class DatabaseConnection:
                 "createdAt": project["createdAt"]
             })
 
-            self.redis_db.expire(f"project:{project_id}", 10)
+            self.redis_db.expire(f"project:{project_id}", 30)
 
         return project
     

@@ -11,6 +11,8 @@ from os import getenv
 
 REDIS = getenv("REDIS_URL") # setup manually
 
+print(f"REDIS_URL env value was {REDIS}")
+
 if not REDIS:
     print("REDIS_URL value not found in env, cache is disabled")
 
@@ -30,16 +32,27 @@ def get_db() -> database.DatabaseConnection:
         g.db.row_factory = Row
     
     try:
-        headers = dict(request.headers)
+        data = dict(request.headers)
 
-        used_db = headers.get("usedDB")
+        if data.get("usedDB") == None:
+            data = dict(request.args)
+
+        used_db = data.get("usedDB")
+
+        print(used_db)
 
         match used_db:
             case "sqlite":
+                print("disableing cache for this db")
                 g.db.cache_enabled = False
             case "redis":
                 if g.db.cache_avaliable:
+                    print("enableing cache for this db")
                     g.db.cache_enabled = True
+            case _:
+                if g.db.cache_avaliable:
+                    print("enableing cache for this db")
+                    g.db.cache_enabled
     except RuntimeError:
         print("get_db used outside of a request")
 
@@ -68,7 +81,7 @@ def get_task(task_id: int):
 
     if task:
         task = dict(task)
-        return jsonify(dict(db.get_task(task_id))), 200
+        return jsonify(task), 200
     else:
         return {}, 404
 
