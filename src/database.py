@@ -91,7 +91,7 @@ class DatabaseConnection:
         if self.cache_enabled:
             employee = self.redis_db.hgetall(f"employee:{employee_id}")
             if employee:
-                self.redis_db.expire(f"employee:{employee_id}", 30)
+                self.redis_db.expire(f"employee:{employee_id}", 120)
         if not employee:
             query = "SELECT * FROM employee WHERE idEmployee = (?) LIMIT 1;"
 
@@ -108,7 +108,7 @@ class DatabaseConnection:
                 "idManager": employee["idManager"] if employee["idManager"] else -1
             })
 
-            self.redis_db.expire(f"employee:{employee_id}", 30)
+            self.redis_db.expire(f"employee:{employee_id}", 120)
 
         return employee
 
@@ -167,7 +167,7 @@ class DatabaseConnection:
         if self.cache_enabled:
             task = self.redis_db.hgetall(f"task:{task_id}")
             if task:
-                self.redis_db.expire(f"task:{task_id}", 30)
+                self.redis_db.expire(f"task:{task_id}", 120)
 
         if not task:
             query = "SELECT * FROM workTask WHERE idWorkTask = ?;"
@@ -184,7 +184,7 @@ class DatabaseConnection:
                 "idProject": task["idProject"] if task["idProject"] else -1,
             })
 
-            self.redis_db.expire(f"task:{task_id}", 30)
+            self.redis_db.expire(f"task:{task_id}", 120)
 
         self.db.commit()
 
@@ -336,11 +336,11 @@ class DatabaseConnection:
         if self.cache_enabled:
             project = self.redis_db.hgetall(f"project:{project_id}")
             if project:
-                self.redis_db.expire(f"project:{project_id}", 30)
+                self.redis_db.expire(f"project:{project_id}", 120)
         if not project:
             query = "SELECT * FROM project WHERE idProject = ?;"
 
-            project = self.cursor.execute(query, (project_id, )).fetchone()
+            project = self.cursor.execute(query, (project_id, ), no_delay=True).fetchone()
 
         # project:id name idManager text
         
@@ -352,7 +352,7 @@ class DatabaseConnection:
                 "createdAt": project["createdAt"]
             })
 
-            self.redis_db.expire(f"project:{project_id}", 30)
+            self.redis_db.expire(f"project:{project_id}", 120)
 
         return project
     
@@ -363,7 +363,7 @@ class DatabaseConnection:
 
         params = [f"%{name}%" for name in names]
 
-        return self.cursor.execute(query, params).fetchall()
+        return self.cursor.execute(query, params, no_delay=True).fetchall()
 
     def get_project_by_name(self, name: str):
         if self.cache_enabled:
