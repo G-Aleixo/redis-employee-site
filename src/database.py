@@ -54,7 +54,7 @@ class DatabaseConnection:
         self.cache_avaliable = False
         if redis_url:
             try:
-                self.redis_db = redis.Redis(host=redis_url, db=0, decode_responses=True)
+                self.redis_db = redis.Redis.from_url(host=redis_url, db=0, decode_responses=True)
                 self.cache_enabled = True
                 self.cache_avaliable = True
             except:
