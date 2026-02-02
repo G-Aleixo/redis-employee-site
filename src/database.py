@@ -29,8 +29,9 @@ class SlowCursor(sql.Cursor):
         print(f"Sleeping for {CURSOR_DELAY} seconds")
         sleep(CURSOR_DELAY)
 
-    def execute(self, *args, **kwargs):
-        self._delay()
+    def execute(self, *args, no_delay = False, **kwargs):
+        if not no_delay:
+            self._delay()
         return super().execute(*args, **kwargs)
     
     def executemany(self, *args, **kwargs):
@@ -42,6 +43,8 @@ class SlowCursor(sql.Cursor):
     
     def fetchall(self, *args, **kwargs):
         return super().fetchall(*args, **kwargs)
+
+
 
 class SlowDatabase(sql.Connection):
     def cursor(self, factory: None = None):
@@ -81,7 +84,7 @@ class DatabaseConnection:
         self.cursor: sql.Cursor = self.db.cursor(SlowCursor)
 
         # set foreign keys to actually be enforced
-        self.db.cursor(None).execute("PRAGMA foreign_keys = ON;")
+        self.cursor.execute("PRAGMA foreign_keys = ON;", no_delay=True)
 
     def get_employee(self, employee_id: int):
         employee = None
