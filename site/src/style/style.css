@@ -1,64 +1,65 @@
-html{
-    width: 100%;
-    overflow-x: hidden ;
-}
-#header-area{
-    background-color: rgb(190, 190, 190);
-    text-align: center;
-}
-#link-text{
-    color: rgb(0, 0, 0);
-    background-color: rgb(219, 219, 219);
-    border-style: double;
-    font-size: 1.5ex;
-    text-align: center;
-    vertical-align: middle;
-    padding-top: 1%;
-}
-.custom-header{
-    background-color: rgb(197, 197, 197);
-    position: relative;
+html {
+  width: 100%;
 }
 
-
-#title-text{
-    padding-top: 2%;
-    padding-bottom: 2%;
+#header-area {
+  background-color: rgb(190, 190, 190);
+  text-align: center;
 }
 
-#nav-bar{
-    background-color: rgb(255, 255, 255);
+#link-text {
+  color: rgb(0, 0, 0);
+  background-color: rgb(219, 219, 219);
+  border-style: double;
+  font-size: 1.5ex;
+  text-align: center;
+  vertical-align: middle;
+  padding-top: 1%;
 }
 
-.nav-link{
-    color: black;
-    background-color: rgb(224, 224, 224);
+.custom-header {
+  background-color: rgb(197, 197, 197);
+  position: relative;
 }
 
-#bd-logo{
-    width: 256px;
-    height: 128px;
+#title-text {
+  padding-top: 2%;
+  padding-bottom: 2%;
 }
 
-#login-area{
-    background-color:  rgb(224, 224, 224);
+#nav-bar {
+  background-color: rgb(255, 255, 255);
+}
+
+.nav-link {
+  color: black;
+  background-color: rgb(224, 224, 224);
+}
+
+#bd-logo {
+  width: 256px;
+  height: 128px;
+}
+
+#login-area {
+  background-color: rgb(224, 224, 224);
 }
 
 .nav-link:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .big-title-limited {
-    max-height: 200px;
-    overflow-y: auto;
+  max-height: 200px;
+  overflow-y: auto;
 }
 
-.title-limited{
-    max-height: 80px;
-    overflow-y: auto;
+.title-limited {
+  max-height: 80px;
+  overflow-y: auto;
 }
 
-.text-limited{
-    max-height: 120px;
-    overflow-y: auto;
+.text-limited {
+  max-height: 120px;
+  overflow-y: auto;
 }
