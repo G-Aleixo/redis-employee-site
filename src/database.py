@@ -52,9 +52,12 @@ class DatabaseConnection:
     #TODO: use redis as a cache and introduce some delay
     def __init__(self, database_path: str, redis_url: str):
         self.cache_avaliable = False
+        self.redis_db = None
         if redis_url:
             try:
+                print("connecting to redis db")
                 self.redis_db = redis.Redis.from_url(host=redis_url, db=0, decode_responses=True)
+                print(self.redis_db)
                 self.cache_enabled = True
                 self.cache_avaliable = True
             except:
