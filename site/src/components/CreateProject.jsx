@@ -332,9 +332,11 @@ export default function CreateProject({ fetch_custom, usedDB }) {
                       idWorkTask={taskObj.idWorkTask}
                       name={taskObj.name}
                       content={taskObj.content}
+                      done={taskObj.done}
                       idManager={localStorage["id"]}
                       editTask={editTask}
                       deleteTask={deleteTask}
+                      fetch_custom={fetch_custom}
                     />
                   ))}
                 </div>

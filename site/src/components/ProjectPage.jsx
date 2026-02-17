@@ -150,11 +150,14 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
             <div className="row row-cols-1 row-cols-md-3 g-1 p-4 justify-content-center">
               {projectsTasks.map((taskObj, index) => (
                 <Task
-                key={index}
+                  key={index}
+                  idWorkTask={taskObj.idWorkTask}
                   id={taskObj.idProject}
                   name={taskObj.name}
                   content={taskObj.content}
+                  done={taskObj.done}
                   idManager={project["idManager"]}
+                  fetch_custom={fetch_custom}
                 />
               ))}
             </div>
