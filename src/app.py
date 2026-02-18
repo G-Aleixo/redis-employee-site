@@ -279,6 +279,12 @@ def delete_project(project_id: int):
 
     return {}, db.delete_project(project_id)
 
+@app.delete("/api/projects/<int:project_id>/comments/<int:comment_id>")
+def delete_project_comment(project_id: int, comment_id: int):
+    db = get_db()
+
+    return {}, db.delete_project_comment(comment_id)
+
 @app.post("/api/projects/<int:project_id>/comments")
 def add_comment(project_id):
     data = request.get_json()
