@@ -462,7 +462,7 @@ class DatabaseConnection:
         return False
 
     def get_project_comments(self, project_id: int):
-        query = "SELECT c.* FROM comment c INNER JOIN taskComment tc ON c.idComment = tc.idComment WHERE tc.idWorkTask = ?;"
+        query = "SELECT c.* FROM comment c INNER JOIN projectComment pc ON c.idComment = pc.idComment WHERE pc.idProject = ?;"
 
         return self.cursor.execute(query, (project_id, )).fetchall()
 

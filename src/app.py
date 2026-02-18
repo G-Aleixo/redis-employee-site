@@ -279,6 +279,24 @@ def delete_project(project_id: int):
 
     return {}, db.delete_project(project_id)
 
+@app.post("/api/projects/<int:project_id>/comments")
+def add_comment(project_id):
+    data = request.get_json()
+
+    if not data or "content" not in data:
+        return jsonify({"error": "Missing required field: content"}), 400
+    if not data or "employee_id" not in data:
+        return jsonify({"error": "Missing required field: employee_id"}), 400
+
+    content = data["content"]
+    employee_id = data["employee_id"]
+
+    db = get_db()
+
+    db.post_project_comment(project_id, employee_id, content)
+
+    return {}, 201
+
 @app.get("/api/projects/<int:project_id>/comments")
 def get_project_comments(project_id: int):
     if project_id == None:
