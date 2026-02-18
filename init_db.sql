@@ -49,6 +49,7 @@ CREATE TABLE comment
  idComment INTEGER PRIMARY KEY AUTOINCREMENT,
  idEmployee INTEGER NOT NULL,
  content VARCHAR NOT NULL,
+ createdAt NOT NULL,
  FOREIGN KEY(idEmployee) REFERENCES employee (idEmployee)
 ); 
 
