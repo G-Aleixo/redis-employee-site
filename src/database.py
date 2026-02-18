@@ -464,7 +464,7 @@ class DatabaseConnection:
     def get_project_comments(self, project_id: int):
         query = "SELECT c.idComment, c.content, c.createdAt, e.name from comment as c INNER JOIN projectComment pc ON c.idComment = pc.idComment INNER JOIN employee e ON c.idEmployee = e.idEmployee WHERE pc.idProject = ?;"
 
-        return self.cursor.execute(query, (project_id, )).fetchall()
+        return self.cursor.execute(query, (project_id, ), no_delay=True).fetchall()
 
     def post_project_comment(self, project_id: int, employee_id: int, comment: str, createdAt: datetime):
         if self.project_exists(project_id) and self.employee_exists(employee_id):

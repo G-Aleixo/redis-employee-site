@@ -22,7 +22,10 @@ export default function CreateComment({
           }),
         }),
       });
-      if (res.ok) loadProjectPage();
+      if (res.ok) {
+        loadProjectPage();
+        setContent("");
+      }
     } catch (error) {
       console.warn("Erro de server ou CORS", error);
     }
