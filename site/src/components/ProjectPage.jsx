@@ -15,6 +15,14 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
 
   const { id } = useParams();
 
+  async function deleteComment(commentId) {
+    const res = await fetch_custom(`/api/projects/${id}/comments/${commentId}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (res.ok) loadProjectPage();
+  }
+
   async function loadProjectPage() {
     try {
       const res = await fetch_custom(`/api/projects/${id}`, {
@@ -52,7 +60,6 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
       if (!comments.ok) throw new Error("Erro ao buscar comentários");
       const commentsData = await comments.json();
       setProjectComments(commentsData);
-      console.log(commentsData)
     } catch (error) {
       console.warn("Erro de server ou CORS", error);
     }
@@ -206,6 +213,10 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
             content={commentObj.content}
             nameEmployee={commentObj.name}
             createdAt={commentObj.createdAt}
+            idEmployee={commentObj.idEmployee}
+            idManager={commentObj.idManager}
+            idComment={commentObj.idComment}
+            deleteComment={deleteComment}
           />
         </div>
       ))}
