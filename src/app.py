@@ -287,13 +287,16 @@ def add_comment(project_id):
         return jsonify({"error": "Missing required field: content"}), 400
     if not data or "employee_id" not in data:
         return jsonify({"error": "Missing required field: employee_id"}), 400
+    if not data or "createdAt" not in data:
+        return jsonify({"error": "Missing required field: createdAt"}), 400
 
     content = data["content"]
     employee_id = data["employee_id"]
+    createdAt = data["createdAt"]
 
     db = get_db()
 
-    db.post_project_comment(project_id, employee_id, content)
+    db.post_project_comment(project_id, employee_id, content, createdAt)
 
     return {}, 201
 

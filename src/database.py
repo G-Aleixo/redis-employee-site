@@ -462,15 +462,15 @@ class DatabaseConnection:
         return False
 
     def get_project_comments(self, project_id: int):
-        query = "SELECT c.* FROM comment c INNER JOIN projectComment pc ON c.idComment = pc.idComment WHERE pc.idProject = ?;"
+        query = "SELECT c.idComment, c.content, c.createdAt, e.name from comment as c INNER JOIN projectComment pc ON c.idComment = pc.idComment INNER JOIN employee e ON c.idEmployee = e.idEmployee WHERE pc.idProject = ?;"
 
         return self.cursor.execute(query, (project_id, )).fetchall()
 
-    def post_project_comment(self, project_id: int, employee_id: int, comment: str):
+    def post_project_comment(self, project_id: int, employee_id: int, comment: str, createdAt: datetime):
         if self.project_exists(project_id) and self.employee_exists(employee_id):
-            add_comment = "INSERT INTO comment (idEmployee, content) VALUES (?, ?);"
+            add_comment = "INSERT INTO comment (idEmployee, content, createdAt) VALUES (?, ?, ?);"
 
-            self.cursor.execute(add_comment, (employee_id, comment))
+            self.cursor.execute(add_comment, (employee_id, comment, createdAt))
 
             comment_id = self.cursor.lastrowid
 
