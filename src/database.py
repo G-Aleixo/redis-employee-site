@@ -172,7 +172,7 @@ class DatabaseConnection:
         if not task:
             query = "SELECT * FROM workTask WHERE idWorkTask = ?;"
             
-            task = self.cursor.execute(query, (task_id, )).fetchone()
+            task = self.cursor.execute(query, (task_id, ), no_delay=True).fetchone()
 
         if task and self.cache_enabled:
             self.redis_db.hset(f"task:{task_id}", mapping = {
@@ -197,7 +197,7 @@ class DatabaseConnection:
                 return True
             
         query = "SELECT 1 FROM workTask WHERE idWorkTask = ?;"
-        row = self.cursor.execute(query, (task_id, )).fetchone()
+        row = self.cursor.execute(query, (task_id, ), no_delay=True).fetchone()
         if row:
             return True
         return False
@@ -271,19 +271,16 @@ class DatabaseConnection:
         if not self.task_exists(task_id):
             return False
 
-        print(status)
-
         query = "UPDATE workTask SET done = ? WHERE idWorkTask = ?;"
-
-        self.cursor.execute(query, (1 if status else 0, task_id))
+        
+        self.cursor.execute(query, (1 if status else 0, task_id), no_delay=True)
 
         query = "UPDATE workTask SET doneTimestamp = ? WHERE idWorkTask = ?;"
 
         if status == True:
-            self.cursor.execute(query, (datetime.now(), task_id))
+            self.cursor.execute(query, (datetime.now(), task_id), no_delay=True)
         else:
-            self.cursor.execute(query, ("", task_id))
-
+            self.cursor.execute(query, ("", task_id), no_delay=True)
 
         task = self.get_task(task_id)
 
@@ -292,12 +289,9 @@ class DatabaseConnection:
             self.redis_db.hset(f"task:{task_id}", "done", int(task["done"]))
             self.redis_db.hset(f"task:{task_id}", "doneTimestamp", task["doneTimestamp"])
 
-
         self.db.commit()
 
-        if task is not None and bool(int(task["done"])) == status:
-            return True
-        return False
+        return task is not None and bool(int(task["done"])) == status
 
     def assign_employee(self, task_id: int, employee_id: int):
         if self.task_exists(task_id) and self.employee_exists(employee_id):
@@ -315,7 +309,7 @@ class DatabaseConnection:
     def get_task_comments(self, task_id: int):
         query = "SELECT c.* FROM comment c INNER JOIN taskComment tc ON c.idComment = tc.idComment WHERE tc.idWorkTask = ?;"
 
-        return self.cursor.execute(query, (task_id, )).fetchall()
+        return self.cursor.execute(query, (task_id, ), no_delay=True).fetchall()
 
     def post_task_comment(self, task_id: int, employee_id: int, comment: str):
         if self.task_exists(task_id) and self.employee_exists(employee_id):
