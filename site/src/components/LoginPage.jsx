@@ -63,10 +63,7 @@ export default function LoginPage({ response, usedDB }) {
         </div>
 
         <div className="col-sm-4 d-flex align-items-center justify-content-center">
-          <img
-            src={renanImg}
-            className="img-fluid w-50 rounded-circle d-none d-sm-block"
-          />
+          <img src={renanImg} className="img-fluid w-50 rounded-circle d-none d-sm-block"/>
         </div>
       </div>
 

@@ -200,7 +200,6 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
           </button>
         </div>
       </div>
-      <hr />
       <CreateComment
         project_id={id}
         loadProjectPage={loadProjectPage}
