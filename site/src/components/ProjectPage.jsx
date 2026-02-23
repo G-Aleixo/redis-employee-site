@@ -116,7 +116,7 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
             </span>
             <input
               type="text"
-              value={project["idManager"]}
+              value={project["idManager"] || ""}
               className="form-control shadow rounded-end"
               placeholder="Error Info Missing"
               aria-label="Username"
@@ -133,7 +133,7 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
             </span>
             <input
               type="text"
-              value={project["idProject"]}
+              value={project["idProject"] || ""}
               className="form-control shadow rounded-end"
               placeholder="Error Info Missing"
               aria-label="Username"
@@ -150,7 +150,7 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
             </span>
             <input
               type="text"
-              value={project["createdAt"] || "Indefinido"}
+              value={project["createdAt"] || ""}
               className="form-control shadow rounded-end"
               placeholder="Error Info Missing"
               aria-label="Username"

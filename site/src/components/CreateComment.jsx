@@ -43,9 +43,9 @@ export default function CreateComment({
 
       <div className="row justify-content-center g-0">
         <div className="col-10">
-          <div class="mb-3">
-            <label for="exampleFormControlTextarea1" class="form-label">Digite seu comentário</label>
-            <textarea class="form-control" name="username" id="exampleFormControlTextarea1" onChange={(e) => setContent(e.target.value)} value={content} required rows="1" onInput={(e) => {e.target.style.height = "auto"; e.target.style.height = e.target.scrollHeight + "px";}}></textarea>
+          <div className="mb-3">
+            <label htmlFor="exampleFormControlTextarea1" className="form-label">Digite seu comentário</label>
+            <textarea className="form-control" name="username" id="exampleFormControlTextarea1" onChange={(e) => setContent(e.target.value)} value={content} required rows="1" onInput={(e) => {e.target.style.height = "auto"; e.target.style.height = e.target.scrollHeight + "px";}}></textarea>
           </div>
         </div>
       </div>
