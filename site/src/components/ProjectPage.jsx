@@ -36,6 +36,14 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
 
       const projectData = await res.json();
       setProject(projectData);
+
+      const managerRes = await fetch_custom(`/api/employees/${projectData.idManager}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      const managerData = await managerRes.json();
+      setProject((prev) => ({ ...prev, managerName: managerData.name }));
+
     } catch (error) {
       console.warn("Erro de server ou CORS", error);
     }
@@ -128,6 +136,23 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
 
         <div className="col-sm-5 pe-3">
           <div className="input-group mb-3">
+            <span className="input-group-text" id="basic-addon1">
+              Nome do Criador:
+            </span>
+            <input
+              type="text"
+              value={project["managerName"] || ""}
+              className="form-control shadow rounded-end"
+              placeholder="Error Info Missing"
+              aria-label="Username"
+              aria-describedby="basic-addon1"
+              readOnly
+            />
+          </div>
+        </div>
+
+        <div className="col-sm-5 ps-3">
+          <div className="input-group mb-3">
             <span className="input-group-text" id="basic-addon2">
               Id do Projeto:
             </span>
@@ -143,7 +168,7 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
           </div>
         </div>
 
-        <div className="col-sm-10 px-3">
+        <div className="col-sm-5 pe-3">
           <div className="input-group mb-3">
             <span className="input-group-text" id="basic-addon3">
               Criado em:{" "}

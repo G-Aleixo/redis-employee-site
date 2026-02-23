@@ -95,7 +95,7 @@ class DatabaseConnection:
         if not employee:
             query = "SELECT * FROM employee WHERE idEmployee = (?) LIMIT 1;"
 
-            employee = self.cursor.execute(query, (employee_id, )).fetchone()
+            employee = self.cursor.execute(query, (employee_id, ), no_delay=True).fetchone()
 
         if employee and self.cache_enabled:
             self.redis_db.hset(f"employee:{employee_id}", mapping = {
