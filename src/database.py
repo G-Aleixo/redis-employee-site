@@ -357,7 +357,18 @@ class DatabaseConnection:
 
         params = [f"%{name}%" for name in names]
 
-        return self.cursor.execute(query, params, no_delay=True).fetchall()
+        projects = self.cursor.execute(query, params, no_delay=True).fetchall()
+
+        if len(projects) == 0:
+            conditions = " OR ".join(["text LIKE ?"] * len(names))
+
+            query = f"SELECT * FROM project WHERE {conditions}"
+
+            params = [f"%{name}%" for name in names]
+
+            projects = self.cursor.execute(query, params, no_delay=True).fetchall()
+
+        return projects
 
     def get_project_by_name(self, name: str):
         if self.cache_enabled:

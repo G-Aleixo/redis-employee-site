@@ -14,8 +14,13 @@ export default function Projects({ fetch_custom, usedDB }) {
   async function searchProject(e) {
     e.preventDefault();
 
+    if (projectName.trim() == "") {
+      getProjects({ preventDefault: () => {} });
+      return;
+    }
+
     try {
-      const res = await fetch_custom(`/api/projects/search/${encodeURIComponent(projectName)}`, {
+      const res = await fetch_custom(`/api/projects/search/${encodeURIComponent(projectName.trim())}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
