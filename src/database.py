@@ -4,11 +4,15 @@ import redis
 from datetime import datetime
 from time import sleep, time
 from os import getenv
+from dotenv import load_dotenv
 
 def stable_hash(data: any):
     return hashlib.sha256(data.encode()).hexdigest()
 
 CURSOR_DELAY = getenv("DATABASE_CURSOR_DELAY")
+
+load_dotenv()
+
 print(f"DATABASE_CURSOR_DELAY env variable is {CURSOR_DELAY}")
 if CURSOR_DELAY != None:
     CURSOR_DELAY = float(CURSOR_DELAY)

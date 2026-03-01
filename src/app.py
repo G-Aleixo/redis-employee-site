@@ -8,8 +8,11 @@ import src.database as database
 import hashlib
 
 from os import getenv
+from dotenv import load_dotenv
 
-REDIS = getenv("REDIS_URL") # setup manually
+REDIS = getenv("REDIS_URL")
+
+load_dotenv()
 
 print(f"REDIS_URL env value was {REDIS}")
 
@@ -21,7 +24,7 @@ DATABASE = "worker_database.db"
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:5173", "https://g-aleixo.github.io", "https://redis-employee-site.onrender.com"], supports_credentials=True)
 
-app.secret_key = "Charley Harvard Alpha Donald"
+app.secret_key = getenv("FLASK_SECRET_KEY")
 
 def stable_hash(data: any):
     return hashlib.sha256(data.encode()).hexdigest()

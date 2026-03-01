@@ -233,3 +233,6 @@ dist-ssr
 
 # Redis dump
 dump.rdb
+
+# Ignore .env files containing sensitive information
+.env
