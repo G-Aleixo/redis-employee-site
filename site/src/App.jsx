@@ -35,6 +35,9 @@ export function App() {
 
     setLoading(true);
 
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    const delayTime = usedDB === "redis" ? 0 : 3500;
+
     try {
       options = {
         ...options,
@@ -43,6 +46,7 @@ export function App() {
           usedDB: usedDB,
         },
       };
+      await delay(delayTime);
       const response = await fetch(baseUrl + url, {...options});
       return response;
     } finally {
