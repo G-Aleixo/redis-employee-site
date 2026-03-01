@@ -64,12 +64,6 @@ def close_db(exception):
     if db is not None:
         db.close()
 
-
-@app.route("/")
-def hello_world():
-    name = request.args.get("name", "Flask")
-    return f"<p>Hello {escape(name)}!</p>"
-
 @app.get("/api/tasks/<int:task_id>")
 def get_task(task_id: int):
     if task_id == None:
@@ -159,37 +153,6 @@ def mark_task_completed(task_id, status):
     if db.mark_task_completed(task_id, status):
         return {}, 201
     return {}, 400
-
-
-@app.get("/api/tasks/<int:task_id>/assigned")
-def get_task_assignees(task_id: int):
-    if task_id == None:
-        return {}, 501
-
-    db = get_db()
-
-    task = db.get_task(task_id)
-
-    if task:
-        task = dict(task)
-        return jsonify([dict(row) for row in db.get_assigned(task_id)]), 200
-    else:
-        return {}, 404
-
-@app.get("/api/tasks/<int:task_id>/comments")
-def get_task_comments(task_id: int):
-    if task_id == None:
-        return {}, 501
-
-    db = get_db()
-
-    task = db.get_task(task_id)
-
-    if task:
-        task = dict(task)
-        return jsonify([dict(row) for row in db.get_task_comments(task_id)]), 200
-    else:
-        return {}, 404
 
 @app.get("/api/projects/<int:project_id>")
 def get_project(project_id: int):
@@ -349,114 +312,66 @@ def get_employee_api(employee_id: int | None = None):
     else:
         return {}, 404
 
-@app.get("/employees/<int:employee_id>")
-def get_employee_page(employee_id: int | None = None):
-    if employee_id == None:
-        return "<p>NOT IMPLEMENTED</p>", 501
+@app.post("/signup")
+def signup():
+    data = request.get_json()
+    
+    if not data or "name" not in data:
+        return jsonify({"error": "Missing required field: name"}), 400
+    if not data or "age" not in data:
+        return jsonify({"error": "Missing required field: age"}), 400
+    if not data or "information" not in data:
+        return jsonify({"error": "Missing required field: information"}), 400
+    if not data or "password" not in data:
+        return jsonify({"error": "Missing required field: password"}), 400
+    if not data or "favorite_team" not in data:
+        return jsonify({"error": "Missing required field: favorite_team"}), 400
+    if not data or "joinedOn" not in data:
+        return jsonify({"error": "Missing required field: joinedOn"}), 400
+
+    username = data["name"]
+    age = data["age"]
+    info = data["information"]
+    password = data["password"]
+    favorite_team = data["favorite_team"]
+    joinedOn = data["joinedOn"]
+    
+    db = get_db()
+    sucess = db.add_employee(username, age, info, password, 1, favorite_team, joinedOn)
+    db.close()
+    if sucess == 501:
+        return {"error": "User with this name already exists"}, 501
+    return {"message": "User created successfully"}, 200
+
+@app.post("/login")
+def login():
+    data = request.get_json()
+    
+    if not data or "name" not in data:
+        return jsonify({"error": "Missing required field: name"}), 400
+    if not data or "password" not in data:
+        return jsonify({"error": "Missing required field: password"}), 400
+    
+    username = data["name"]
+    password = data["password"]
 
     db = get_db()
-    
-    employee = db.get_employee(employee_id)
-    if employee:
-        response = f"""\
-<p>ID: {escape(employee["idEmployee"])}</p>
-<p>Favorite soccer team: {escape(employee["favoriteTeam"])}</p>
-<p>Age: {escape(employee["age"])}</p>
-<p>Name: {escape(employee["name"])}</p>
-<p>Info: {escape(employee["information"])}</p>
-<p>Joined on: {escape(employee["joinedOn"])}</p>"""
+    user = db.cursor.execute("SELECT * FROM employee WHERE name = ?", (username,), no_delay=True).fetchone()
+    db.close()
 
-        if employee["idManager"] != None:
-            manager_name = db.get_employee(employee["idManager"])["name"]
-            response += f"\n<p>Manager: <a href=\"/employees/{escape(employee[6])}\">{escape(manager_name)}</a></p>"
-        
-        return make_response(response)
-    
-    return "<p>ERROR 404, employee not found!</p>", 404
+    if user is None:
+        return {"error": "User not found", "status": 404}, 404
 
-@app.route("/signup", methods=['GET', 'POST'])
-def signup():
-    if request.method == 'POST':
-        data = request.get_json()
-        username = data["name"]
-        age = data["age"]
-        info = data["information"]
-        password = data["password"]
-        favorite_team = data["favorite_team"]
-        joinedOn = data["joinedOn"]
+    if user["password"] != stable_hash(password + (user["name"] + user["joinedOn"])):
+        return {"error": "Invalid credentials", "status": 401}, 401
 
-        db = get_db()
-        sucess = db.add_employee(username, age, info, password, 1, favorite_team, joinedOn)
-        db.close()
-        if sucess == 501:
-            return {"error": "User with this name already exists"}, 501
-        return {"message": "User created successfully"}, 200
-
-    # GET request → show signup form
-    return r"""<!DOCTYPE html>
-<html>
-<head>
-    <title>Signup</title>
-</head>
-<body>
-    <h2>Create an Account</h2>
-    <form method="POST" action="/signup">
-        <label for="username">Username:</label><br>
-        <input type="text" id="username" name="username" required><br><br>
-
-        <label for="age">Age:</label><br>
-        <input type="number" id="age" name="age" required><br><br>
-
-        <label for="information">About yourself:</label><br>
-        <textarea id="information" name="information"></textarea><br><br>
-
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" name="password" required><br><br>
-
-        <button type="submit">Sign Up</button>
-    </form>
-</body>
-</html>
-"""
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        data = request.get_json()
-        username = data["name"]
-        password = data["password"]
-
-        db = get_db()
-        user = db.cursor.execute("SELECT * FROM employee WHERE name = ?", (username,), no_delay=True).fetchone()
-        db.close()
-
-        if user is None:
-            return {"error": "User not found", "status": 404}, 404
-
-        if user["password"] != stable_hash(password + (user["name"] + user["joinedOn"])):
-            return {"error": "Invalid credentials", "status": 401}, 401
-
-        session["user_id"] = user["idemployee"]
-        session["username"] = user["name"]
-        return {
-            "id": user["idemployee"],
-            "name": user["name"],
-            "age": user["age"],
-            "favTeam": user["favoriteTeam"],
-            "information": user["information"],
-            "joinedOn": user["joinedOn"]
-        }, 200
-
-    # If GET request → show login page
-    return r"""<!DOCTYPE html> <html> <head> <title>Login</title> </head> <body> <h2>Login</h2> <form method="POST" action="/login"> <label>Username:</label> <input type="text" name="username" required><br><br> <label>Password:</label> <input type="password" name="password" required><br><br> <button type="submit">Login</button> </form> </body> </html>"""
-
-@app.route('/profile')
-def profile():
-    if "user_id" not in session:
-        return redirect(url_for('login'))
-    return f"Welcome {session['username']}!"
-
-@app.post("/logout")
-def logout():
-    session.clear()
-    return jsonify({"message": "Logged out"}), 200
+    session["user_id"] = user["idemployee"]
+    session["username"] = user["name"]
+    return {
+        "id": user["idemployee"],
+        "name": user["name"],
+        "age": user["age"],
+        "favTeam": user["favoriteTeam"],
+        "information": user["information"],
+        "joinedOn": user["joinedOn"]
+    }, 200
