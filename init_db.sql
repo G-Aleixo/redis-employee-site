@@ -5,9 +5,7 @@ DROP TABLE IF EXISTS employee;
 DROP TABLE IF EXISTS workTask;
 DROP TABLE IF EXISTS project;
 DROP TABLE IF EXISTS comment;
-DROP TABLE IF EXISTS taskComment;
 DROP TABLE IF EXISTS projectComment;
-DROP TABLE IF EXISTS assignment;
 
 CREATE TABLE employee 
 (
@@ -21,7 +19,6 @@ CREATE TABLE employee
  idManager INTEGER,
  FOREIGN KEY(idManager) REFERENCES employee (idEmployee)
 );
-
 CREATE TABLE workTask 
 ( 
  idWorkTask INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -33,35 +30,22 @@ CREATE TABLE workTask
  idProject INTEGER,
  CHECK (done IN (TRUE, FALSE)),
  FOREIGN KEY(idProject) REFERENCES project (idProject)
-); 
-
+);
 CREATE TABLE project 
 ( 
  idProject INTEGER PRIMARY KEY AUTOINCREMENT,
  name VARCHAR NOT NULL,
- idManager INTEGER NOT NULL,
+ idManager INTEGER NOT NULL, text VARCHAR, createdAt DATETIME,
  UNIQUE (name),
  FOREIGN KEY(idManager) REFERENCES employee (idEmployee)
-); 
-
+);
 CREATE TABLE comment 
 ( 
  idComment INTEGER PRIMARY KEY AUTOINCREMENT,
  idEmployee INTEGER NOT NULL,
- content VARCHAR NOT NULL,
- createdAt NOT NULL,
+ content VARCHAR NOT NULL, createdAt DATETIME,
  FOREIGN KEY(idEmployee) REFERENCES employee (idEmployee)
-); 
-
-CREATE TABLE taskComment 
-( 
- idComment INTEGER NOT NULL,
- idWorkTask INTEGER NOT NULL,
- UNIQUE (idComment),
- FOREIGN KEY(idComment) REFERENCES comment (idComment),
- FOREIGN KEY(idWorkTask) REFERENCES workTask (idWorkTask)
-); 
-
+);
 CREATE TABLE projectComment 
 ( 
  idComment INTEGER NOT NULL,
@@ -69,13 +53,4 @@ CREATE TABLE projectComment
  UNIQUE (idComment),
  FOREIGN KEY(idComment) REFERENCES comment (idComment),
  FOREIGN KEY(idProject) REFERENCES project (idProject)
-); 
-
-CREATE TABLE assignment 
-( 
- idEmployee INTEGER NOT NULL,
- idWorkTask INTEGER NOT NULL,
- idAssigned INTEGER PRIMARY KEY AUTOINCREMENT,
- FOREIGN KEY(idEmployee) REFERENCES employee (idEmployee),
- FOREIGN KEY(idWorkTask) REFERENCES workTask (idWorkTask)
-); 
+);

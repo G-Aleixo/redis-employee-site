@@ -9,9 +9,4 @@ with open("init_db.sql") as file:
     cursor.executescript(script)
     db.commit()
 
-with open("init_db_data.sql") as file:
-    script = file.read()
-    cursor.executescript(script)
-    db.commit()
-
 db.commit()
