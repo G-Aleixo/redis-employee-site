@@ -63,3 +63,8 @@ html {
   max-height: 120px;
   overflow-y: auto;
 }
+
+.form-check-input {
+  background-color: rgb(207, 207, 207);
+  border-color: rgb(175, 175, 175);
+}
