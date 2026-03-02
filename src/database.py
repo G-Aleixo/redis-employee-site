@@ -116,9 +116,6 @@ class DatabaseConnection:
 
         return employee
 
-    def get_employees(self):
-        return self.cursor.execute("SELECT * FROM employee;").fetchall()
-
     def employee_exists(self, employee_id: int) -> bool:
         if self.cache_enabled:
             employee = self.redis_db.hget(f"employee:{employee_id}", "name")
@@ -159,12 +156,6 @@ class DatabaseConnection:
             self.redis_db.set(f"employee_exists:{name}", 1)
 
         return 200
-    
-    def verify_password(self, employee_id: str, password: str):
-        employee = self.get_employee(employee_id=employee_id)
-
-        if employee:
-            return employee["password"] == stable_hash(password + employee["name"] + employee["joinedOn"])
 
     def get_task(self, task_id: int):
         task = None
@@ -297,38 +288,6 @@ class DatabaseConnection:
 
         return task is not None and bool(int(task["done"])) == status
 
-    def assign_employee(self, task_id: int, employee_id: int):
-        if self.task_exists(task_id) and self.employee_exists(employee_id):
-            query = "INSERT INTO assignment (idWorkTask, idEmployee) VALUES (?, ?);"
-
-            self.cursor.execute(query, (task_id, employee_id))
-
-            self.db.commit()
-
-    def get_assigned(self, task_id: int):
-        query = "SELECT e.* FROM employee e INNER JOIN assignment a ON e.idEmployee = a.idEmployee WHERE a.idWorkTask = ?;"
-
-        return self.cursor.execute(query, (task_id, )).fetchall()
-
-    def get_task_comments(self, task_id: int):
-        query = "SELECT c.* FROM comment c INNER JOIN taskComment tc ON c.idComment = tc.idComment WHERE tc.idWorkTask = ?;"
-
-        return self.cursor.execute(query, (task_id, ), no_delay=True).fetchall()
-
-    def post_task_comment(self, task_id: int, employee_id: int, comment: str):
-        if self.task_exists(task_id) and self.employee_exists(employee_id):
-            add_comment = "INSERT INTO comment (idEmployee, content) VALUES (?, ?);"
-
-            self.cursor.execute(add_comment, (employee_id, comment))
-
-            comment_id = self.cursor.lastrowid
-
-            assign_comment = "INSERT INTO taskComment (idComment, idWorkTask) VALUES (?, ?);"
-
-            self.cursor.execute(assign_comment, (comment_id, task_id))
-
-            self.db.commit()
-    
     def get_project(self, project_id: int):
         project = None
         if self.cache_enabled:
