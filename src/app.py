@@ -1,7 +1,6 @@
-from flask import Flask, request, make_response, jsonify, g, session, redirect, url_for # pyright: ignore[reportMissingImports]
+from flask import Flask, request, jsonify, g, session # pyright: ignore[reportMissingImports]
 from flask_cors import CORS # pyright: ignore[reportMissingModuleSource]
 from markupsafe import escape
-from functools import wraps
 
 from sqlite3 import Row
 import src.database as database

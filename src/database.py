@@ -2,7 +2,7 @@ import sqlite3 as sql
 import hashlib
 import redis
 from datetime import datetime
-from time import sleep, time
+from time import sleep
 from os import getenv
 from dotenv import load_dotenv
 
