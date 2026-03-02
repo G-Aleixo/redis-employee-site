@@ -53,7 +53,7 @@ export default function Login({ setResponse, usedDB, fetch_custom }) {
           setAlert({ 
             showAlert: true, 
             title: "Senha incorreta!", 
-            text: "O nome que você escolheu já está em uso, tente outro nome.",
+            text: "A senha que você digitou esta incorreta.",
             className: "alert-danger"
           });
         }
@@ -63,7 +63,7 @@ export default function Login({ setResponse, usedDB, fetch_custom }) {
       setAlert({ 
         showAlert: true, 
         title: "Um Erro Ocorreu!", 
-        text: "A senha inserida não está correta, tente novamente.",
+        text: "Ocorreu um erro ao tentar acessar o servidor. Error 404",
         className: "alert-warning"
       });
     }

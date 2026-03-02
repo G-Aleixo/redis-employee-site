@@ -117,7 +117,7 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
       )}
 
       <div className="row justify-content-center pt-3 g-0 gap-1">
-        <div className="col-sm-5 ps-3">
+        <div className="col-sm-5 px-3">
           <div className="input-group mb-3">
             <span className="input-group-text" id="basic-addon1">
               Id do Criador:
@@ -134,7 +134,7 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
           </div>
         </div>
 
-        <div className="col-sm-5 pe-3">
+        <div className="col-sm-5 px-3">
           <div className="input-group mb-3">
             <span className="input-group-text" id="basic-addon1">
               Nome do Criador:
@@ -151,7 +151,7 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
           </div>
         </div>
 
-        <div className="col-sm-5 ps-3">
+        <div className="col-sm-5 px-3">
           <div className="input-group mb-3">
             <span className="input-group-text" id="basic-addon2">
               Id do Projeto:
@@ -168,7 +168,7 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
           </div>
         </div>
 
-        <div className="col-sm-5 pe-3">
+        <div className="col-sm-5 px-3">
           <div className="input-group mb-3">
             <span className="input-group-text" id="basic-addon3">
               Criado em:{" "}

@@ -65,6 +65,15 @@ html {
 }
 
 .form-check-input {
-  background-color: rgb(207, 207, 207);
-  border-color: rgb(175, 175, 175);
+  background-color: rgb(255, 255, 255);
+  border-color: rgb(0, 0, 0);
+  width: 1.5em;
+  height: 1.5em;
+  background-image: url("https://static.thenounproject.com/png/2009949-200.png");
+}
+
+.form-check-input:checked {
+  background-color: #198754;
+  border-color: #e6e6e6;
+  background-image: url("https://uxwing.com/wp-content/themes/uxwing/download/checkmark-cross/checkmark-white-icon.png")
 }

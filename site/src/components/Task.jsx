@@ -53,9 +53,9 @@ export default function Task({
             </>
           )}
         </div>
-        <div>
+        <div className="d-flex align-items-center justify-content-center pb-1">
           <input
-            className="form-check-input"
+            className="form-check-input me-2"
             type="checkbox"
             value=""
             id="flexCheckChecked"
@@ -69,7 +69,7 @@ export default function Task({
               (editTask != null && deleteTask != null)
             }
           />
-          <label className="form-check-label">
+          <label className="form-check-label" htmlFor="flexCheckChecked">
             Estado da Tarefa: {doneMessage}
           </label>
         </div>

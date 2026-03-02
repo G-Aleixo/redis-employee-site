@@ -100,7 +100,7 @@ export default function LoginPage({ response, usedDB }) {
         </div>
       </div>
 
-      <div className="row justify-content-center py-3 g-0">
+      <div className="row justify-content-center p-3 g-0">
         <div className="col-sm-10 d-flex justify-content-center gap-3">
           <button className="btn btn-success w-50" onClick={() => navigate("/")}>
             Voltar Home
