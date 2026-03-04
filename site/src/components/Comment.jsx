@@ -1,4 +1,5 @@
 import renanImg from "../assets/renan.jpeg";
+
 export default function Comment({
   content,
   nameEmployee,
@@ -34,7 +35,7 @@ export default function Comment({
           <div className="row g-0">
             <div className="col-12">
               <p className="text-wrap">
-                <strong>{nameEmployee}</strong> - {createdAt}
+                <strong>{nameEmployee}#{idEmployee}</strong> - {createdAt}
               </p>
             </div>
             <div className="col-11">

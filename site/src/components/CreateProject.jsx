@@ -8,7 +8,8 @@ export default function CreateProject({ fetch_custom, usedDB }) {
   const navigate = useNavigate();
 
   const { id } = useParams();
-  const isEdit = !!id;
+  const [projectId, setProjectId] = useState(id);
+  const [isEdit, setIsEdit] = useState(!!projectId);
 
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
@@ -117,7 +118,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
     e.preventDefault();
 
     try {
-      const res = await fetch_custom(`/api/projects/${id}`, {
+      const res = await fetch_custom(`/api/projects/${projectId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -126,7 +127,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
         }),
       });
 
-      await syncTasks(id);
+      await syncTasks(projectId);
 
       if (res.ok) {
         setAlert({
@@ -158,11 +159,15 @@ export default function CreateProject({ fetch_custom, usedDB }) {
           name: title.trim(),
           text: text.trim(),
           manager_id: localStorage["id"].trim(),
-          createdAt: new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }).trim(),
+          createdAt: new Date()
+            .toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })
+            .trim(),
         }),
       });
 
       const data = await res.json();
+
+      setProjectId(data.project_id);
 
       await createTasks(data.project_id);
 
@@ -190,6 +195,8 @@ export default function CreateProject({ fetch_custom, usedDB }) {
         className: "alert-danger",
       });
     }
+
+    setIsEdit(true);
   }
 
   useEffect(() => {
@@ -220,11 +227,11 @@ export default function CreateProject({ fetch_custom, usedDB }) {
   }, [popup]);
 
   useEffect(() => {
-    if (!id) return;
+    if (!projectId) return;
 
     async function loadProject() {
       try {
-        const projectRes = await fetch_custom(`/api/projects/${id}`, {
+        const projectRes = await fetch_custom(`/api/projects/${projectId}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -237,7 +244,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
         setTitle(project.name.trim());
         setText(project.text.trim() || "");
 
-        const tasksRes = await fetch_custom(`/api/projects/${id}/tasks`, {
+        const tasksRes = await fetch_custom(`/api/projects/${projectId}/tasks`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -260,7 +267,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
         <div className="row justify-content-center g-0">
           <div className="col-12">
             <h3 className="text-center py-3 border-bottom border-black w-75 mx-auto">
-              Criando seu Projeto
+              {isEdit ? "Editando " : "Criando "} seu Projeto
             </h3>
           </div>
         </div>
@@ -359,7 +366,7 @@ export default function CreateProject({ fetch_custom, usedDB }) {
               </div>
             </div>
 
-            <div className="row justify-content-center py-3 g-0">
+            <div className="row justify-content-center p-3 g-0">
               <div className="col-sm-10 d-flex justify-content-center gap-3">
                 <button className="btn btn-secondary w-50" type="submit">
                   Salvar Projeto

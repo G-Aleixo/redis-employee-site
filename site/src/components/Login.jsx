@@ -16,11 +16,11 @@ export default function Login({ setResponse, usedDB, fetch_custom }) {
   const [name, setName] = useState("");
   const [pwd, setPwd] = useState("");
 
-  const [alert, setAlert] = useState({ 
-    showAlert: false, 
-    title: "", 
-    text: "", 
-    className: "" 
+  const [alert, setAlert] = useState({
+    showAlert: false,
+    title: "",
+    text: "",
+    className: "",
   });
 
   async function login(e) {
@@ -43,28 +43,28 @@ export default function Login({ setResponse, usedDB, fetch_custom }) {
         navigate("/login-page");
       } else {
         if (res.status === 404) {
-          setAlert({ 
-            showAlert: true, 
-            title: "Conta Não Encontrada!", 
+          setAlert({
+            showAlert: true,
+            title: "Conta Não Encontrada!",
             text: "Sua conta não foi encontrada, tente criar uma conta no botão 'Criar Conta'.",
-            className: "alert-danger"
+            className: "alert-danger",
           });
         } else if (res.status === 401) {
-          setAlert({ 
-            showAlert: true, 
-            title: "Senha incorreta!", 
+          setAlert({
+            showAlert: true,
+            title: "Senha incorreta!",
             text: "A senha que você digitou esta incorreta.",
-            className: "alert-danger"
+            className: "alert-danger",
           });
         }
       }
     } catch (error) {
       console.warn("Erro de rede ou CORS:", error);
-      setAlert({ 
-        showAlert: true, 
-        title: "Um Erro Ocorreu!", 
+      setAlert({
+        showAlert: true,
+        title: "Um Erro Ocorreu!",
         text: "Ocorreu um erro ao tentar acessar o servidor. Error 404",
-        className: "alert-warning"
+        className: "alert-warning",
       });
     }
   }
@@ -74,7 +74,10 @@ export default function Login({ setResponse, usedDB, fetch_custom }) {
   }, []);
 
   return (
-    <div className={`container-fluid p-0 border border-2 ${borderClass}`} id="login-area">
+    <div
+      className={`container-fluid p-0 border border-2 ${borderClass}`}
+      id="login-area"
+    >
       {alert.showAlert && (
         <Alert
           setFunction={(prev) => setAlert({ ...prev, showAlert: false })}
@@ -99,10 +102,21 @@ export default function Login({ setResponse, usedDB, fetch_custom }) {
         <div className="row justify-content-center g-0">
           <div className="col-md-6 p-3">
             <div className="input-group shadow">
-              <span className="input-group-text" id="basic-addon1" style={{ width: "10ex" }}>
+              <span
+                className="input-group-text"
+                id="basic-addon1"
+                style={{ width: "10ex" }}
+              >
                 Usuário
               </span>
-              <input type="text" className="form-control" name="username" placeholder="Digite seu nome" onChange={(e) => setName(e.target.value)} required></input>
+              <input
+                type="text"
+                className="form-control"
+                name="username"
+                placeholder="Digite seu nome"
+                onChange={(e) => setName(e.target.value)}
+                required
+              ></input>
             </div>
           </div>
         </div>
@@ -110,21 +124,41 @@ export default function Login({ setResponse, usedDB, fetch_custom }) {
         <div className="row justify-content-center g-0">
           <div className="col-md-6 p-3">
             <div className="input-group shadow">
-              <span className="input-group-text" id="basic-addon2" style={{ width: "10ex" }}>
+              <span
+                className="input-group-text"
+                id="basic-addon2"
+                style={{ width: "10ex" }}
+              >
                 Senha
               </span>
-              <input type="password" className="form-control" name="password" placeholder="Digite sua senha" onChange={(e) => setPwd(e.target.value)} required></input>
+              <input
+                type="password"
+                className="form-control"
+                name="password"
+                placeholder="Digite sua senha"
+                onChange={(e) => setPwd(e.target.value)}
+                required
+              ></input>
               <div className="invalid-feedback">Insira uma Senha Válida</div>
             </div>
           </div>
         </div>
 
-        <div className="row justify-content-center g-0">
-          <div className="col-12 d-flex justify-content-center gap-3 p-4">
-            <button className={`btn ${btnClass} d-flex align-items-center justify-content-center`} type="submit">
+        <div className="row justify-content-center p-3 g-0">
+          <div className="col-sm-10 d-flex justify-content-center gap-3">
+            <button
+              className={`btn ${btnClass} w-50`}
+              type="submit"
+            >
               Fazer Login
             </button>
-            <button className="btn btn-secondary" type="button" onClick={() => navigate("/create-account")}>Criar Conta</button>
+            <button
+              className="btn btn-secondary w-50"
+              type="button"
+              onClick={() => navigate("/create-account")}
+            >
+              Criar Conta
+            </button>
           </div>
         </div>
       </form>

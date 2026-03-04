@@ -1,12 +1,31 @@
-export default function CreateTasks({ setPopup, nameTask, setNameTask, contentTask, setContentTask, setTaskData }) {
+export default function CreateTasks({
+  setPopup,
+  nameTask,
+  setNameTask,
+  contentTask,
+  setContentTask,
+  setTaskData,
+}) {
   return (
-    <div className="modal fade show d-block" tabIndex="-1" style={{zIndex: 100}} id="staticBackdrop" data-bs-backdrop="static">
+    <div
+      className="modal fade show d-block"
+      tabIndex="-1"
+      style={{ zIndex: 100 }}
+      id="staticBackdrop"
+      data-bs-backdrop="static"
+    >
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
-          <form action="" onSubmit={setTaskData}>
+          <form onSubmit={setTaskData}>
             <div className="modal-header">
               <h5 className="modal-title">Criando uma Tarefa</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setPopup(false)}></button>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+                onClick={() => setPopup(false)}
+              ></button>
             </div>
 
             <div className="modal-body">
@@ -14,14 +33,32 @@ export default function CreateTasks({ setPopup, nameTask, setNameTask, contentTa
                 <span className="input-group-text" id="basic-addon1">
                   Título
                 </span>
-                <input type="text" className="form-control" placeholder="Título da Tarefa" aria-label="Username" aria-describedby="basic-addon1" value={nameTask} onChange={(e) => setNameTask(e.target.value)} required/>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Título da Tarefa"
+                  aria-label="Username"
+                  aria-describedby="basic-addon1"
+                  value={nameTask}
+                  onChange={(e) => setNameTask(e.target.value)}
+                  required
+                />
               </div>
 
               <div className="mb-3">
                 <label htmlFor="floatingTextarea" className="form-label">
                   Informações Extras
                 </label>
-                <textarea className="form-control" name="information" id="floatingTextarea" aria-label="Withtextarea" placeholder="Descreva a tarefa... opcional" style={{ height: "140px", resize: "none" }} value={contentTask} onChange={(e) => setContentTask(e.target.value)} />
+                <textarea
+                  className="form-control"
+                  name="information"
+                  id="floatingTextarea"
+                  aria-label="Withtextarea"
+                  placeholder="Descreva a tarefa... opcional"
+                  style={{ height: "140px", resize: "none" }}
+                  value={contentTask}
+                  onChange={(e) => setContentTask(e.target.value)}
+                />
               </div>
             </div>
 

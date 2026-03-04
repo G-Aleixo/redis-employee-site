@@ -17,7 +17,9 @@ function NotFound() {
     <div className="text-center p-5">
       <h1>404</h1>
       <p>Recurso não encontrado</p>
-      <button className="btn btn-primary" onClick={() => navigate("/")}>Voltar Home</button>
+      <button className="btn btn-primary" onClick={() => navigate("/")}>
+        Voltar Home
+      </button>
     </div>
   );
 }
@@ -47,7 +49,7 @@ export function App() {
         },
       };
       await delay(delayTime);
-      const response = await fetch(baseUrl + url, {...options});
+      const response = await fetch(baseUrl + url, { ...options });
       return response;
     } finally {
       setLoading(false);
@@ -80,10 +82,7 @@ export function App() {
         <Route
           path="/create-project/:id?"
           element={
-            <CreateProject
-              fetch_custom={fetch_custom}
-              usedDB={usedDB}
-            />
+            <CreateProject fetch_custom={fetch_custom} usedDB={usedDB} />
           }
         />
 
@@ -93,12 +92,7 @@ export function App() {
         />
         <Route
           path="/projects"
-          element={
-            <Projects
-              fetch_custom={fetch_custom}
-              usedDB={usedDB}
-            />
-          }
+          element={<Projects fetch_custom={fetch_custom} usedDB={usedDB} />}
         />
         <Route
           path="/project/:id"

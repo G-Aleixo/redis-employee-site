@@ -16,10 +16,13 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
   const { id } = useParams();
 
   async function deleteComment(commentId) {
-    const res = await fetch_custom(`/api/projects/${id}/comments/${commentId}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-    });
+    const res = await fetch_custom(
+      `/api/projects/${id}/comments/${commentId}`,
+      {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      },
+    );
     if (res.ok) loadProjectPage();
   }
 
@@ -37,13 +40,15 @@ export default function ProjectPage({ fetch_custom, usedDB }) {
       const projectData = await res.json();
       setProject(projectData);
 
-      const managerRes = await fetch_custom(`/api/employees/${projectData.idManager}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
+      const managerRes = await fetch_custom(
+        `/api/employees/${projectData.idManager}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        },
+      );
       const managerData = await managerRes.json();
       setProject((prev) => ({ ...prev, managerName: managerData.name }));
-
     } catch (error) {
       console.warn("Erro de server ou CORS", error);
     }

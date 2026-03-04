@@ -13,7 +13,7 @@ export default function Credits() {
         </div>
 
         <div className="row border-bottom border-black w-75 mx-auto g-0 py-1"></div>
-        
+
         <div className="row justify-content-center g-0 py-4">
           <div className="col-12 text-center mx-auto">
             <h4>Frontend: Kaio Henrique</h4>
@@ -31,7 +31,9 @@ export default function Credits() {
         <div className="row justify-content-center g-0 py-4">
           <div className="col-12 text-center mx-auto">
             <h4>Fullstack: Brasilicio Henrique</h4>
-            <em>"Eu ja fudi e desfudi esse código 3 vezes." - Brasilicio Henrique</em>
+            <em>
+              "Eu ja fudi e desfudi esse código 3 vezes." - Brasilicio Henrique
+            </em>
           </div>
         </div>
 
@@ -47,17 +49,23 @@ export default function Credits() {
         <div className="row justify-content-center g-0 py-4">
           <div className="col-12 text-center mx-auto">
             <h5>Apoio: Renan, The Rocha</h5>
-            <em>O grande, o homem, aquele que chutou uma bola e hoje ela se chama lua. <br /> - <br /> O nosso Professor.</em>
+            <em>
+              O grande, o homem, aquele que chutou uma bola e hoje ela se chama
+              lua. <br /> - <br /> O nosso Professor.
+            </em>
           </div>
         </div>
 
         <div className="row justify-content-center g-0 pb-4">
           <div className="col-sm-10 d-flex justify-content-center gap-3">
-            <button className="btn btn-success w-50" onClick={() => navigate("/")}>
+            <button
+              className="btn btn-success w-50"
+              onClick={() => navigate("/")}
+            >
               Voltar a Home
             </button>
           </div>
-      </div>
+        </div>
       </div>
     </>
   );

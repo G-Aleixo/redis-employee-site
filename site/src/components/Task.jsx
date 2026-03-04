@@ -10,7 +10,7 @@ export default function Task({
   deleteTask = null,
   fetch_custom,
 }) {
-  const [status, setStatus] = useState(done);
+  const [status, setStatus] = useState(Boolean(done));
   const [doneMessage, setDoneMessage] = useState(done ? "Feito" : "Não Feito");
   const [isChange, setIsChange] = useState(false);
 
@@ -26,9 +26,9 @@ export default function Task({
 
   async function changeStatus() {
     if (status) setDoneMessage("Feito");
-    else setDoneMessage("Não feito");
+    else setDoneMessage("Não Feito");
     try {
-      await fetch_custom(`/api/tasks/${idWorkTask}/set-status/${status}`, {
+      await fetch_custom(`/api/tasks/${idWorkTask}/set-status/${Number(status)}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
@@ -58,18 +58,18 @@ export default function Task({
             className="form-check-input me-2"
             type="checkbox"
             value=""
-            id="flexCheckChecked"
+            id={`flexCheckChecked-${idWorkTask}`}
             onChange={(e) => {
+              setStatus(e.target.checked);
               setIsChange(true);
-              setStatus(e.target.checked ? 1 : 0);
             }}
-            checked={status === 1}
+            checked={status}
             disabled={
               idManager != localStorage["id"] ||
               (editTask != null && deleteTask != null)
             }
           />
-          <label className="form-check-label" htmlFor="flexCheckChecked">
+          <label className="form-check-label" htmlFor={`flexCheckChecked-${idWorkTask}`}>
             Estado da Tarefa: {doneMessage}
           </label>
         </div>

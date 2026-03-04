@@ -75,5 +75,10 @@ html {
 .form-check-input:checked {
   background-color: #198754;
   border-color: #e6e6e6;
-  background-image: url("https://uxwing.com/wp-content/themes/uxwing/download/checkmark-cross/checkmark-white-icon.png")
+  background-image: url("https://uxwing.com/wp-content/themes/uxwing/download/checkmark-cross/checkmark-white-icon.png");
+}
+
+.form-check-input:hover,
+.form-check-label:hover {
+  cursor: pointer;
 }

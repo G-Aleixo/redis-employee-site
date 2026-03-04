@@ -7,7 +7,7 @@ export default function Projects({ fetch_custom, usedDB }) {
 
   const [projectName, setProjectName] = useState("");
 
-  const [projects, setProjects] = useState([])
+  const [projects, setProjects] = useState([]);
 
   const borderClass = usedDB === "sqlite" ? "border-primary" : "border-danger";
 
@@ -20,10 +20,13 @@ export default function Projects({ fetch_custom, usedDB }) {
     }
 
     try {
-      const res = await fetch_custom(`/api/projects/search/${encodeURIComponent(projectName.trim())}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await fetch_custom(
+        `/api/projects/search/${encodeURIComponent(projectName.trim())}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        },
+      );
 
       const data = await res.json();
       setProjects(data);
@@ -53,7 +56,11 @@ export default function Projects({ fetch_custom, usedDB }) {
   }, []);
 
   useEffect(() => {
-    if (localStorage["id"] == 0 || !localStorage["id"] || localStorage["id"] === undefined) {
+    if (
+      localStorage["id"] == 0 ||
+      !localStorage["id"] ||
+      localStorage["id"] === undefined
+    ) {
       navigate("/not-found");
       return;
     }
@@ -61,7 +68,10 @@ export default function Projects({ fetch_custom, usedDB }) {
 
   return (
     <>
-      <div className={`container-fluid p-0 border border-2 ${borderClass}`} id="login-area">
+      <div
+        className={`container-fluid p-0 border border-2 ${borderClass}`}
+        id="login-area"
+      >
         <div className="row justify-content-center g-0">
           <div className="col-12 text-center">
             <h3 className="py-3 border-bottom border-black w-75 mx-auto">
@@ -74,8 +84,20 @@ export default function Projects({ fetch_custom, usedDB }) {
           <div className="col-12 px-5">
             <form onSubmit={searchProject}>
               <div className="input-group mb-3 shadow">
-                <input type="text" className="form-control" placeholder="Nome do Projeto" aria-label="pesquisa" aria-describedby="button-addon1" value={projectName} onChange={(e) => setProjectName(e.target.value)}/>
-                <button className="btn btn-success" type="submit" id="button-addon1">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Nome do Projeto"
+                  aria-label="pesquisa"
+                  aria-describedby="button-addon1"
+                  value={projectName}
+                  onChange={(e) => setProjectName(e.target.value)}
+                />
+                <button
+                  className="btn btn-success"
+                  type="submit"
+                  id="button-addon1"
+                >
                   Pesquisar
                 </button>
               </div>
@@ -98,12 +120,18 @@ export default function Projects({ fetch_custom, usedDB }) {
         </div>
         <div className="row border-bottom border-black w-75 mx-auto py-3"></div>
 
-        <div className="row justify-content-center py-3 g-0">
+        <div className="row justify-content-center p-3 g-0">
           <div className="col-sm-10 d-flex justify-content-center gap-3">
-            <button className="btn btn-secondary w-50" onClick={() => navigate("/create-project")}>
+            <button
+              className="btn btn-secondary w-50"
+              onClick={() => navigate("/create-project")}
+            >
               Criar Projeto
             </button>
-            <button className="btn btn-success w-50" onClick={() => navigate("/")}>
+            <button
+              className="btn btn-success w-50"
+              onClick={() => navigate("/")}
+            >
               Voltar Home
             </button>
           </div>
